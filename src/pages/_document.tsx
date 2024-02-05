@@ -15,6 +15,7 @@ const MyDocument = () => (
   </Html>
 );
 
+// from antd docs
 MyDocument.getInitialProps = async (ctx: DocumentContext) => {
   const cache = createCache();
   const originalRenderPage = ctx.renderPage;
