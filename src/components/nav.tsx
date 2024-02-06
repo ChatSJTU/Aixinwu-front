@@ -1,9 +1,13 @@
 import { Space, Menu, Button } from 'antd';
+import { MoonOutlined, MoonFilled } from '@ant-design/icons';
+import { UserContext } from '@/contexts/UserContext';
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useContext } from 'react';
 
 const NavBar = () => {
     const router = useRouter();
+    const { userTheme, setUserTheme } = useContext(UserContext);
 
     const menuItems = [
         { label: "置换", value: "/1" },
@@ -25,7 +29,16 @@ const NavBar = () => {
                     }))}>
                 </Menu>
             </Space>
-            <Button type="primary">jAccount 登录</Button>
+            <Button type="text" shape="round" style={{
+                    marginRight: 'auto',
+                    transform: 'none',
+                }}
+                onClick={() => {
+                    setUserTheme(userTheme === 'light' ? 'dark' : 'light');
+                }}>
+                {userTheme === 'light' ? <MoonOutlined /> : <MoonFilled />}
+            </Button>
+            <Button type="primary"  >jAccount 登录</Button>
         </>
     )
 }
