@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react';
-import { Layout, ConfigProvider, theme } from 'antd';
+import { Layout, ConfigProvider, theme, FloatButton, QRCode } from 'antd';
+import { CommentOutlined } from '@ant-design/icons'
 // import { useMediaQuery } from "react-responsive";
 import { UserContext } from '@/contexts/UserContext';
 import NavBar from '@/components/nav';
@@ -55,9 +56,13 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
                         {children}
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>
-                        Copyright ©{new Date().getFullYear()} 爱心屋联盟 版权所有
+                        Copyright ©{new Date().getFullYear()} 上海交通大学爱心屋 版权所有
                     </Footer>
                 </Layout>
+                <FloatButton shape="square"
+                    style={{ right: 24 }}
+                    icon={<CommentOutlined />}
+                />
             </ConfigProvider>
         </UserContext.Provider>
     );

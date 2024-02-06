@@ -104,3 +104,8 @@ code {
 .homebanner {
     height: calc(100% - 24px);
 }
+
+.container.homebanner .ant-carousel {
+    border-radius: 7px;
+    overflow: hidden;
+  }
