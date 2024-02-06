@@ -1,9 +1,11 @@
 import { createContext } from 'react';
 
-export const UserContext = createContext<{
+interface UserContextType {
     userTheme: string;
-    setUserTheme: React.Dispatch<React.SetStateAction<string>>}>
-({
-    userTheme: 'light',
-    setUserTheme: () => {},
+    changeTheme: (themeName: string) => void;
+  }
+
+export const UserContext = createContext<UserContextType>({
+    userTheme: 'light', 
+    changeTheme: () => {} 
 });
