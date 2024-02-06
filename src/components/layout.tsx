@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from 'react';
-import { Layout, ConfigProvider, theme, FloatButton, QRCode } from 'antd';
+import { Layout, ConfigProvider, theme, FloatButton } from 'antd';
 import { CommentOutlined } from '@ant-design/icons'
 // import { useMediaQuery } from "react-responsive";
 import { UserContext } from '@/contexts/UserContext';

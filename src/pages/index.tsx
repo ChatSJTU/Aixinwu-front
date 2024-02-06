@@ -3,7 +3,6 @@ import HomeBanner from "@/components/home-banner";
 import { HomeLeftContent } from "@/components/home-left";
 import { HomeRightContent } from "@/components/home-right";
 import { Row, Col } from "antd";
-import { useEffect } from "react";
 
 export default function HomePage() {
 
