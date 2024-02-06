@@ -14,7 +14,8 @@ const HomeBanner = () => {
     return (
         <Row>
             <Col span={6}>
-                <div className="container homebanner"></div>
+                <div className="container homebanner">
+                </div>
             </Col>
             <Col span={12}>
                 <div className="container homebanner">

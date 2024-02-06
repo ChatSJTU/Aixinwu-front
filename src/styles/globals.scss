@@ -76,6 +76,7 @@ code {
         background-color: themed('primary-bg-color');
         border: themed('primary-border-color') solid 1px;
     }
+    min-height: 100px;
 }
 
 /* navbar */
@@ -108,4 +109,8 @@ code {
 .container.homebanner .ant-carousel {
     border-radius: 7px;
     overflow: hidden;
-  }
+}
+
+.container.homecontent {
+    margin-bottom: 24px;
+}
