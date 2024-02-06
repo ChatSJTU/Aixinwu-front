@@ -1,4 +1,4 @@
-@import './_theme.scss';
+@import '@/styles/_theme.scss';
  
 @mixin themify {
   @each $theme-name, $theme-map in $themes {
