@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
-import { Button, Layout } from 'antd';
+import { Layout } from 'antd';
+import NavBar from './nav';
 
 const { Header, Content, Footer } = Layout;
 
@@ -18,13 +19,10 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
                 alignItems: 'center',
             }}
         >
-            SJTU 爱心屋
-            <Button type="primary">jAccount 登录</Button>
+            <NavBar/>
         </Header>
         <Content className="layout-content" style={{ padding: '50px 50px 0px 50px' }}>
-            <div className="container">
-                {children}
-            </div>
+            {children}
         </Content>
         <Footer style={{ textAlign: 'center' }}>
             Copyright ©{new Date().getFullYear()} 爱心屋联盟 版权所有
