@@ -10,7 +10,7 @@ interface LayoutProps {
 
 const MainLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <Layout>
+    <Layout className="main-layout">
         <Header className="layout-header" 
             style={{ 
                 position: 'sticky', 

@@ -31,6 +31,10 @@ code {
 }
 
 /* layout */
+.main-layout {
+    min-height: 100vh !important;
+}
+
 .layout-header {
     padding: 0px 100px 0px 100px !important;
     height: 65px !important;
