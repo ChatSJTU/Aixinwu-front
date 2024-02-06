@@ -10,6 +10,16 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+:root {
+    --page-padding: 12%;
+}
+
+@media (max-width: 1200px) {
+    :root {
+        --page-padding: 5%;
+    }
+}
+
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -36,7 +46,7 @@ code {
 }
 
 .layout-header {
-    padding: 0px 100px 0px 100px !important;
+    padding: 0px var(--page-padding) 0px var(--page-padding) !important;
     height: 65px !important;
     background-color: #e8f2ff !important;
     box-shadow: 0px 2px 10px #dddddd;
@@ -47,7 +57,7 @@ code {
 }
 
 .layout-content {
-    padding: 38px 88px 0px 88px !important;
+    padding: 18px calc(var(--page-padding) - 12px) 0px calc(var(--page-padding) - 12px) !important;
 }
 
 /* shared content card */
