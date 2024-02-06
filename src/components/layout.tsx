@@ -1,9 +1,9 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { Layout, ConfigProvider, theme, FloatButton } from 'antd';
 import { CommentOutlined } from '@ant-design/icons'
-// import { useMediaQuery } from "react-responsive";
 import { UserContext } from '@/contexts/UserContext';
-import NavBar from '@/components/nav';
+import NavBar from '@/components/global-nav';
+import GlobalFooter from '@/components/global-footer';
 
 const { Header, Content, Footer } = Layout;
 
@@ -43,21 +43,14 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
                 }}
             >
                 <Layout className="main-layout">
-                    <Header className="layout-header" 
-                        style={{ 
-                            position: 'sticky', 
-                            display: 'flex', 
-                            justifyContent: 'space-between', 
-                            alignItems: 'center',
-                        }}
-                    >
+                    <Header className="layout-header">
                         <NavBar/>
                     </Header>
-                    <Content className="layout-content" style={{ padding: '50px 50px 0px 50px' }}>
+                    <Content className="layout-content">
                         {children}
                     </Content>
-                    <Footer style={{ textAlign: 'center' }}>
-                        Copyright ©{new Date().getFullYear()} 上海交通大学爱心屋 版权所有
+                    <Footer className="layout-footer">
+                        <GlobalFooter/>
                     </Footer>
                 </Layout>
                 <FloatButton shape="square"
