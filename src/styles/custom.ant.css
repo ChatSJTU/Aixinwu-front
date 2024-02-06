@@ -1,0 +1,12 @@
+.ant-statistic-content {
+    justify-content: flex-end !important;
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.ant-statistic-content-value {
+    overflow: hidden; 
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+}
+  
