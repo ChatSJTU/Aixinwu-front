@@ -16,7 +16,7 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
     // const preferDark = useMediaQuery({query: "(prefers-color-scheme: dark)"});
 
     useEffect(() => {
-        var currentTheme = localStorage.getItem('currentTheme');
+        var currentTheme = localStorage.getItem('themeContextValue');
         if (currentTheme === null) {
             currentTheme = 'light';
             localStorage.setItem('themeContextValue', currentTheme);
