@@ -1,5 +1,9 @@
 @import "@/styles/custom.ant.scss";
 @import "@/styles/_themify.scss";
+@import "@/styles/animations.css";
+
+@import "@/styles/github-markdown-light.css";
+@import "@/styles/github-markdown-dark.css";
 
 /* root */
 body {
@@ -140,4 +144,9 @@ code {
 
 .container.homecontent {
     margin-bottom: 24px;
+}
+
+/* article page */
+.container.article-content > * {
+    animation: floatUp 0.5s ease-out;
 }
