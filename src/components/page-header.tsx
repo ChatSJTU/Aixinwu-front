@@ -11,7 +11,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
     title, onBack, extra
 }) => {
     return (
-        <Space style={{ display: 'flex !important', alignItems: 'baseline' }}>
+        <Space style={{ display: 'flex !important', alignItems: 'baseline', padding: "0px 12px 0px 12px" }}>
             {onBack && <Button
                 type="text"
                 onClick={() => history.back()}
