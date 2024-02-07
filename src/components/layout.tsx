@@ -43,7 +43,7 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
                 }}
             >
                 <Layout className="main-layout">
-                    <Header className="layout-header">
+                    <Header className="layout-header" style={{position: 'sticky'}}>
                         <NavBar/>
                     </Header>
                     <Content className="layout-content">
