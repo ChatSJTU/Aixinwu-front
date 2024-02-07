@@ -1,13 +1,13 @@
 import React from 'react';
 import { HeartTwoTone } from '@ant-design/icons';
 
-interface CustomHeartIconProps {
+interface AxCoinProps {
   size?: number; 
   color?: string;
   style?: React.CSSProperties;
 }
 
-export const AxCoin: React.FC<CustomHeartIconProps> = ({ 
+export const AxCoin: React.FC<AxCoinProps> = ({ 
     size = 22,
     color = "#eb2f96",
     style
