@@ -1,8 +1,11 @@
-import { Image, Spin, Divider, Row, Col, Button } from 'antd'
+import { Image, Spin, Divider, Row, Col, Button, Typography } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
+import Head from "next/head";
 import { useEffect, useState } from 'react';
 import { AxCoin } from '@/components/axcoin';
+
+const { Title, Text, Link } = Typography;
 
 interface ProductDetails {
     image_url: string;
@@ -53,36 +56,43 @@ const ProductDetailsPage: React.FC = () => {
     }
 
     return (
+        <>
+        <Head>
+           <title>{`商品详情-${productDetails.product_name}`}</title>
+        </Head>
         <div>
             <Row>
                 <Col span={6}>
-                    <div>
+                    <div className='container'>
                         <Image
                             src={productDetails.image_url}
                             alt={productDetails.product_name}
-                            width={256}
-                            height={256}
+                            width={168}
+                            height={168}
                         />
                     </div>
                 </Col>
-                <Col span={18} style={{paddingLeft: '250px'}}>
-                    <div>
-                        <h1>{productDetails.product_name}</h1>
+                <Col span={18} style={{ paddingLeft: '250px' }}>
+                    <div className='container'>
+                        <Title level={4} style={{marginTop: '0px'}}>{productDetails.product_name}</Title>
                         {productDetails.detailed_product_name && (
-                            <h3>{productDetails.detailed_product_name}</h3>
+                            <Title level={5} type="secondary">{productDetails.detailed_product_name}</Title>
                         )}
-                        <p style={{ display: 'flex', alignItems: 'center' }}>
+                        <Text style={{ display: 'flex', alignItems: 'center' }}>
                             爱心币：<AxCoin size={16} />
                             <span style={{ color: '#eb2f96' }}>{productDetails.cost}</span>
-                        </p>
+                        </Text>
                         {productDetails.stock && (
-                            <p>库存: {productDetails.stock}</p>
+                            <>
+                                <Text>{`库存: ${productDetails.stock}`}</Text>
+                                <br></br>
+                            </>
                         )}
-                        <Button 
-                        type='primary'
-                        icon={<ShoppingCartOutlined/>}
-                        style={{backgroundColor: '#eb2f96'}}
-                        onClick={()=>{}}
+                        <Button
+                            type='primary'
+                            icon={<ShoppingCartOutlined />}
+                            style={{ backgroundColor: '#eb2f96', marginTop: '50px' }}
+                            onClick={() => { }}
                         >
                             添加到爱心篮
                         </Button>
@@ -90,9 +100,11 @@ const ProductDetailsPage: React.FC = () => {
                 </Col>
             </Row>
             <Divider />
-            <p style={{ whiteSpace: 'pre-line' }} >{productDetails.desc}</p>
-
+            <div className='container'>
+                <Text style={{ whiteSpace: 'pre-line' }} >{productDetails.desc}</Text>
+            </div>
         </div>
+        </>
     );
 };
 
