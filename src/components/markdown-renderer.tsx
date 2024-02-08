@@ -14,11 +14,12 @@ const MarkdownRenderer = ({content} : any) =>{
         <div style={{ wordWrap: 'break-word', overflowWrap: 'break-word'}} className={userTheme}>
         <ReactMarkdown
             className={'markdown-body-' + (userTheme === 'dark' ? 'dark' : 'light')}
-                children={content}
-                remarkPlugins={[remarkGfm, remarkHtml]}
-                rehypePlugins={[rehypeRaw, rehypeSanitize]}
-                skipHtml={false}
-            />
+            remarkPlugins={[remarkGfm, remarkHtml]}
+            rehypePlugins={[rehypeRaw, rehypeSanitize]}
+            skipHtml={false}
+        >
+            {content}
+        </ReactMarkdown>
         </div>
     )
 }
