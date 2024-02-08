@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { Layout, ConfigProvider, theme, FloatButton } from 'antd';
-import { CommentOutlined } from '@ant-design/icons'
+import { ArrowUpOutlined } from '@ant-design/icons'
 import { UserContext } from '@/contexts/UserContext';
 import NavBar from '@/components/global-nav';
 import GlobalFooter from '@/components/global-footer';
@@ -55,7 +55,8 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
                 </Layout>
                 <FloatButton shape="square"
                     style={{ right: 24 }}
-                    icon={<CommentOutlined />}
+                    icon={<ArrowUpOutlined />}
+                    onClick={()=>{window.scrollTo({ top: 0, behavior: 'smooth' });}}
                 />
             </ConfigProvider>
         </UserContext.Provider>
