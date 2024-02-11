@@ -17,7 +17,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
                 onClick={() => history.back()}
                 icon={<ArrowLeftOutlined />}
             />}
-            <div style={{fontWeight: 600, fontSize: '20px'}}>{title}</div>
+            <div style={{fontWeight: 600, fontSize: '20px'}} className="normal-text">
+                {title}
+            </div>
             {extra && extra}
         </Space>
     )  

@@ -150,3 +150,10 @@ code {
 .container.article-content > * {
     animation: floatUp 0.5s ease-out;
 }
+
+/* others */
+.normal-text {
+    @include themify {
+        color: themed('primary-text-color') !important;
+    }
+}
