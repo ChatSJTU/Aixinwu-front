@@ -19,10 +19,15 @@
 
 .ant-divider {
     @include themify {
-        border-block-start: 1px solid themed('primary-border-color') !important;
+        border-block-start: 1.5px solid themed('primary-border-color') !important;
     }
 }
 
 .layout-footer .ant-qrcode {
     padding: 4px !important;
+}
+
+.article-content .ant-typography {
+    margin-top: 0.5em;
+    text-align: center;
 }

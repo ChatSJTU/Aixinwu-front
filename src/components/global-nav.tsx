@@ -1,6 +1,6 @@
 import { Space, Menu, Button } from 'antd';
 import { SunOutlined, MoonOutlined } from '@ant-design/icons';
-import { UserContext } from '@/contexts/UserContext';
+import { UserContext } from '@/contexts/user';
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useContext } from 'react';

@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { Layout, ConfigProvider, theme, FloatButton } from 'antd';
 import { ArrowUpOutlined } from '@ant-design/icons'
-import { UserContext } from '@/contexts/UserContext';
+import { UserContext } from '@/contexts/user';
 import NavBar from '@/components/global-nav';
 import GlobalFooter from '@/components/global-footer';
 

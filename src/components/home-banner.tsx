@@ -3,9 +3,9 @@ import { AxCoin } from "./axcoin";
 
 const HomeBanner = () => {
     const contentStyle: React.CSSProperties = {
-        height: "284px",
+        height: "326px",
         color: "#fff",
-        lineHeight: "284px",
+        lineHeight: "326px",
         textAlign: "center",
         margin: "0px",
         background: "#364d79",
@@ -18,7 +18,7 @@ const HomeBanner = () => {
                 </div>
             </Col>
             <Col span={12}>
-                <div className="container homebanner">
+                <div className="container homebanner" style={{padding: '0px'}}>
                     <Carousel autoplay
                         autoplaySpeed={7000} speed={1500}
                         effect="fade"

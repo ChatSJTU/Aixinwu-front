@@ -4,7 +4,7 @@ import remarkGfm from 'remark-gfm';
 import remarkHtml from 'remark-html';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { UserContext } from "@/contexts/UserContext";
+import { UserContext } from "@/contexts/user";
 
 const MarkdownRenderer = ({content} : any) =>{
 
