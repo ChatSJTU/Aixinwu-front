@@ -14,7 +14,7 @@ const GlobalFooter = () => {
                         <Link href="/" className="footer-map-item">置换</Link>
                         <Link href="/" className="footer-map-item">租赁</Link>
                         <Link href="/" className="footer-map-item">失物招领</Link>
-                        <Link href="/" className="footer-map-item">预捐赠</Link>
+                        <Link href="/pre-donate" className="footer-map-item">预捐赠</Link>
                     </Space>
                 </Col>
                 <Col span={5}>
