@@ -2,21 +2,11 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from 'react';
-import { Breadcrumb, Divider, Space, Typography } from "antd";
+import { Breadcrumb, Divider, Skeleton, Space, Typography } from "antd";
 import { CalendarOutlined, EyeOutlined, UserOutlined } from "@ant-design/icons"
 import MarkdownRenderer from "@/components/markdown-renderer";
-
-interface ArticleDetails {
-    id: number;
-    title: string;
-    description: string | null;
-    author: string;
-    content: string;
-    publish_time: string;
-    navigation?: { name: string; id: number; }[];
-    reads_count: number;
-    sort: number;
-}
+import { ArticleDetails } from "@/models/article";
+// import { LoadingSpin } from "@/components/loading-spin";
 
 const { Title } = Typography
 
@@ -35,38 +25,45 @@ const TestData : ArticleDetails = {
 const ArticlePage = () => {
     const router = useRouter();
     //TODO 效仿选课社区分离 service 和 model
-    const { article_id } = router.query;
+    const { id } = router.query;
     const [ articleDetails, setArticleDetails ] = useState<ArticleDetails | null>(TestData);
 
     return (
         <>
             <Head>
-                <title>{`${articleDetails?.title} - 上海交通大学绿色爱心屋`}</title>
+                <title>{`${articleDetails ? articleDetails.title : '加载中'} - 上海交通大学绿色爱心屋`}</title>
             </Head>
-            <Breadcrumb style={{padding: "4px 12px 4px 12px"}}
-                items={[
-                    { title: <Link href="/">首页</Link> },
-                    ...articleDetails?.navigation?.map(item => ({
-                        title: <Link href={`/articles/list/${item.id}`}>{item.name}</Link>
-                    })) || [], 
-                    { title: <a>正文</a> }
-                ]}/>
-            <div className="container article-content">
             {articleDetails &&
                 <>
-                    <Space direction="vertical" style={{width: "100%"}}>
-                        <Title level={3}>{articleDetails?.title}</Title>
-                        <div style={{textAlign: "center"}} className="normal-text">
-                            <UserOutlined /> {articleDetails.author}&nbsp;&nbsp;&nbsp;
-                            <CalendarOutlined /> {new Date(articleDetails.publish_time).toISOString().split('T')[0]}&nbsp;&nbsp;&nbsp;
-                            <EyeOutlined /> {articleDetails.reads_count}
-                        </div>
-                    </Space>
-                    <Divider/>
-                    <MarkdownRenderer content={articleDetails?.content}/>
+                    <Breadcrumb style={{margin: "4px 12px 4px 12px"}}
+                        items={[
+                            { title: <Link href="/">首页</Link> },
+                            ...articleDetails?.navigation?.map(item => ({
+                                title: <Link href={`/articles/list/${item.id}`}>{item.name}</Link>
+                            })) || [], 
+                            { title: <a>正文</a> }
+                        ]}/>
+                    <div className="container article-content">
+                        <Space direction="vertical" style={{width: "100%"}}>
+                            <Title level={3}>{articleDetails?.title}</Title>
+                            <div style={{textAlign: "center"}} className="normal-text">
+                                <UserOutlined /> {articleDetails.author}&nbsp;&nbsp;&nbsp;
+                                <CalendarOutlined /> {new Date(articleDetails.publish_time).toISOString().split('T')[0]}&nbsp;&nbsp;&nbsp;
+                                <EyeOutlined /> {articleDetails.reads_count}
+                            </div>
+                        </Space>
+                        <Divider/>
+                        <MarkdownRenderer content={articleDetails?.content}/>
+                    </div>
                 </>
-            }   
-            </div>
+            }
+            {!articleDetails &&
+                <div className="container" style={{textAlign: "center"}}>
+                    <Skeleton.Input active/>
+                    <Divider/>
+                    <Skeleton title={false} paragraph={{ rows: 4 }} active/>
+                </div>
+            }
         </>
     );
   };
