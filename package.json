@@ -21,7 +21,8 @@
     "rehype-sanitize": "^6.0.0",
     "remark-gfm": "^4.0.0",
     "remark-html": "^16.0.1",
-    "sass": "^1.70.0"
+    "sass": "^1.70.0",
+    "swr": "^2.2.4"
   },
   "devDependencies": {
     "@types/node": "^20",
