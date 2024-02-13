@@ -1,9 +1,10 @@
-import { Image, Spin, Divider, Row, Col, Button, Typography, Carousel } from 'antd'
+import { Image, Spin, Divider, Row, Col, Button, Typography, Carousel, Breadcrumb } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import Head from "next/head";
 import { useEffect, useState } from 'react';
 import { AxCoin } from '@/components/axcoin';
+import { stringify } from 'querystring';
 
 const { Title, Text, Link } = Typography;
 
@@ -62,6 +63,13 @@ const ProductDetailsPage: React.FC = () => {
             <Head>
                 <title>{`商品详情-${productDetails.product_name}`}</title>
             </Head>
+            <Breadcrumb style={{margin: "4px 12px 4px 12px"}}
+                        items={[
+                            { title: <Link href="/">首页</Link> },
+                            { title: <Link href="/products">商品详情</Link> },
+                            { title: <Link href={`/products/single/${id}`}>{productDetails.product_name}</Link> }
+                        ]}
+            />
             <div className='container'>
                 <Row>
                     <Col span={6}>
