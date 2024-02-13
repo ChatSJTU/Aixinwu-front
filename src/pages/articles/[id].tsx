@@ -2,8 +2,8 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from 'react';
-import { Breadcrumb, Divider, Skeleton, Space, Typography } from "antd";
-import { CalendarOutlined, EyeOutlined, UserOutlined } from "@ant-design/icons"
+import { Breadcrumb, Button, Divider, Skeleton, Space, Typography } from "antd";
+import { CalendarOutlined, EyeOutlined, UserOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons"
 import MarkdownRenderer from "@/components/markdown-renderer";
 import { ArticleDetails } from "@/models/article";
 // import { LoadingSpin } from "@/components/loading-spin";
@@ -19,7 +19,12 @@ const TestData : ArticleDetails = {
     "publish_time": "2024-02-11T15:19:38.2493411+08:00",
     "navigation": [{ name: "通知公告", id: 0}, ],
     "reads_count": 114514,
-    "sort": 1
+    "sort": 1,
+    "next": null,
+    "previous": {
+        "id": 3,
+        "title": "02-JavaScript-正则技巧"
+    },
 }
 
 const ArticlePage = () => {
@@ -46,7 +51,7 @@ const ArticlePage = () => {
                     <div className="container article-content">
                         <Space direction="vertical" style={{width: "100%"}}>
                             <Title level={3}>{articleDetails?.title}</Title>
-                            <div style={{textAlign: "center"}} className="normal-text">
+                            <div style={{textAlign: "center"}} className="secondary-text">
                                 <UserOutlined /> {articleDetails.author}&nbsp;&nbsp;&nbsp;
                                 <CalendarOutlined /> {new Date(articleDetails.publish_time).toISOString().split('T')[0]}&nbsp;&nbsp;&nbsp;
                                 <EyeOutlined /> {articleDetails.reads_count}
@@ -54,6 +59,29 @@ const ArticlePage = () => {
                         </Space>
                         <Divider/>
                         <MarkdownRenderer content={articleDetails?.content}/>
+                        {(articleDetails.next || articleDetails.previous) &&
+                            <>
+                                <Divider/>
+                                <div className="article-footer">
+                                    {articleDetails.next ?
+                                        <Link href={`articles/${articleDetails.next.id}`}>
+                                            <LeftOutlined className="secondary-text"/>
+                                            <Button type="link">
+                                                {articleDetails.next.title}
+                                            </Button>
+                                        </Link>
+                                    : <div></div>}
+                                    {articleDetails.previous &&
+                                        <Link href={`articles/${articleDetails.previous.id}`}>
+                                            <Button type="link">
+                                                {articleDetails.previous.title}
+                                            </Button>
+                                            <RightOutlined className="secondary-text"/>
+                                        </Link>
+                                    }
+                                </div>
+                            </>
+                        }
                     </div>
                 </>
             }
