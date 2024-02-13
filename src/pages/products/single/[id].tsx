@@ -11,7 +11,7 @@ interface ProductDetails {
     image_url: string;
     product_name: string;
     detailed_product_name?: string;
-    desc: string; // 后续可以传入html代码，这样商品描述格式就不单一了
+    desc: string;
     cost: number;
     stock?: number;
     upload_time?: string;
@@ -20,13 +20,13 @@ interface ProductDetails {
 
 const ProductDetailsPage: React.FC = () => {
     const router = useRouter();
-    const { product_id } = router.query;
+    const { id } = router.query;
     const [productDetails, setProductDetails] = useState<ProductDetails | null>(null);
 
     useEffect(() => {
         const fetchProductDetails = async () => {
             try {
-                // 根据product_id, 从后端获取response
+                // 根据id, 从后端获取response
                 // 以下为一个示例
                 const response = {
                     data: {
@@ -46,10 +46,10 @@ const ProductDetailsPage: React.FC = () => {
             }
         };
 
-        if (product_id) {
+        if (Number.isInteger(Number(id))) {
             fetchProductDetails();
         }
-    }, [product_id, router]);
+    }, [id, router]);
 
     if (!productDetails) {
         return <center><Spin tip="loading..." size="large" style={{ marginTop: '200px' }} /></center>; // 可以显示加载状态指示器
@@ -57,24 +57,22 @@ const ProductDetailsPage: React.FC = () => {
 
     return (
         <>
-        <Head>
-           <title>{`商品详情-${productDetails.product_name}`}</title>
-        </Head>
-        <div>
-            <Row>
-                <Col span={6}>
-                    <div className='container'>
+            <Head>
+                <title>{`商品详情-${productDetails.product_name}`}</title>
+            </Head>
+            <div className='container'>
+                <Row>
+                    <Col span={6}>
                         <Image
                             src={productDetails.image_url}
                             alt={productDetails.product_name}
                             width={168}
                             height={168}
                         />
-                    </div>
-                </Col>
-                <Col span={18} style={{ paddingLeft: '250px' }}>
-                    <div className='container'>
-                        <Title level={4} style={{marginTop: '0px'}}>{productDetails.product_name}</Title>
+                    </Col>
+                    <Col span={18} style={{ paddingLeft: '250px' }}>
+
+                        <Title level={4} style={{ marginTop: '0px' }}>{productDetails.product_name}</Title>
                         {productDetails.detailed_product_name && (
                             <Title level={5} type="secondary">{productDetails.detailed_product_name}</Title>
                         )}
@@ -96,14 +94,11 @@ const ProductDetailsPage: React.FC = () => {
                         >
                             添加到爱心篮
                         </Button>
-                    </div>
-                </Col>
-            </Row>
-            <Divider />
-            <div className='container'>
+                    </Col>
+                </Row>
+                <Divider />
                 <Text style={{ whiteSpace: 'pre-line' }} >{productDetails.desc}</Text>
             </div>
-        </div>
         </>
     );
 };
