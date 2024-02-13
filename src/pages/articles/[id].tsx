@@ -64,7 +64,7 @@ const ArticlePage = () => {
                                 <Divider/>
                                 <div className="article-footer">
                                     {articleDetails.next ?
-                                        <Link href={`articles/${articleDetails.next.id}`}>
+                                        <Link href={`/articles/${articleDetails.next.id}`}>
                                             <LeftOutlined className="secondary-text"/>
                                             <Button type="link">
                                                 {articleDetails.next.title}
@@ -72,7 +72,7 @@ const ArticlePage = () => {
                                         </Link>
                                     : <div></div>}
                                     {articleDetails.previous &&
-                                        <Link href={`articles/${articleDetails.previous.id}`}>
+                                        <Link href={`/articles/${articleDetails.previous.id}`}>
                                             <Button type="link">
                                                 {articleDetails.previous.title}
                                             </Button>
