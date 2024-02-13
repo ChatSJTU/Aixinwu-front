@@ -153,9 +153,20 @@ code {
     animation: floatUp 0.5s ease-out;
 }
 
+.article-footer {
+    justify-content: space-between;
+    display: flex;
+}
+
 /* others */
-.normal-text {
+.primary-text {
     @include themify {
         color: themed('primary-text-color') !important;
+    }
+}
+
+.secondary-text {
+    @include themify {
+        color: themed('secondary-text-color') !important;
     }
 }
