@@ -36,3 +36,9 @@
     margin-top: -6px;
     margin-bottom: 24px;
 }
+
+.ant-statistic-content-suffix {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
