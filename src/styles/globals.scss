@@ -68,7 +68,7 @@ code {
     -webkit-backdrop-filter: blur(12px);
     @include themify {
         background-color: rgba(themed('secondary-bg-color'), 0.8) !important;
-        box-shadow: 0px 2px 10px themed('box-shadow-color');
+        // box-shadow: 0px 2px 10px themed('box-shadow-color');
     }
 }
 

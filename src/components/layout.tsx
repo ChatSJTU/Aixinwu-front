@@ -39,7 +39,12 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
             <ConfigProvider
                 theme={{ 
                     algorithm: userTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
-                    token: { colorPrimary: "#1677ff", colorInfo: "#1677ff" },
+                    token: { colorPrimary: "#0a9172", colorInfo: "#0a9172" },
+                    components:{
+                        Menu: {
+                            horizontalItemSelectedColor: "#026b56",
+                        },
+                    }
                 }}
             >
                 <Layout className="main-layout">
