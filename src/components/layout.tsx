@@ -4,12 +4,9 @@ import { ArrowUpOutlined } from '@ant-design/icons'
 import { UserContext } from '@/contexts/user';
 import NavBar from '@/components/global-nav';
 import GlobalFooter from '@/components/global-footer';
+import { LayoutProps } from '@/models/layout';
 
 const { Header, Content, Footer } = Layout;
-
-interface LayoutProps {
-  children: ReactNode;
-}
 
 const MainLayout: React.FC<LayoutProps> = ({ children }) => {
     const [userTheme, setUserTheme] = useState<string>('light');
