@@ -4,20 +4,11 @@ import { useRouter } from 'next/router';
 import Head from "next/head";
 import { useEffect, useState } from 'react';
 import { AxCoin } from '@/components/axcoin';
+import { ProductDetails } from '@/models/products'
 import { stringify } from 'querystring';
 
 const { Title, Text, Link } = Typography;
 
-interface ProductDetails {
-    image_url: string[]; // 长度至少为1
-    product_name: string;
-    detailed_product_name?: string;
-    desc: string;
-    cost: number;
-    stock?: number;
-    upload_time?: string;
-    [propName: string]: any;
-}
 
 const ProductDetailsPage: React.FC = () => {
     const router = useRouter();
