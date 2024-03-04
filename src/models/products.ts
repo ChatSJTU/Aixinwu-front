@@ -15,6 +15,8 @@ export interface ProductDetails {
 export interface ProductSummary {
     image_url: string[]; // 长度至少为1
     product_name: string;
+    product_id: number
+    detailed_product_name?: string;
     cost: number;
     stock?: number;
     [propName: string]: any;
@@ -38,6 +40,8 @@ export const ProductDetailsExample = {
 export const ProductSummaryExample = {
     image_url: ["https://aixinwu.sjtu.edu.cn/uploads/product/6395/202203_347.jpg"],
     product_name: "新航道2023考研政治900题",
+    product_id: 6395,
+    detailed_product_name: "新航道考研政治2023年徐之明思想政治理论金榜书900题",
     cost: 24,
     stock: 907
 }
