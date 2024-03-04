@@ -1,0 +1,3 @@
+interface AuthenticationData {
+  authorizationUrl: string
+}

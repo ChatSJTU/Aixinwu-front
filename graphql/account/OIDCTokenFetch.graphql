@@ -1,0 +1,16 @@
+mutation OIDCTokenFetch($input: JSONString!, $pluginId: String!) {
+  externalObtainAccessTokens(input: $input, pluginId: $pluginId) {
+    user {
+      avatar(size: 10, format: ORIGINAL) {
+        url
+        alt
+      }
+      lastLogin
+      firstName
+      continuous
+    }
+    token
+    csrfToken
+    refreshToken
+  }
+}

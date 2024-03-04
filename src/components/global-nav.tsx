@@ -3,7 +3,9 @@ import { SunOutlined, MoonOutlined } from '@ant-design/icons';
 import { UserContext } from '@/contexts/user';
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { GraphQLContext } from '@/contexts/graphql';
+import { useOidcRedirectMutation, useOidcTokenFetchMutation } from '@/graphql/hooks';
 
 const NavBar = () => {
     const router = useRouter();
@@ -15,6 +17,32 @@ const NavBar = () => {
         { label: "失物招领", value: "/3" },
         { label: "预捐赠", value: "/pre-donate" },
     ];
+
+    const {client} = useContext(GraphQLContext)
+
+    const [oidcRedirectMutation] = useOidcRedirectMutation({client})
+
+    const [oidcFetchTokenMutation] = useOidcTokenFetchMutation({client})
+
+    useEffect(()=>{
+      const urlParams = new URLSearchParams(window.location.search)
+      const code = urlParams.get("code")
+      const state = urlParams.get("state")
+      if(code && state){
+        oidcFetchTokenMutation({
+          variables: {
+            input: JSON.stringify({
+            code: code,
+            state: state,
+          }), pluginId: "aixinwu.authentication.openidconnect"
+          }
+        }).then((value) => {
+          console.log(value.data?.externalObtainAccessTokens)
+        }).then(() => {
+          window.location.replace(window.location.href.split('?')[0])
+        })
+      }
+    },[])
 
     return (
         <>
@@ -34,7 +62,21 @@ const NavBar = () => {
                     onClick={() => {changeTheme(userTheme === 'light' ? 'dark' : 'light')}}
                     icon = {userTheme === 'light' ? <MoonOutlined /> : <SunOutlined />}
                 />
-                <Button type="primary"  >jAccount 登录</Button>
+                <Button type="primary"  onClick = {() => {
+
+              oidcRedirectMutation({
+            variables: {
+              input: JSON.stringify({
+                redirectUri: window.location.href
+              }),
+              pluginId: "aixinwu.authentication.openidconnect"
+            }
+          }).then((value) => {
+                let data = JSON.parse(value.data?.externalAuthenticationUrl?.authenticationData) as AuthenticationData
+                window.location.replace(data.authorizationUrl)
+          })
+ 
+        }}>jAccount 登录</Button>
             </Space>
         </>
     )

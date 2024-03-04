@@ -1,0 +1,5 @@
+mutation OIDCRedirect($input: JSONString!, $pluginId: String!) {
+  externalAuthenticationUrl(input: $input, pluginId: $pluginId) {
+    authenticationData
+  }
+}
