@@ -40,7 +40,7 @@ export const UserBasicInfoCard: React.FC<{ userInfo: UserBasicInfo }> = ({ userI
     const tag = tagStyle[type] || { text: '未知', color: 'default' };
 
     return (
-        <Row justify="space-between">
+        <Row justify="space-between" className="primary-text">
             <Col>
                 <Space size="large" align="start">
                     <Avatar shape="square" size={80} icon={<UserOutlined />} />
