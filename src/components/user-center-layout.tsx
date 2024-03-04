@@ -1,11 +1,11 @@
-import React, { memo } from 'react';
-import { Tabs, Typography } from 'antd';
+import React from 'react';
+import { Tabs } from 'antd';
 import { ContainerOutlined, GiftOutlined, InteractionOutlined, SolutionOutlined, IdcardOutlined, SettingOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import { LayoutProps } from '@/models/layout';
+import { UserBasicInfo } from '@/models/user';
 import { PageHeader } from "@/components/page-header";
-
-const { Title } = Typography;
+import { UserBasicInfoCard } from '@/components/user-basic-info-card';
 
 const UserCenterTabs = [
     {
@@ -40,6 +40,14 @@ const UserCenterTabs = [
     }
 ]
 
+const TestData : UserBasicInfo = {
+    name: "李华",
+    email: "lihua@sjtu.edu.cn",
+    type: "student",
+    balance: 114514,
+    continuous_login_days: 2
+}
+
 const UserLayout: React.FC<LayoutProps> = ({ children }) => {
     const router = useRouter();
 
@@ -51,7 +59,7 @@ const UserLayout: React.FC<LayoutProps> = ({ children }) => {
         <>
             <PageHeader title="用户中心"/>
             <div className="container basic-card">
-                <Title level={5}>基本信息</Title>
+                <UserBasicInfoCard userInfo={TestData}/>
             </div>
             <div className="container basic-card">
                 <Tabs 
