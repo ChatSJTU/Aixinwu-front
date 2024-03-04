@@ -38,7 +38,8 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
                 hoverable
                 style={{
                     maxWidth: 200,
-                    transition: 'box-shadow 0.3s'
+                    transition: 'box-shadow 0.3s',
+                    border: 'none'
                 }}
                 cover={<Image alt={product_name} src={image_url[0]} preview={false} />}
             >
