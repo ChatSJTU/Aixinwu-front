@@ -1,5 +1,17 @@
 mutation OIDCRedirect($input: JSONString!, $pluginId: String!) {
   externalAuthenticationUrl(input: $input, pluginId: $pluginId) {
     authenticationData
+    accountErrors {
+      message
+      field
+      code
+      addressType
+    }
+    errors {
+      message
+      addressType
+      code
+      field
+    }
   }
 }

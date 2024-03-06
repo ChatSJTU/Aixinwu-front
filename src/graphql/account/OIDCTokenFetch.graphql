@@ -1,6 +1,10 @@
 mutation OIDCTokenFetch($input: JSONString!, $pluginId: String!) {
   externalObtainAccessTokens(input: $input, pluginId: $pluginId) {
     user {
+      id
+      account
+      balance
+      email
       avatar(size: 10, format: ORIGINAL) {
         url
         alt
@@ -12,5 +16,17 @@ mutation OIDCTokenFetch($input: JSONString!, $pluginId: String!) {
     token
     csrfToken
     refreshToken
+    errors {
+      message
+      field
+      code
+      addressType
+    }
+    accountErrors {
+      addressType
+      code
+      field
+      message
+    }
   }
 }

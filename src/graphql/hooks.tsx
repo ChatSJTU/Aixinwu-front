@@ -32531,7 +32531,7 @@ export type OidcRedirectMutationVariables = Exact<{
 }>;
 
 
-export type OidcRedirectMutation = { __typename?: 'Mutation', externalAuthenticationUrl?: { __typename?: 'ExternalAuthenticationUrl', authenticationData?: any | null } | null };
+export type OidcRedirectMutation = { __typename?: 'Mutation', externalAuthenticationUrl?: { __typename?: 'ExternalAuthenticationUrl', authenticationData?: any | null, accountErrors: Array<{ __typename?: 'AccountError', message?: string | null, field?: string | null, code: AccountErrorCode, addressType?: AddressTypeEnum | null }>, errors: Array<{ __typename?: 'AccountError', message?: string | null, addressType?: AddressTypeEnum | null, code: AccountErrorCode, field?: string | null }> } | null };
 
 export type OidcTokenFetchMutationVariables = Exact<{
   input: Scalars['JSONString']['input'];
@@ -32539,13 +32539,25 @@ export type OidcTokenFetchMutationVariables = Exact<{
 }>;
 
 
-export type OidcTokenFetchMutation = { __typename?: 'Mutation', externalObtainAccessTokens?: { __typename?: 'ExternalObtainAccessTokens', token?: string | null, csrfToken?: string | null, refreshToken?: string | null, user?: { __typename?: 'User', lastLogin?: any | null, firstName: string, continuous: number, avatar?: { __typename?: 'Image', url: string, alt?: string | null } | null } | null } | null };
+export type OidcTokenFetchMutation = { __typename?: 'Mutation', externalObtainAccessTokens?: { __typename?: 'ExternalObtainAccessTokens', token?: string | null, csrfToken?: string | null, refreshToken?: string | null, user?: { __typename?: 'User', id: string, account: string, balance: number, email: string, lastLogin?: any | null, firstName: string, continuous: number, avatar?: { __typename?: 'Image', url: string, alt?: string | null } | null } | null, errors: Array<{ __typename?: 'AccountError', message?: string | null, field?: string | null, code: AccountErrorCode, addressType?: AddressTypeEnum | null }>, accountErrors: Array<{ __typename?: 'AccountError', addressType?: AddressTypeEnum | null, code: AccountErrorCode, field?: string | null, message?: string | null }> } | null };
 
 
 export const OidcRedirectDocument = gql`
     mutation OIDCRedirect($input: JSONString!, $pluginId: String!) {
   externalAuthenticationUrl(input: $input, pluginId: $pluginId) {
     authenticationData
+    accountErrors {
+      message
+      field
+      code
+      addressType
+    }
+    errors {
+      message
+      addressType
+      code
+      field
+    }
   }
 }
     `;
@@ -32580,6 +32592,10 @@ export const OidcTokenFetchDocument = gql`
     mutation OIDCTokenFetch($input: JSONString!, $pluginId: String!) {
   externalObtainAccessTokens(input: $input, pluginId: $pluginId) {
     user {
+      id
+      account
+      balance
+      email
       avatar(size: 10, format: ORIGINAL) {
         url
         alt
@@ -32591,6 +32607,18 @@ export const OidcTokenFetchDocument = gql`
     token
     csrfToken
     refreshToken
+    errors {
+      message
+      field
+      code
+      addressType
+    }
+    accountErrors {
+      addressType
+      code
+      field
+      message
+    }
   }
 }
     `;
