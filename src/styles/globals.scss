@@ -171,3 +171,59 @@ code {
         color: themed('secondary-text-color') !important;
     }
 }
+
+.preview-card {
+    max-width: 250px;
+    height: 280px;
+    border: none;
+}
+
+.preview-card-container {
+    max-width: 250px;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    border-color: transparent; // Default state
+    border-style: solid;
+    border-width: 1px;
+    position: relative;
+
+    &:hover {
+        border-color: #B3D4FC;
+    }
+}
+
+.preview-card-title {
+    display: block;
+    margin-top: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    font-weight: bold;
+}
+
+.custom-col {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.preview-card-cover {
+    height: 150px !important;
+    width: auto !important;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.two-line-ellipsis {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    max-height: 42px;
+    margin-top: 5px;
+}
