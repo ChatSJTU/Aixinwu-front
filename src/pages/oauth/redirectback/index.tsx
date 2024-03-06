@@ -1,7 +1,7 @@
 import { AxwLogo } from "@/components/axw-logo";
 import { LoadingSpin } from "@/components/loading-spin";
-import AuthContext from "@/contexts/auth-context";
-import { UserContext } from "@/contexts/user";
+import AuthContext from "@/contexts/auth";
+import { UserContext } from "@/contexts/theme";
 import { useOidcTokenFetchMutation, ExternalObtainAccessTokens } from "@/graphql/hooks";
 import { Button, Card, Flex, Result, Space } from "antd";
 import { useRouter } from "next/router";

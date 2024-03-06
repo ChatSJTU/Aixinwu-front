@@ -3,7 +3,8 @@ import MainLayout from '@/components/layout';
 
 import type { AppProps } from 'next/app';
 import { useEffect, useState } from 'react';
-import { AuthContextProvider } from '@/contexts/auth-context';
+import { AuthContextProvider } from '@/contexts/auth';
+import { ThemeContextProvider } from '@/contexts/theme';
 import Head from 'next/head';
 
 
@@ -25,9 +26,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   
   return (
     <AuthContextProvider>
-      <MainLayout>
-        <Component {...pageProps} />
-      </MainLayout>
+      <ThemeContextProvider>
+        <MainLayout>
+          <Component {...pageProps} />
+        </MainLayout>
+      </ThemeContextProvider>
     </AuthContextProvider>
   );
 }

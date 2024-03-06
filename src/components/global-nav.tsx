@@ -1,15 +1,15 @@
 import { Space, Menu, Button } from 'antd';
 import { SunOutlined, MoonOutlined, UserOutlined } from '@ant-design/icons';
-import { UserContext } from '@/contexts/user';
+import ThemeContext from '@/contexts/theme';
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useContext } from 'react';
 import { useOidcRedirectMutation } from '@/graphql/hooks';
-import AuthContext from '@/contexts/auth-context';
+import AuthContext from '@/contexts/auth';
 
 const NavBar = () => {
     const router = useRouter();
-    const { userTheme, changeTheme } = useContext(UserContext);
+    const themeCtx = useContext(ThemeContext);
     const authCtx = useContext(AuthContext);
     const client = authCtx.client;
 
@@ -51,8 +51,8 @@ const NavBar = () => {
             </Space>
             <Space size="middle" className="navbar">
                 <Button type="text"
-                    onClick={() => {changeTheme(userTheme === 'light' ? 'dark' : 'light')}}
-                    icon = {userTheme === 'light' ? <MoonOutlined /> : <SunOutlined />}
+                    onClick={() => {themeCtx.changeTheme(themeCtx.userTheme === 'light' ? 'dark' : 'light')}}
+                    icon = {themeCtx.userTheme === 'light' ? <MoonOutlined /> : <SunOutlined />}
                 />
                 {
                   authCtx.isLoggedIn ?  
