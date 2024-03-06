@@ -3,7 +3,6 @@ import MainLayout from '@/components/layout';
 
 import type { AppProps } from 'next/app';
 import { useEffect, useState } from 'react';
-import SplashScreen from '@/components/splash-screen';
 import { AuthContextProvider } from '@/contexts/auth-context';
 import Head from 'next/head';
 
@@ -20,7 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Head>
           <title>加载中 - 上海交通大学绿色爱心屋</title>
         </Head>
-        <SplashScreen></SplashScreen>
+        <></>
       </>
     );
   
