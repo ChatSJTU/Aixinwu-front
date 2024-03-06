@@ -7,10 +7,6 @@ import { AxCoin } from "@/components/axcoin";
 
 const { Title, Text } = Typography;
 
-interface ProductSummaryProps {
-    productSummary: ProductSummary;
-}
-
 export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSummary }) => {
     const { image_url, product_id, product_name, detailed_product_name, cost, stock } = productSummary;
 

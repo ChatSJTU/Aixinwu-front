@@ -22,6 +22,10 @@ export interface ProductSummary {
     [propName: string]: any;
 }
 
+export interface ProductSummaryProps {
+    productSummary: ProductSummary;
+}
+
 export interface ProductSummaryList {
     products: ProductSummary[]; // 长度至少为1的数组
 }
