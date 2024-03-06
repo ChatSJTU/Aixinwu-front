@@ -5,8 +5,6 @@ import { UserContext } from '@/contexts/user';
 import NavBar from '@/components/global-nav';
 import GlobalFooter from '@/components/global-footer';
 import { LayoutProps } from '@/models/layout';
-import { GraphQLContext } from '@/contexts/graphql';
-import create_graphql_client from '@/graphql';
 
 const { Header, Content, Footer } = Layout;
 
@@ -29,11 +27,8 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
         document.documentElement.setAttribute('data-theme', themeName);
         localStorage.setItem('themeContextValue', themeName);
     }
-    
-    const client = create_graphql_client()
 
     return (
-        <GraphQLContext.Provider value = {{client}}>
         <UserContext.Provider value={{
             userTheme,
             changeTheme,
@@ -62,7 +57,6 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
                 />
             </ConfigProvider>
         </UserContext.Provider>
-      </GraphQLContext.Provider>
     );
 }
 

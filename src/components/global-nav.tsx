@@ -3,9 +3,8 @@ import { SunOutlined, MoonOutlined, UserOutlined } from '@ant-design/icons';
 import { UserContext } from '@/contexts/user';
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useContext, useEffect, useState } from 'react';
-import { GraphQLContext } from '@/contexts/graphql';
-import { ExternalObtainAccessTokens, useOidcRedirectMutation, useOidcTokenFetchMutation } from '@/graphql/hooks';
+import { useContext } from 'react';
+import { useOidcRedirectMutation } from '@/graphql/hooks';
 import AuthContext from '@/contexts/auth-context';
 
 const NavBar = () => {
