@@ -26,6 +26,7 @@ const ProductDetailsPage: React.FC = () => {
                             "https://aixinwu.sjtu.edu.cn/uploads/product/6394/202203_347.jpg",
                             "https://aixinwu.sjtu.edu.cn/uploads/product/6457/202306_347.jpg"],
                         product_name: "新航道2023考研政治900题",
+                        product_id: 122,
                         detailed_product_name: "新航道考研政治2023年徐之明思想政治理论金榜书900题",
                         desc: "//此部分后续可更换为嵌入html代码，需注意DOM-based XSS\n\n商品名称：新航道2023考研政治900题\n出版社：世界知识出版社\n本书有以下特点：\n1.根据考试大纲、2021版新教材编写，考点覆盖，重点突出，讲解详实。\n2.中国人民大学教授、原考研政治命题专家主编。\n3.偶数页题目、奇数页答案对应编排，人性化设计方便考生刷题。",
                         cost: 24,
