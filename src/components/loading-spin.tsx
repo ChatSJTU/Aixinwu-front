@@ -1,6 +1,7 @@
 import React from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
-import { AxwLogo } from '@/components/axw-logo';
+import Icon from '@ant-design/icons';
+import AxwLogo from '../../assets/icons/axw-logo.svg';
 import { Spin, Flex, Space } from 'antd';
 
 interface SpinProps {
@@ -12,18 +13,24 @@ interface SpinProps {
 export const LoadingSpin: React.FC<SpinProps> = ({ 
     size = 48,
     style,
-    logo = false
+    logo = false,
 }) => {
+
+    const iconStyle = {
+        ...style,
+        color: style?.color || 'var(--ant-primary-color)', 
+        fontSize: size,
+    };
 
     if (logo) return (
         <Flex 
-            style={{height: "100vh", width: "100vw", background: "#FFF"}}
+            style={{height: "100%", width: "100%", background: "#FFF"}}
             justify="center" 
             align="center">
-            <Space size="middle" direction="vertical">
+            <Space size="middle" direction="vertical" align="center">
                 <Space size="middle" direction="horizontal">
-                    <AxwLogo fill="#cbcdd1" size={size}></AxwLogo>
-                    <span style={{color: "#cbcdd1", fontWeight: "bold", fontSize: "20px"}}>上海交通大学爱心屋</span>
+                    <Icon component={AxwLogo} style={iconStyle} ></Icon>
+                    <span style={{color: style?.color || 'var(--ant-primary-color)', fontWeight: "bold", fontSize: "20px"}}>上海交通大学爱心屋</span>
                 </Space>
                 <Spin
                     indicator={
