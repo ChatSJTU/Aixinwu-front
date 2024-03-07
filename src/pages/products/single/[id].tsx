@@ -5,7 +5,6 @@ import Head from "next/head";
 import { useEffect, useState } from 'react';
 import { AxCoin } from '@/components/axcoin';
 import { ProductDetails } from '@/models/products'
-import { stringify } from 'querystring';
 
 const { Title, Text, Link } = Typography;
 
@@ -47,7 +46,7 @@ const ProductDetailsPage: React.FC = () => {
     }, [id, router]);
 
     if (!productDetails) {
-        return <center><Spin tip="loading..." size="large" style={{ marginTop: '200px' }} /></center>; // 可以显示加载状态指示器
+        return <center><Spin size="large" style={{ marginTop: '200px' }} /></center>; // 可以显示加载状态指示器
     }
 
     return (
