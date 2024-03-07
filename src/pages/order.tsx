@@ -1,8 +1,11 @@
 import Head from "next/head";
-import {Col, Row, List, Avatar, Skeleton, InputNumber, Typography, Image} from "antd";
+import {Col, Row, List, Space, Input, Avatar, Skeleton, InputNumber, Typography, Image, Button} from "antd";
 import OrderPage from "@/pages/old-order";
 import {AxCoin} from "@/components/axcoin";
-import React from "react";
+import React, {useState} from "react";
+import {it} from "node:test";
+import {tree} from "next/dist/build/templates/app-page";
+import {runInNewContext} from "vm";
 const { Title, Text, Link } = Typography;
 
 
@@ -23,13 +26,61 @@ function getProductSummary(id: number, itemNumber: number) {
 }
 
 const OrderPageView = () => {
-    const data = [
+    var data = [
         getProductSummary(1, 1),
         getProductSummary(2, 4),
     ];
+    const [listProducts, setListProduts] = useState(data);
 
+    function onClickDelete(id: number) {
+        const newListProduct = listProducts.filter(item => (item.id != id));
+        setListProduts(newListProduct);
+    }
 
+    function onItemNumberChange(id: number, value: number) {
+        const newListProduct = listProducts.map(
+            (item) => {
+                if (item.id == id) {
+                    item.itemNumber = value;
+                    return item;
+                }
+                else {
+                    return item;
+                }
+            }
+        );
+        setListProduts(newListProduct);
+    }
 
+    function onItemNumberMinus(id: number) {
+        const newListProduct = listProducts.map(
+            (item) => {
+                if (item.id == id) {
+                    item.itemNumber = item.itemNumber - 1;
+                    return item;
+                }
+                else {
+                    return item;
+                }
+            }
+        );
+        setListProduts(newListProduct);
+    }
+
+    function onItemNumberPlus(id: number) {
+        const newListProduct = listProducts.map(
+            (item) => {
+                if (item.id == id) {
+                    item.itemNumber = item.itemNumber + 1;
+                    return item;
+                }
+                else {
+                    return item;
+                }
+            }
+        );
+        setListProduts(newListProduct);
+    }
 
     return (
         <>
@@ -41,7 +92,7 @@ const OrderPageView = () => {
                     <div className={"container"}>
                         <List
                             itemLayout="horizontal"
-                            dataSource={data}
+                            dataSource={listProducts}
                             size={"large"}
                             header = {
                                 <div style={{padding: "0px 24px"}}>
@@ -50,7 +101,7 @@ const OrderPageView = () => {
                                         <Col span={2}><center>单价</center></Col>
                                         <Col span={4}><center>数量</center></Col>
                                         <Col span={2}><center>小记</center></Col>
-                                        <Col span={4}/>
+                                        <Col span={2}/>
                                     </Row>
                                 </div>
                             }
@@ -67,39 +118,80 @@ const OrderPageView = () => {
                                                 />
                                             </Col>
                                             <Col span={2} style={{display:"flex"}}>
-                                                <Text style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto"}}>
+                                                <Button
+                                                    style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto", textHoverBg: "white"}}
+                                                    type={"link"}
+                                                >
                                                     <AxCoin size={16}/> <span style={{color: '#eb2f96'}}>{item.cost}</span>
                                                 {/* 单价 */}
-                                                </Text>
+                                                </Button>
                                             </Col>
-                                            <Col span={4} style={{display:"flex"}}>
+                                            <Col span={4}>
                                                 <div style={{display: "flex", flexDirection: "column", alignItems:"center"}}>
-                                                    <InputNumber
-                                                        key={"itemNumber"} style={{width: '100%'}}
-                                                        addonBefore={<div onClick={() => {alert("-")}}>-</div>}
-                                                        addonAfter={<div onClick={() => {alert("+")}}>+</div>}
-                                                    />
+                                                    <Space.Compact style={{width: '100%'}}>
+                                                        <Button
+                                                            style={{paddingLeft: '10%', paddingRight: '10%'}}
+                                                            onClick={()=>onItemNumberMinus(item.id)}
+                                                            disabled={item.itemNumber <= 1}
+                                                        >
+                                                            -
+                                                        </Button>
+                                                        <InputNumber
+                                                            min={1} max={item.stock} value={item.itemNumber}
+                                                            controls={false}
+                                                            onChange={(value) => onItemNumberChange(item.id, value)}
+                                                        />
+                                                        <Button
+                                                            style={{paddingLeft: '10%', paddingRight: '10%'}}
+                                                            onClick={()=>onItemNumberPlus(item.id)}
+                                                            disabled={item.itemNumber >= item.stock}
+                                                        >
+                                                            +
+                                                        </Button>
+                                                    </Space.Compact>
+                                                    {/*<InputNumber*/}
+                                                    {/*    min={1} max={item.stock} defaultValue={item.itemNumber}*/}
+                                                    {/*    key={"itemNumber"} style={{width: '100%'}} changeOnWheel={true} controls={false}*/}
+                                                    {/*    addonBefore={*/}
+                                                    {/*        <Button*/}
+                                                    {/*            type={"text"}*/}
+                                                    {/*            style={{padding:"2vh", alignContent:"center"}}*/}
+                                                    {/*        >-</Button>*/}
+                                                    {/*    }*/}
+                                                    {/*    addonAfter={<div onClick={() => {alert("+")}}>+</div>}*/}
+
+                                                    {/*/>*/}
                                                     <Text style={{fontSize: '12px', color: "gray", display: 'flex', alignItems: "center"}}>
                                                         库存：{item.stock}
                                                     </Text>
                                                 </div>
                                             </Col>
                                             <Col span={2} style={{display:"flex"}}>
-                                                <Text style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto"}}>
+                                                <Button
+                                                    style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto", textHoverBg: "white"}}
+                                                    type={"link"}
+                                                >
                                                     <AxCoin size={16}/> <span style={{color: '#eb2f96'}}>{item.cost * item.itemNumber}</span>
                                                 {/* 小记 */}
-                                                </Text>
+                                                </Button>
                                             </Col>
-                                            <Col span={2} style={{display:"flex"}}>
-                                                <Text style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto"}}>
+                                            <Col span={2} style={{display:"flex", flexDirection: "column", alignItems:"center"}}>
+                                                <Button
+                                                    style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto"}}
+                                                    type={"text"}
+                                                    onClick={(()=>onClickDelete(item.id))}
+                                                >
                                                     删除
-                                                </Text>
+                                                </Button>
                                             </Col>
-                                            <Col span={2} style={{display:"flex"}}>
-                                                <Text style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto"}}>
-                                                    分享
-                                                </Text>
-                                            </Col>
+                                            {/*<Col span={2} style={{display:"flex"}}>*/}
+                                            {/*    <Button*/}
+                                            {/*        style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto"}}*/}
+                                            {/*        type={"text"}*/}
+                                            {/*    >*/}
+                                            {/*        分享*/}
+                                            {/*    </Button>*/}
+                                            {/*</Col>*/}
                                         </Row>
                                     </List.Item>
                                 </>
