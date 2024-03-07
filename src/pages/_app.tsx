@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { AuthContextProvider } from '@/contexts/auth';
 import { ThemeContextProvider } from '@/contexts/theme';
 import Head from 'next/head';
+import { MessageContextProvider } from '@/contexts/message';
 
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -27,9 +28,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <AuthContextProvider>
       <ThemeContextProvider>
-        <MainLayout>
-          <Component {...pageProps} />
-        </MainLayout>
+        <MessageContextProvider>
+          <MainLayout>
+            <Component {...pageProps} />
+          </MainLayout>
+        </MessageContextProvider>
       </ThemeContextProvider>
     </AuthContextProvider>
   );

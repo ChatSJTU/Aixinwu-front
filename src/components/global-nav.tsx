@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useContext } from 'react';
 import { useOidcRedirectMutation } from '@/graphql/hooks';
 import AuthContext from '@/contexts/auth';
+import { MessageContext } from '@/contexts/message';
 
 const NavBar = () => {
     const router = useRouter();
@@ -14,6 +15,7 @@ const NavBar = () => {
     const client = authCtx.client;
 
     const [oidcRedirectMutation] = useOidcRedirectMutation({client});
+    const message = useContext(MessageContext);
 
     const doExternalLogin = () => {
       oidcRedirectMutation({
@@ -24,9 +26,25 @@ const NavBar = () => {
           pluginId: "aixinwu.authentication.openidconnect"
         }
       }).then((value) => {
-            let data = JSON.parse(value.data?.externalAuthenticationUrl?.authenticationData) as AuthenticationData
-            window.location.replace(data.authorizationUrl)
-      })
+        if (!value.data || 
+            !value.data.externalAuthenticationUrl) {
+          throw "认证失败";
+        }
+        if (value.data.externalAuthenticationUrl.errors.length != 0)
+        {
+          throw value.data.externalAuthenticationUrl.errors[0].message;
+        }
+        var data = JSON.parse(value.data?.externalAuthenticationUrl?.authenticationData) as AuthenticationData;
+        if (!data.authorizationUrl)
+        {
+          throw "获取数据失败，请稍后重试";
+        }
+        return data;
+      }).then((data) => {
+        window.location.replace(data.authorizationUrl)
+      },(err)=>{
+        message.error(err);
+      });
     };
 
     const menuItems = [
