@@ -4,16 +4,16 @@ import remarkGfm from 'remark-gfm';
 import remarkHtml from 'remark-html';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import { UserContext } from "@/contexts/theme";
+import ThemeContext from "@/contexts/theme";
 
 const MarkdownRenderer = ({content} : any) =>{
 
-    const { userTheme } = useContext(UserContext);
+    const themeCtx = useContext(ThemeContext);
 
     return(
-        <div style={{ wordWrap: 'break-word', overflowWrap: 'break-word'}} className={userTheme}>
+        <div style={{ wordWrap: 'break-word', overflowWrap: 'break-word'}} className={themeCtx.userTheme}>
         <ReactMarkdown
-            className={'markdown-body-' + (userTheme === 'dark' ? 'dark' : 'light')}
+            className={'markdown-body-' + (themeCtx.userTheme === 'dark' ? 'dark' : 'light')}
             remarkPlugins={[remarkGfm, remarkHtml]}
             rehypePlugins={[rehypeRaw, rehypeSanitize]}
             skipHtml={false}
