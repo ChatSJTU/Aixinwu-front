@@ -1,11 +1,7 @@
 import Head from "next/head";
 import {Col, Row, List, Space, Input, Avatar, Skeleton, InputNumber, Typography, Image, Button} from "antd";
-import OrderPage from "@/pages/old-order";
 import {AxCoin} from "@/components/axcoin";
 import React, {useState} from "react";
-import {it} from "node:test";
-import {tree} from "next/dist/build/templates/app-page";
-import {runInNewContext} from "vm";
 const { Title, Text, Link } = Typography;
 
 
