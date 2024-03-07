@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Image, Typography, Row, Col, Flex } from 'antd'
+import { Card, Image, Typography, Space, Flex } from 'antd'
 import { ShoppingCartOutlined, PayCircleOutlined } from '@ant-design/icons';
 
 import { ProductSummaryProps } from "@/models/products";
@@ -13,13 +13,13 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
         <div
             className="preview-card-container"
         >
-            <a target="_blank" href={`/books/${product_id}`}>
+            <a target="_blank" href={`/products/single/${product_id}`}>
                 <Card
                     hoverable
                     className="preview-card"
-                    cover={<Image className='preview-card-cover' alt={product_name} src={image_url[0]} preview={true} />}
+                    cover={<Image className='preview-card-cover' alt={product_name} src={image_url[0]} preview={false} />}
                 >
-                    <div>
+                    <Space direction="vertical" size="small" style={{ display: 'flex' }}>
                         <span className='preview-card-title'>{product_name}</span>
                         <Flex justify="space-between" align="center">
                             <div>
@@ -36,7 +36,7 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
                                 {detailed_product_name.length < 30 ? detailed_product_name : `${detailed_product_name.substring(0, 30)}...`}
                             </Text>
                         }
-                    </div>
+                    </Space>
                 </Card>
             </a>
         </div>

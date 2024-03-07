@@ -189,18 +189,19 @@ code {
     position: relative;
 
     &:hover {
-        border-color: #B3D4FC;
+        border-color: #5373ae;
+        box-shadow: 0 4px 8px rgba(141, 152, 213, 0.3);
     }
 }
 
 .preview-card-title {
     display: block;
-    margin-top: 0px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
     font-weight: bold;
+    margin-top: 2px;
 }
 
 .custom-col {
@@ -210,11 +211,12 @@ code {
 }
 
 .preview-card-cover {
-    height: 150px !important;
+    height: 130px !important;
     width: auto !important;
     display: block;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 10px;
 }
 
 .two-line-ellipsis {
@@ -225,5 +227,4 @@ code {
     text-overflow: ellipsis;
     white-space: normal;
     max-height: 42px;
-    margin-top: 5px;
 }
