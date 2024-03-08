@@ -3,7 +3,7 @@ import { Row, Col } from 'antd';
 import { ProductPreviewCard } from './product-preview-card';
 import { ProductSummary } from "@/models/products";
 
-const ProductGrid: React.FC<{ products: ProductSummary[] }> = ({ products }) => {
+const ProductGrid: React.FC<{ products: ProductSummary[], rowNum?: number }> = ({ rowNum = 2, products }) => {
 	const getColSpan = () => {
 		const xs = 12; // mobile
 		const sm = 12; // small screens
@@ -14,7 +14,7 @@ const ProductGrid: React.FC<{ products: ProductSummary[] }> = ({ products }) => 
 	};
 
 	return (
-		<div className='custom-col'>
+		<div className='product-grid-container' style={{maxHeight: `calc(${rowNum} * (280px + 16px))`}}>
 			<Row gutter={[16, 16]}>
 				{products.map((product: ProductSummary) => (
 					<Col {...getColSpan()} key={product.product_id}>

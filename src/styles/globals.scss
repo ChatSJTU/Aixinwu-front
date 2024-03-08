@@ -9,8 +9,8 @@
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -27,7 +27,7 @@ body {
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+        monospace;
 }
 
 /* scrollbar */
@@ -35,14 +35,15 @@ code {
     width: 6px;
     height: 6px;
 }
-  
+
 ::-webkit-scrollbar-thumb {
     @include themify {
         background-color: themed('scrollbar-bg-color');
     }
+
     border-radius: 2px;
 }
-  
+
 ::-webkit-scrollbar-thumb:hover {
     @include themify {
         background-color: themed('scrollbar-color');
@@ -66,6 +67,7 @@ code {
     align-items: center;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+
     @include themify {
         background-color: rgba(themed('secondary-bg-color'), 0.8) !important;
         box-shadow: 0px 2px 10px themed('box-shadow-color');
@@ -87,6 +89,7 @@ code {
 .footer-map-title {
     font-weight: 600;
     font-size: 14px;
+
     @include themify {
         color: themed('primary-text-color') !important;
     }
@@ -94,6 +97,7 @@ code {
 
 .footer-map-item {
     font-size: 12px;
+
     @include themify {
         color: themed('primary-text-color');
     }
@@ -104,10 +108,12 @@ code {
     border-radius: 8px;
     margin: 12px;
     padding: 20px;
+
     @include themify {
         background-color: themed('primary-bg-color');
         border: themed('primary-border-color') solid 1px;
     }
+
     min-height: 100px;
 }
 
@@ -115,7 +121,7 @@ code {
 .navbar {
     display: flex;
     align-items: center;
-    height: 100%; 
+    height: 100%;
 }
 
 .navbar .title {
@@ -123,6 +129,7 @@ code {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
     @include themify {
         color: themed('primary-text-color') !important;
     }
@@ -150,7 +157,7 @@ code {
 }
 
 /* article page */
-.container.article-content > * {
+.container.article-content>* {
     animation: floatUp 0.5s ease-out;
 }
 
@@ -159,27 +166,15 @@ code {
     display: flex;
 }
 
-/* others */
-.primary-text {
-    @include themify {
-        color: themed('primary-text-color') !important;
-    }
-}
-
-.secondary-text {
-    @include themify {
-        color: themed('secondary-text-color') !important;
-    }
-}
-
+/* product preview card */
 .preview-card {
-    max-width: 250px;
+    max-width: 165px;
     height: 280px;
     border: none;
 }
 
 .preview-card-container {
-    max-width: 250px;
+    max-width: 165px;
     border-radius: 8px;
     overflow: hidden;
     transition: border-color 0.3s, box-shadow 0.3s;
@@ -227,4 +222,44 @@ code {
     text-overflow: ellipsis;
     white-space: normal;
     max-height: 42px;
+}
+
+/* product grid*/
+.product-grid-container {
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &:hover {
+        &::-webkit-scrollbar-thumb {
+            @include themify {
+                background-color: themed('scrollbar-bg-color');
+            }
+        }
+        &::-webkit-scrollbar-thumb:hover {
+            @include themify {
+                background-color: themed('scrollbar-color');
+            }
+        }
+    }
+}
+
+/* others */
+.primary-text {
+    @include themify {
+        color: themed('primary-text-color') !important;
+    }
+}
+
+.secondary-text {
+    @include themify {
+        color: themed('secondary-text-color') !important;
+    }
 }
