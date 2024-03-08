@@ -1,5 +1,5 @@
 import { ExternalObtainAccessTokens, User } from "@/graphql/hooks"
-import React, { useCallback, useMemo } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client"
 import useLocalStorage from "@/hooks/useLocalStorage"
 import { LayoutProps } from "@/models/layout"
@@ -53,7 +53,7 @@ export const AuthContextProvider = (props : LayoutProps) => {
   const [refreshToken, setRefreshToken] = useLocalStorage<string>("refreshToken", "");
   const [token, setToken] = useLocalStorage<string>("token", "");
   const [exp, setExp] = useLocalStorage<number>("expTime", 0);
-  const [userInfo, setUserInfo] = useLocalStorage<User | undefined>("userInfo", () => undefined);
+  const [userInfo, setUserInfo] = useState<User>({} as User);
   
   const isLoggedIn = (!!token) && (calculateRemainDuration(exp) > 0)
 
@@ -69,10 +69,11 @@ export const AuthContextProvider = (props : LayoutProps) => {
   }
 
   const logoutHandler = useCallback(() => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("refreshToken")
-    localStorage.removeItem("expTime")
-    localStorage.removeItem("userInfo")
+    setRefreshToken("")
+    setToken("")
+    setExp(1)
+    setUserInfo({} as User)
+    location.reload();
   }, [])
 
   const contextValue = {

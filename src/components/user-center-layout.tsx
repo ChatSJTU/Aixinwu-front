@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Tabs } from 'antd';
 import { ContainerOutlined, GiftOutlined, InteractionOutlined, SolutionOutlined, IdcardOutlined, SettingOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
@@ -6,6 +6,9 @@ import { LayoutProps } from '@/models/layout';
 import { UserBasicInfo } from '@/models/user';
 import { PageHeader } from "@/components/page-header";
 import { UserBasicInfoCard } from '@/components/user-basic-info-card';
+import AuthContext from '@/contexts/auth';
+import { MessageContext } from '@/contexts/message';
+import { useUserBasicInfoLazyQuery } from '@/graphql/hooks';
 
 const UserCenterTabs = [
     {
@@ -40,26 +43,52 @@ const UserCenterTabs = [
     }
 ]
 
-const TestData : UserBasicInfo = {
-    name: "李华",
-    email: "lihua@sjtu.edu.cn",
-    type: "student",
-    balance: 114514,
-    continuous_login_days: 2
-}
-
 const UserLayout: React.FC<LayoutProps> = ({ children }) => {
     const router = useRouter();
-
+    const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo>({} as UserBasicInfo);
+    const authCtx = useContext(AuthContext);
+    const client = authCtx.client;
+    const [ userBasicInfoQuery, opts ] = useUserBasicInfoLazyQuery({client});
+    const message = useContext(MessageContext);
+    
     const handleTabChange = (key : string) => {
         router.push(key);
     };
+
+    const doQueryUserBasicInfo = () => {
+      userBasicInfoQuery().then((value) => {
+        if (!value.data || 
+            !value.data.me) {
+          throw "获取用户数据失败";
+        }
+        return value.data.me;
+      }).then((data) => {
+        setUserBasicInfo({
+            name: data.firstName,
+            email: data.email,
+            type: data.userType,
+            balance: data.balance,
+            continuous_login_days: data.continuous
+        } as UserBasicInfo);
+      },(err)=>{
+        message.error(err);
+      });
+    };
+
+    useEffect(()=>{
+      if (!authCtx.isLoggedIn)
+      {
+        message.warning("请先登录！")
+        return;
+      }
+      doQueryUserBasicInfo();
+    }, []);
 
     return (
         <>
             <PageHeader title="用户中心"/>
             <div className="container basic-card">
-                <UserBasicInfoCard userInfo={TestData}/>
+                <UserBasicInfoCard userInfo={userBasicInfo}/>
             </div>
             <div className="container basic-card">
                 <Tabs 
