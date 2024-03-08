@@ -29550,13 +29550,13 @@ export type User = Node & ObjectWithMetadata & {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   accessibleChannels?: Maybe<Array<Channel>>;
-  /** OIDC Account of the user.  */
+  /** The name of the user IODC account. */
   account: Scalars['String']['output'];
   /** List of all user's addresses. */
   addresses: Array<Address>;
   /** The avatar of the user. */
   avatar?: Maybe<Image>;
-  /** Account Balance */
+  /** The balance of the user. */
   balance: Scalars['Int']['output'];
   /**
    * Returns the last open checkout of this user.
@@ -29576,7 +29576,7 @@ export type User = Node & ObjectWithMetadata & {
    * Added in Saleor 3.8.
    */
   checkouts?: Maybe<CheckoutCountableConnection>;
-  /** Continous Login Days of the user.  */
+  /** The continous login days of the user. */
   continuous: Scalars['Int']['output'];
   /** The data when the user create account. */
   dateJoined: Scalars['DateTime']['output'];
@@ -29686,8 +29686,8 @@ export type User = Node & ObjectWithMetadata & {
   updatedAt: Scalars['DateTime']['output'];
   /** List of user's permissions. */
   userPermissions?: Maybe<Array<UserPermission>>;
-  /** OIDC User type provided by the OIDC provider.  */
-  user_type: Scalars['String']['output'];
+  /** The type of the user. Defined by the OIDC provider */
+  userType: Scalars['String']['output'];
 };
 
 
@@ -32541,6 +32541,11 @@ export type OidcTokenFetchMutationVariables = Exact<{
 
 export type OidcTokenFetchMutation = { __typename?: 'Mutation', externalObtainAccessTokens?: { __typename?: 'ExternalObtainAccessTokens', token?: string | null, csrfToken?: string | null, refreshToken?: string | null, user?: { __typename?: 'User', id: string, account: string, balance: number, email: string, lastLogin?: any | null, firstName: string, continuous: number, avatar?: { __typename?: 'Image', url: string, alt?: string | null } | null } | null, errors: Array<{ __typename?: 'AccountError', message?: string | null, field?: string | null, code: AccountErrorCode, addressType?: AddressTypeEnum | null }>, accountErrors: Array<{ __typename?: 'AccountError', addressType?: AddressTypeEnum | null, code: AccountErrorCode, field?: string | null, message?: string | null }> } | null };
 
+export type UserBasicInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserBasicInfoQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string, balance: number, userType: string, continuous: number, avatar?: { __typename?: 'Image', url: string } | null } | null };
+
 
 export const OidcRedirectDocument = gql`
     mutation OIDCRedirect($input: JSONString!, $pluginId: String!) {
@@ -32649,3 +32654,51 @@ export function useOidcTokenFetchMutation(baseOptions?: Apollo.MutationHookOptio
 export type OidcTokenFetchMutationHookResult = ReturnType<typeof useOidcTokenFetchMutation>;
 export type OidcTokenFetchMutationResult = Apollo.MutationResult<OidcTokenFetchMutation>;
 export type OidcTokenFetchMutationOptions = Apollo.BaseMutationOptions<OidcTokenFetchMutation, OidcTokenFetchMutationVariables>;
+export const UserBasicInfoDocument = gql`
+    query UserBasicInfo {
+  me {
+    id
+    email
+    firstName
+    lastName
+    balance
+    avatar(format: ORIGINAL, size: 10) {
+      url
+    }
+    userType
+    continuous
+  }
+}
+    `;
+
+/**
+ * __useUserBasicInfoQuery__
+ *
+ * To run a query within a React component, call `useUserBasicInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserBasicInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserBasicInfoQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUserBasicInfoQuery(baseOptions?: Apollo.QueryHookOptions<UserBasicInfoQuery, UserBasicInfoQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserBasicInfoQuery, UserBasicInfoQueryVariables>(UserBasicInfoDocument, options);
+      }
+export function useUserBasicInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserBasicInfoQuery, UserBasicInfoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserBasicInfoQuery, UserBasicInfoQueryVariables>(UserBasicInfoDocument, options);
+        }
+export function useUserBasicInfoSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserBasicInfoQuery, UserBasicInfoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<UserBasicInfoQuery, UserBasicInfoQueryVariables>(UserBasicInfoDocument, options);
+        }
+export type UserBasicInfoQueryHookResult = ReturnType<typeof useUserBasicInfoQuery>;
+export type UserBasicInfoLazyQueryHookResult = ReturnType<typeof useUserBasicInfoLazyQuery>;
+export type UserBasicInfoSuspenseQueryHookResult = ReturnType<typeof useUserBasicInfoSuspenseQuery>;
+export type UserBasicInfoQueryResult = Apollo.QueryResult<UserBasicInfoQuery, UserBasicInfoQueryVariables>;

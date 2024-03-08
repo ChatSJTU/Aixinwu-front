@@ -1,0 +1,14 @@
+query UserBasicInfo {
+  me {
+    id
+    email
+    firstName
+    lastName
+    balance
+    avatar(format: ORIGINAL, size: 10) {
+      url
+    }
+    userType
+    continuous
+  }
+}
