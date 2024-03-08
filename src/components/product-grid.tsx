@@ -14,7 +14,7 @@ const ProductGrid: React.FC<{ products: ProductSummary[], rowNum?: number }> = (
 	};
 
 	return (
-		<div className='product-grid-container' style={{maxHeight: `calc(${rowNum} * (280px + 16px))`}}>
+		<div className='product-grid-container' style={{maxHeight: `calc(${rowNum} * (265px + 16px))`}}>
 			<Row gutter={[16, 16]}>
 				{products.map((product: ProductSummary) => (
 					<Col {...getColSpan()} key={product.product_id}>

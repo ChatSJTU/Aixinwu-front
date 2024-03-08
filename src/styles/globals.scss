@@ -169,7 +169,7 @@ code {
 /* product preview card */
 .preview-card {
     max-width: 165px;
-    height: 280px;
+    height: 265px;
     border: none;
 }
 
@@ -222,6 +222,7 @@ code {
     text-overflow: ellipsis;
     white-space: normal;
     max-height: 42px;
+    font-size: 12px !important;
 }
 
 /* product grid*/
