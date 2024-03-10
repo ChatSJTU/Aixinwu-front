@@ -1,9 +1,12 @@
 import Head from "next/head";
-import {Col, Row, List, Space, Input, Avatar, Skeleton, InputNumber, Typography, Image, Button, Table} from "antd";
+import {Col, Row, List, Space, Input, Avatar, Skeleton, InputNumber, Typography, Image, Button, Table, Divider, Collapse, Menu, Dropdown} from "antd";
 const { Column } = Table;
 import {AxCoin} from "@/components/axcoin";
+import { DownOutlined, EllipsisOutlined } from '@ant-design/icons';
 import React, {useState} from "react";
+import { useEffect } from 'react';
 const { Title, Text, Link, Paragraph } = Typography;
+const { Panel } = Collapse;
 
 interface product {
     id: number,
@@ -35,6 +38,9 @@ function getProductSummary(id: number, itemNumber: number) {
         subtotal: 0
     });
 }
+
+
+
 
 const OrderPageView = () => {
     var data = [
@@ -92,6 +98,83 @@ const OrderPageView = () => {
         );
         setListProduts(newListProduct);
     }
+
+         // 假设data是你的商品数据数组
+         const [totalCost, setTotalCost] = useState(0);
+
+         // 计算总价
+         const calculateTotalCost = () => {
+             const total = data.reduce((acc, item) => {
+                 return acc + (item.cost * item.itemNumber);
+             }, 0);
+             setTotalCost(total);
+         };
+    
+          // 在组件挂载时计算总价
+        useEffect(() => {
+            calculateTotalCost();
+        }, []);
+    
+        // 更多地址
+        // const menu = (
+        //     <Menu>
+        //       <Menu.Item key="0">
+        //         <a href="#">地址1</a>
+        //       </Menu.Item>
+        //       <Menu.Item key="1">
+        //         <a href="#">地址2</a>
+        //       </Menu.Item>
+        //       <Menu.Item key="2">
+        //         <a href="#">地址3</a>
+        //       </Menu.Item>
+        //       {/* 添加更多地址 */}
+        //     </Menu>
+        //   );
+    
+        const addresses = [
+            {
+              name: '姚嘉豪',
+              phone: '18838868188',
+              address: '上海交通大学闵行校区思源湖'
+            },
+            {
+                name: '姚嘉豪',
+                phone: '18838868188',
+                address: '上海交通大学闵行校区思源湖'
+            },
+            {
+                name: '姚嘉豪',
+                phone: '18838868188',
+                address: '上海交通大学闵行校区思源湖'
+            },
+            {
+                name: '姚嘉豪',
+                phone: '18838868188',
+                address: '上海交通大学闵行校区思源湖'
+            },
+            {
+                name: '姚嘉豪',
+                phone: '18838868188',
+                address: '上海交通大学闵行校区思源湖'
+            },
+            // 添加更多地址
+          ];
+          
+    
+        const menu = (
+            <Menu style={{ maxHeight: '220px',maxWidth:'200px', overflowY: 'auto' }}>
+              {addresses.map((address, index) => (
+                <Menu.Item key={index}>
+                  <p style={{ maxHeight: '300px', overflow: 'auto'}}>
+                    <span>{address.name}</span>
+                    <span>{address.phone}</span>
+                    <br />
+                    <span style={{ fontSize: '12px', color: '#888', overflow: 'hidden', textOverflow: 'ellipsis' }}>{address.address}</span>
+                  </p>
+                </Menu.Item>
+              ))}
+            </Menu>
+          );
 
     return (
         <>
@@ -336,11 +419,57 @@ const OrderPageView = () => {
                         />
                     </div>
                 </Col>
-                <Col span={6}>
+                {/* <Col span={6}>
                     <div className={"container"}>
                         这里会是一个小组件@yjh
                     </div>
-                </Col>
+                </Col> */}
+                
+                
+                <Col span={6}>
+                          <div className={"container"}>
+                              <div> 
+                                  <Collapse  defaultActiveKey={['1']} style={{marginBottom:'0px' }} ghost size="small">                           
+                                        <Panel header = "收货人信息：" key="1"  style={{ maxHeight: '300px', textOverflow: 'ellipsis', fontWeight: 'bold'}}>
+                                        <Dropdown overlay={menu}  trigger={['click']} >
+                                            <Button  type='text'  style={{maxHeight: '300px', overflow: 'auto',fontWeight: 'lighter', height:'auto', }} onClick={e => e.preventDefault()}>                           <Space>
+                                                <Space direction="vertical" size='small' style={{textAlign: 'left'}}>
+                                                    <Space>
+                                                        <span>姚嘉豪 </span>
+                                                        <span>18838868188</span>
+                                                    </Space>
+                                                   <span style={{ fontSize: '12px', color: '#888', overflow: 'hidden', textOverflow: 'ellipsis' }}>上海交通大学闵行校区思源湖</span>
+                                                </Space>
+                                                   <EllipsisOutlined />
+                                               </Space>  
+                                            </Button>
+                                           
+                                            
+                                                {/* <a className="ant-dropdown-link" >
+                                                更多地址 <DownOutlined />
+                                                </a> */}
+                                        </Dropdown>
+                                        </Panel> 
+    
+                                        <Panel header="订单备注" key="2" ghost style={{ maxHeight: '150px', fontWeight: 'bold'}}>
+                                              <Input.TextArea rows={4} style={{maxHeight: '100px', overflow: 'auto'}}/>
+                                        </Panel>  
+
+                                  </Collapse>
+
+                                  <Divider style={{margin: '12px 0'}}/>
+                              
+                                <Space align='center' style={{width: '100%', display: 'flex', justifyContent: 'flex-end'}}>
+                                    
+                                    <Text style={{display: 'flex', alignItems: "center"}}>
+                                    总计： <AxCoin size={16}/> <span style={{color: '#eb2f96'}}>{totalCost}</span>
+                                    </Text>
+                                    <Button type="primary">提交订单</Button>
+                                </Space>
+                              </div>
+                          </div>
+                      </Col> 
+
             </Row>
         </>
     );
