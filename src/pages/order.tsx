@@ -3,7 +3,10 @@ import {Col, Row, List, Space, Input, Avatar, Skeleton, InputNumber, Typography,
 const { Column } = Table;
 import {AxCoin} from "@/components/axcoin";
 import React, {useState} from "react";
+import {Ordering} from "@/components/ordering";
 const { Title, Text, Link, Paragraph } = Typography;
+
+
 
 interface product {
     id: number,
@@ -171,7 +174,7 @@ const OrderPageView = () => {
                                             <Button
                                                 style={{width: '20%', padding: 0}}
                                                 size={"small"}
-                                                type={"ghost"}
+                                                // type={"ghost"}
                                                 // style={{paddingLeft: '10%', paddingRight: '10%'}}
                                                 onClick={()=>onItemNumberMinus(x.id)}
                                                 disabled={x.itemNumber <= 1}
@@ -183,12 +186,16 @@ const OrderPageView = () => {
                                                 size={"small"}
                                                 min={1} max={x.stock} value={x.itemNumber}
                                                 controls={false}
-                                                onChange={(value) => onItemNumberChange(x.id, value)}
+                                                onChange={value => {
+                                                    if (value !== null) {
+                                                        onItemNumberChange(x.id, value);
+                                                    }
+                                                }}  
                                             />
                                             <Button
                                                 style={{width: '20%', padding: 0}}
                                                 size={"small"}
-                                                type={"ghost"}
+                                                // type={"ghost"}
                                                 // style={{paddingLeft: '10%', paddingRight: '10%'}}
                                                 onClick={()=>onItemNumberPlus(x.id)}
                                                 disabled={x.itemNumber >= x.stock}
@@ -253,7 +260,8 @@ const OrderPageView = () => {
                                             </Col>
                                             <Col span={2} style={{display:"flex"}}>
                                                 <Button
-                                                    style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto", textHoverBg: "white"}}
+                                                    // style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto", textHoverBg: "white"}}
+                                                    style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto"}}
                                                     type={"link"}
                                                 >
                                                     <AxCoin size={16}/> <span style={{color: '#eb2f96'}}>{item.cost}</span>
@@ -275,7 +283,11 @@ const OrderPageView = () => {
                                                             size={"small"}
                                                             min={1} max={item.stock} value={item.itemNumber}
                                                             controls={false}
-                                                            onChange={(value) => onItemNumberChange(item.id, value)}
+                                                            onChange={value => {
+                                                                if (value !== null) {
+                                                                    onItemNumberChange(item.id, value);
+                                                                }
+                                                            }}
                                                         />
                                                         <Button
                                                             size={"small"}
@@ -305,7 +317,8 @@ const OrderPageView = () => {
                                             </Col>
                                             <Col span={2} style={{display:"flex"}}>
                                                 <Button
-                                                    style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto", textHoverBg: "white"}}
+                                                    // style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto", textHoverBg: "white"}}
+                                                    style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto"}}
                                                     type={"link"}
                                                 >
                                                     <AxCoin size={16}/> <span style={{color: '#eb2f96'}}>{item.cost * item.itemNumber}</span>
@@ -321,14 +334,6 @@ const OrderPageView = () => {
                                                     删除
                                                 </Button>
                                             </Col>
-                                            {/*<Col span={2} style={{display:"flex"}}>*/}
-                                            {/*    <Button*/}
-                                            {/*        style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto"}}*/}
-                                            {/*        type={"text"}*/}
-                                            {/*    >*/}
-                                            {/*        分享*/}
-                                            {/*    </Button>*/}
-                                            {/*</Col>*/}
                                         </Row>
                                     </List.Item>
                                 </>
@@ -336,11 +341,11 @@ const OrderPageView = () => {
                         />
                     </div>
                 </Col>
+                
                 <Col span={6}>
-                    <div className={"container"}>
-                        这里会是一个小组件@yjh
-                    </div>
+                  <Ordering />
                 </Col>
+
             </Row>
         </>
     );

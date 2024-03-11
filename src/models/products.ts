@@ -46,10 +46,7 @@ export const ProductDetailsExample = {
 export const ProductSummaryExample = {
     image_url: ["https://aixinwu.sjtu.edu.cn/uploads/product/6395/202203_347.jpg"],
     product_name: "新航道2023考研政治900题",
-<<<<<<< HEAD
     product_id: 6395,
-=======
->>>>>>> cart-order
     detailed_product_name: "新航道考研政治2023年徐之明思想政治理论金榜书900题",
     cost: 24,
     stock: 907

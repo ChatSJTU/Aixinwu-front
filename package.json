@@ -12,7 +12,7 @@
   "type": "module",
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.4",
-    "@apollo/client": "^3.9.5",
+    "@apollo/client": "^3.9.6",
     "@svgr/webpack": "^8.1.0",
     "antd": "^5.14.0",
     "graphql": "^16.8.1",
