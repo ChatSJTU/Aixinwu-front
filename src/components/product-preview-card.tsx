@@ -22,13 +22,13 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
                     <Space direction="vertical" size="small" style={{ display: 'flex' }}>
                         <span className='preview-card-title'>{product_name}</span>
                         <Flex justify="space-between" align="center">
-                            <div>
+                            <div style={{whiteSpace: 'nowrap'}}>
                                 <ShoppingCartOutlined />
-                                <Text style={{marginLeft:'3px'}}>{` ${stock}`}</Text>
+                                <Text style={{marginLeft:'2px'}}>{stock}</Text>
                             </div>
-                            <div>
+                            <div style={{whiteSpace: 'nowrap'}}>
                                 <PayCircleOutlined/>
-                                <Text strong style={{marginLeft:'4px'}}>{`${cost.toFixed(2)}`}</Text>
+                                <Text strong style={{marginLeft:'2px'}}>{cost >= 1000 ? cost.toFixed(1) : cost.toFixed(2)}</Text>
                             </div>
                         </Flex>
                         {detailed_product_name &&
