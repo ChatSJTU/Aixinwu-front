@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Card, Image, Typography, Space, Flex } from 'antd'
-import { ShoppingCartOutlined, PayCircleOutlined } from '@ant-design/icons';
+import { ShoppingCartOutlined } from '@ant-design/icons';
+import ThemeContext from "@/contexts/theme";
 
 import { ProductSummaryProps } from "@/models/products";
+import { AxCoin } from "./axcoin";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSummary }) => {
     const { image_url, product_id, product_name, detailed_product_name, cost, stock } = productSummary;
-
+    const themeCtx = useContext(ThemeContext);
     return (
         <div
             className="preview-card-container"
@@ -27,8 +29,8 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
                                 <Text style={{marginLeft:'2px'}}>{stock}</Text>
                             </div>
                             <div style={{whiteSpace: 'nowrap'}}>
-                                <PayCircleOutlined/>
-                                <Text strong style={{marginLeft:'2px'}}>{cost >= 1000 ? cost.toFixed(1) : cost.toFixed(2)}</Text>
+                                <AxCoin size={14}/>
+                                <Text strong style={{marginLeft:'2px', color: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"}}>{cost >= 1000 ? cost.toFixed(1) : cost.toFixed(2)}</Text>
                             </div>
                         </Flex>
                         {detailed_product_name &&
