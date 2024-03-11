@@ -1,13 +1,15 @@
-import { Space, Menu, Button, MenuProps, Dropdown } from 'antd';
-import { SunOutlined, MoonOutlined, UserOutlined, SmileOutlined } from '@ant-design/icons';
+import { Space, Menu, Button, MenuProps, Dropdown, Modal, Input } from 'antd';
+import { SunOutlined, MoonOutlined, UserOutlined, SearchOutlined } from '@ant-design/icons';
 import ThemeContext from '@/contexts/theme';
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useOidcRedirectMutation } from '@/graphql/hooks';
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
 import { AxCoin } from './axcoin';
+
+const { Search } = Input;
 
 const NavBar = () => {
   const router = useRouter();
@@ -16,6 +18,7 @@ const NavBar = () => {
   const client = authCtx.client;
   const [oidcRedirectMutation] = useOidcRedirectMutation({client});
   const message = useContext(MessageContext);
+  const [ searchModalOpen, setSearchModalOpen ] = useState(false);
 
   const items : MenuProps['items'] = [
     {
@@ -85,6 +88,12 @@ const NavBar = () => {
       { label: "预捐赠", value: "/pre-donate" },
   ];
 
+  const handleSearch = (value: string) => {
+    // 处理搜索逻辑
+    console.log(value);
+    setSearchModalOpen(false);
+  };
+
   return (
       <>
           <Space size="large" className="navbar">
@@ -103,6 +112,17 @@ const NavBar = () => {
                   onClick={() => {themeCtx.changeTheme(themeCtx.userTheme === 'light' ? 'dark' : 'light')}}
                   icon = {themeCtx.userTheme === 'light' ? <MoonOutlined /> : <SunOutlined />}
               />
+              <Button type="text" onClick={()=>{setSearchModalOpen(true);}} icon={<SearchOutlined />} />
+              <Modal open={searchModalOpen}
+                title="搜索物品"
+                footer={<br/>}
+                width={800}
+                maskClosable={true}
+                onCancel={()=>{setSearchModalOpen(false);}}
+              >
+                <br />
+                <Search allowClear placeholder="请输入物品名称" onSearch={handleSearch} enterButton />
+              </Modal>
               {
                 authCtx.isLoggedIn ? 
                 <Dropdown menu={{ items }} placement="bottom">
