@@ -3,7 +3,7 @@ import {Col, Row, List, Space, Input, Avatar, Skeleton, InputNumber, Typography,
 const { Column } = Table;
 import {AxCoin} from "@/components/axcoin";
 import React, {useState} from "react";
-// import {Ordering} from "@/components/ordering";
+import {Ordering} from "@/components/ordering";
 const { Title, Text, Link, Paragraph } = Typography;
 
 
@@ -343,7 +343,7 @@ const OrderPageView = () => {
                 </Col>
                 
                 <Col span={6}>
-                  {/* <Ordering /> */}
+                  <Ordering />
                 </Col>
 
             </Row>
