@@ -78,10 +78,8 @@ const ArticleList: React.FC = () => {
             <Row>
                 <Col span={screens.md ? 6 : 24}>
                     <div className="container basic-card">
-                        <Title level={5}>文章分类</Title>
+                        <Title level={5}>分类</Title>
                         <Divider style={{ marginTop: '-10px', marginBottom: '8px' }} />
-                        {/* Display an antd:Menu component, each item shows a string in articleCategories, 
-                            when clicked, wait fetchArticleSummaries(category) to be completed*/}
                         <Menu
                             mode={screens.md ? 'vertical' : 'horizontal'}
                             selectedKeys={[currentCategory]}
@@ -101,7 +99,6 @@ const ArticleList: React.FC = () => {
                     <div className="container basic-card">
                         <Title level={5}>{`共有${articleSummaries.length}篇文章`}</Title>
                         <Divider style={{ marginTop: '-10px', marginBottom: '0px' }} />
-                        {/* Display List of Links whose titles are articleSummaries: title and hrefs are "/articles/${id}" */}
                         <List
                             itemLayout="horizontal"
                             dataSource={articleSummaries}

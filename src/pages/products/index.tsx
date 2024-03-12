@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useState, useEffect} from "react";
 // import Link from "next/link";
-import { Typography, Row, Col, Space, Segmented, Flex } from "antd";
+import { Grid, Typography, Row, Col, Space, Segmented, Flex } from "antd";
 import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
 import { PageHeader } from "@/components/page-header";
 
@@ -10,6 +10,8 @@ const { Title } = Typography;
 const ProductsPage = () => {
     const [coinDirection, setCoinDirection] = useState<string>('up');
     const [selectedSortOption, setSelectedSortOption] = useState<string>('default');
+
+    const screens = Grid.useBreakpoint();
 
     // useEffect(() => {
     //     console.log(selectedSortOption);
@@ -53,12 +55,12 @@ const ProductsPage = () => {
             </Head>
             <PageHeader title="置换专区"/>
             <Row>
-                <Col span={6}>
+                <Col span={screens.md ? 6 : 24}>
                     <div className="container basic-card">
                         <Title level={5}>分类</Title>
                     </div>
                 </Col>
-                <Col span={18}>
+                <Col span={screens.md ? 18 : 24}>
                     <div className="container basic-card">
                         <Flex align="flex-start" justify="space-between" style={{marginTop: '-6px'}}>
                             <Segmented
