@@ -115,7 +115,7 @@ export const Ordering = () => {
                         <Collapse  defaultActiveKey={['1']} style={{marginBottom:'0px' }} ghost size="small">                           
                                 <Panel header = "收货人信息：" key="1"  style={{ maxHeight: '300px', textOverflow: 'ellipsis', fontWeight: 'bold'}}>
                                 <Dropdown overlay={menu}  trigger={['click']} >
-                                    <Button  type='text'  style={{maxHeight: '300px', maxWidth:'200px',overflow: 'auto',fontWeight: 'lighter', height:'auto', }} onClick={e => e.preventDefault()}>                           <Space>
+                                    <Button  type='text'  style={{maxWidth:'14vw', maxHeight: '300px', overflow: 'auto',fontWeight: 'lighter', height:'auto' }} onClick={e => e.preventDefault()}>                           <Space>
                                         <Space direction="vertical" size='small' style={{textAlign: 'left'}}>
                                             <Space>
                                                 <span>李华 </span>
