@@ -155,7 +155,7 @@ const OrderPageView = () => {
                                 align={"center"}
                                 render={(cost) => (
                                     <div style={{display: 'flex', alignItems: "center", justifyContent: "center"}}>
-                                        <AxCoin size={16}/> <span style={{color: '#eb2f96'}}>{cost}</span>
+                                        <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{cost}</span>
                                     </div>
                                 )}
                             />
@@ -215,7 +215,7 @@ const OrderPageView = () => {
                                 width={"10%"}
                                 render={(_: any, x: product) => (
                                     <div style={{display: 'flex', alignItems: "center", justifyContent: "center"}}>
-                                        <AxCoin size={16}/> <span style={{color: '#eb2f96'}}>{x.itemNumber * x.cost}</span>
+                                        <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{x.itemNumber * x.cost}</span>
                                     </div>
                                 )}
                             />
@@ -264,7 +264,7 @@ const OrderPageView = () => {
                                                     style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto"}}
                                                     type={"link"}
                                                 >
-                                                    <AxCoin size={16}/> <span style={{color: '#eb2f96'}}>{item.cost}</span>
+                                                    <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{item.cost}</span>
                                                 {/* 单价 */}
                                                 </Button>
                                             </Col>
@@ -321,7 +321,7 @@ const OrderPageView = () => {
                                                     style={{display: 'flex', alignItems: "center", marginLeft: "auto", marginRight:"auto"}}
                                                     type={"link"}
                                                 >
-                                                    <AxCoin size={16}/> <span style={{color: '#eb2f96'}}>{item.cost * item.itemNumber}</span>
+                                                    <AxCoin size={2}/> <span style={{color: '#eb2f96'}}>{item.cost * item.itemNumber}</span>
                                                 {/* 小记 */}
                                                 </Button>
                                             </Col>
