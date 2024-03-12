@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from 'next/router';
-import { Breadcrumb, Row, Col, Divider, List, Typography, Menu, Spin } from "antd";
+import { Grid, Row, Col, Divider, List, Typography, Menu, Spin, Empty } from "antd";
 
+import { PageHeader } from "@/components/page-header";
 import { ArticleSummaries } from "@/models/article";
 
 const { Title, Link } = Typography;
+const { useBreakpoint } = Grid;
 
 const TestData: ArticleSummaries[] = [{
     "id": 1,
@@ -20,14 +22,15 @@ const TestData: ArticleSummaries[] = [{
 
 const ArticleList: React.FC = () => {
     const router = useRouter();
-    const [articleCategories, setArticleCategories] = useState<string[]>([]);
-    const [articleSummaries, setArticleSummaries] = useState<ArticleSummaries[]>([]);
+    const screens = useBreakpoint();
+    const [articleCategories, setArticleCategories] = useState<{ name: string, id: number }[] | null>(null);
+    const [articleSummaries, setArticleSummaries] = useState<ArticleSummaries[] | null>(null);
     const [currentCategory, setCurrentCategory] = useState<string>('');
 
     const fetchArticleCategories = async () => {
         try {
             // fetch articleCategories(type: string[]) from backend
-            setArticleCategories(['测试分类1', '测试分类2', '测试分类3', '测试分类4', '测试分类5', '测试分类6'])
+            setArticleCategories([{ name: '通知', id: 1 }, { name: '动态', id: 2 }])
         }
         catch (error) {
             console.log(error);
@@ -35,7 +38,7 @@ const ArticleList: React.FC = () => {
         }
     };
 
-    const fetchArticleSummaries = async (articleCategory: string) => {
+    const fetchArticleSummaries = async (articleCategory: number) => {
         try {
             // fetch articleSummarie(type: ArticleSummaries[]) from backend
             setArticleSummaries([...TestData, ...TestData, ...TestData, ...TestData]);
@@ -51,9 +54,9 @@ const ArticleList: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (articleCategories[0]) {
-            setCurrentCategory(articleCategories[0]);
-            fetchArticleSummaries(articleCategories[0]);
+        if (articleCategories && articleCategories[0]) {
+            setCurrentCategory(articleCategories[0].name);
+            fetchArticleSummaries(articleCategories[0].id);
         }
     }, [articleCategories]);
 
@@ -62,57 +65,55 @@ const ArticleList: React.FC = () => {
         fetchArticleSummaries(e.key);
     };
 
-    if (!articleCategories) {
+    if (!articleCategories || !articleSummaries) {
         return <center><Spin size="large" style={{ marginTop: '200px' }} /></center>;
     }
 
     return (
         <>
             <Head>
-                <title>文章总览-上海交通大学绿色爱心屋</title>
+                <title>文章总览 - 上海交通大学绿色爱心屋</title>
             </Head>
-            <Breadcrumb style={{ margin: "4px 12px 4px 12px" }}
-                items={[
-                    { title: <Link href="/">首页</Link> },
-                    { title: <Link href="/articlelist">文章总览</Link> },
-                ]}
-            />
+            <PageHeader title="文章列表" />
             <Row>
-                <Col span={6}>
+                <Col span={screens.md ? 6 : 24}>
                     <div className="container basic-card">
-                        <Title level={4}>分类</Title>
-                        <Divider style={{ marginTop: '-10px', marginBottom: '8px' }}/>
+                        <Title level={5}>文章分类</Title>
+                        <Divider style={{ marginTop: '-10px', marginBottom: '8px' }} />
                         {/* Display an antd:Menu component, each item shows a string in articleCategories, 
                             when clicked, wait fetchArticleSummaries(category) to be completed*/}
                         <Menu
-                            mode="vertical"
+                            mode={screens.md ? 'vertical' : 'horizontal'}
                             selectedKeys={[currentCategory]}
                             onClick={handleMenuClick}
-                            style={{border: 'none'}}
+                            style={{ border: 'none' }}
                         >
                             {articleCategories.map(category => (
-                                <Menu.Item key={category}>{category}</Menu.Item>
+                                <Menu.Item key={category.name}>{category.name}</Menu.Item>
                             ))}
                         </Menu>
+                        {articleCategories.length === 0 &&
+                            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                        }
                     </div>
                 </Col>
-                <Col span={18}>
+                <Col span={screens.md ? 18 : 24}>
                     <div className="container basic-card">
-                        <Title level={4}>文章列表</Title>
-                        <Divider style={{ marginTop: '-10px', marginBottom: '0px' }}/>
+                        <Title level={5}>{`共有${articleSummaries.length}篇文章`}</Title>
+                        <Divider style={{ marginTop: '-10px', marginBottom: '0px' }} />
                         {/* Display List of Links whose titles are articleSummaries: title and hrefs are "/articles/${id}" */}
                         <List
-                        itemLayout="horizontal"
-                        dataSource={articleSummaries}
-                        renderItem={item => (
-                            <List.Item>
-                                <List.Item.Meta
-                                    title={<Link href={`/articles/${item.id}`}>{item.title}</Link>}
-                                    description={item.description}
-                                />
-                            </List.Item>
-                        )}
-                    />
+                            itemLayout="horizontal"
+                            dataSource={articleSummaries}
+                            renderItem={item => (
+                                <List.Item>
+                                    <List.Item.Meta
+                                        title={<Link href={`/articles/${item.id}`}>{item.title}</Link>}
+                                        description={item.description}
+                                    />
+                                </List.Item>
+                            )}
+                        />
                     </div>
                 </Col>
             </Row>
