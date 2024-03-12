@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, Empty } from 'antd';
 import { ProductPreviewCard } from './product-preview-card';
 import { ProductSummary } from "@/models/products";
 
@@ -12,6 +12,10 @@ const ProductGrid: React.FC<{ products: ProductSummary[], rowNum?: number }> = (
 		const xl = 6;  // large screens
 		return { xs, sm, md, lg, xl };
 	};
+
+    if (products.length === 0) {
+        return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+    }
 
 	return (
 		<div className='product-grid-container' style={{maxHeight: `calc(${rowNum} * (265px + 16px))`}}>

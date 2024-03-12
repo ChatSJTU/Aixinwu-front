@@ -1,7 +1,8 @@
 import { createContext, useEffect } from 'react';
 import { ConfigProvider, theme } from 'antd';
 import { LayoutProps } from '@/models/layout';
-import useLocalStorage from "@/hooks/useLocalStorage"
+import useLocalStorage from "@/hooks/useLocalStorage";
+import zhCN from 'antd/locale/zh_CN';
 
 interface ThemeContextType {
   userTheme: string;
@@ -36,6 +37,7 @@ export const ThemeContextProvider = (props : LayoutProps) => {
             algorithm: userTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
             token: { colorPrimary: "#1677ff", colorInfo: "#1677ff" },
         }}
+        locale={zhCN}
       >
         {props.children}
       </ConfigProvider>
