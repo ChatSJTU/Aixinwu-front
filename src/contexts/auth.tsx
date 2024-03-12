@@ -3,6 +3,7 @@ import React, { useCallback, useMemo, useState } from "react"
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client"
 import useLocalStorage from "@/hooks/useLocalStorage"
 import { LayoutProps } from "@/models/layout"
+import { useRouter } from 'next/router'
 
 interface AuthContextType {
   token: string,
@@ -10,6 +11,7 @@ interface AuthContextType {
   isLoggedIn: boolean,
   onLogin: (data: ExternalObtainAccessTokens) => void,
   onLogout: () => void,
+  onLoggedInOr403: () => boolean,
   client: ApolloClient<object> | undefined,
   userInfo: User | undefined
 }
@@ -20,6 +22,7 @@ const AuthContext = React.createContext<AuthContextType>({
   isLoggedIn: false,
   onLogin: (data: ExternalObtainAccessTokens) => {},
   onLogout: () => {},
+  onLoggedInOr403: () => false,
   client: undefined,
   userInfo: undefined
 })
@@ -54,6 +57,7 @@ export const AuthContextProvider = (props : LayoutProps) => {
   const [token, setToken] = useLocalStorage<string>("token", "");
   const [exp, setExp] = useLocalStorage<number>("expTime", 0);
   const [userInfo, setUserInfo] = useState<User>({} as User);
+  const router = useRouter();
   
   const isLoggedIn = (!!token) && (calculateRemainDuration(exp) > 0)
 
@@ -76,12 +80,22 @@ export const AuthContextProvider = (props : LayoutProps) => {
     location.reload();
   }, [])
 
+  const loggedInOr403 = () => {
+    if (!isLoggedIn)
+      {
+        router.push('/403');
+        return false;
+      }
+    return true;
+  }
+
   const contextValue = {
     token: token || "",
     refreshToken: refreshToken || "",
     isLoggedIn: isLoggedIn,
     onLogin: loginHandler,
     onLogout: logoutHandler,
+    onLoggedInOr403: loggedInOr403,
     client: client,
     userInfo: userInfo
   }

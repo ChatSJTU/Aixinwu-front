@@ -76,11 +76,7 @@ const UserLayout: React.FC<LayoutProps> = ({ children }) => {
     };
 
     useEffect(()=>{
-      if (!authCtx.isLoggedIn)
-      {
-        message.warning("请先登录！")
-        return;
-      }
+      if (!authCtx.onLoggedInOr403()) return;
       doQueryUserBasicInfo();
     }, []);
 
