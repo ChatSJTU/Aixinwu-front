@@ -141,6 +141,18 @@ code {
     border: 0;
 }
 
+.modal-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  
+    .ant-input-affix-wrapper,
+    .ant-menu-vertical { 
+      width: 100%;
+      min-width: 0;
+    }
+}
+
 /* homepage */
 .homebanner {
     height: calc(100% - 24px);

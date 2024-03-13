@@ -1,4 +1,4 @@
-import { Space, Menu, Button, MenuProps, Dropdown, Modal, Input } from 'antd';
+import { Space, Menu, Button, MenuProps, Dropdown, Modal, Input, Typography } from 'antd';
 import { SunOutlined, MoonOutlined, UserOutlined, SearchOutlined } from '@ant-design/icons';
 import ThemeContext from '@/contexts/theme';
 import { useRouter } from "next/router";
@@ -9,6 +9,7 @@ import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
 import { AxCoin } from './axcoin';
 
+const { Title, Text } = Typography;
 const { Search } = Input;
 
 const NavBar = () => {
@@ -19,6 +20,7 @@ const NavBar = () => {
   const [oidcRedirectMutation] = useOidcRedirectMutation({client});
   const message = useContext(MessageContext);
   const [ searchModalOpen, setSearchModalOpen ] = useState(false);
+  const [ searchText, setSearchText ] = useState<string>('');
 
   const items : MenuProps['items'] = [
     {
@@ -94,18 +96,23 @@ const NavBar = () => {
     setSearchModalOpen(false);
   };
 
+  const handleSearchMenuClick = (e: any) => {
+    handleSearch(e.key);
+  };
+
   return (
       <>
           <Space size="large" className="navbar">
               <Link href="/" className="title">SJTU 爱心屋</Link>
-              <Menu className="menu"
+              <div style={{display: 'flex'}}>
+              <Menu className="menu" style={{ minWidth: 0, flex: "auto" }}
                   selectedKeys={[router.pathname]}
                   mode="horizontal"
                   items={menuItems.map((item) => ({
                       key: item.value,
                       label: <Link href={item.value}>{item.label}</Link>,
                   }))}>
-              </Menu>
+              </Menu></div>
           </Space>
           <Space size="middle" className="navbar">
               <Button type="text"
@@ -113,15 +120,37 @@ const NavBar = () => {
                   icon = {themeCtx.userTheme === 'light' ? <MoonOutlined /> : <SunOutlined />}
               />
               <Button type="text" onClick={()=>{setSearchModalOpen(true);}} icon={<SearchOutlined />} />
-              <Modal open={searchModalOpen}
-                title="搜索物品"
-                footer={<br/>}
+              <Modal open={searchModalOpen} style={{ top: 0 }}
+                title={<Title level={4} style={{marginTop: '0px'}}>搜索物品</Title>}
+                footer={null}
                 width={800}
                 maskClosable={true}
-                onCancel={()=>{setSearchModalOpen(false);}}
+                onCancel={()=>{setSearchModalOpen(false);setSearchText('');}}
               >
-                <br />
-                <Search allowClear placeholder="请输入物品名称" onSearch={handleSearch} enterButton />
+                <div className="modal-content-wrapper">
+                <Search
+                  style={{marginTop: '16px'}}
+                  allowClear
+                  enterButton
+                  placeholder="请输入物品名称"
+                  onSearch={handleSearch}
+                  value={searchText}
+                  onChange={(e)=>{setSearchText(e.target.value);console.log(e.target.value);}}
+                />
+                <Space direction='vertical' style={{marginTop: '15px'}}>
+                  <Menu mode='vertical' onClick={handleSearchMenuClick} style={{ minWidth: 0, flex: "auto", border: 'none' }}>
+                    <Menu.Item key={`关于${searchText === '' ? '...' : searchText}的物品`}>
+                      <SearchOutlined/>
+                      <Text>{`搜索关于${searchText === '' ? '...' : searchText}的物品`}</Text>
+                      <Text type='secondary' style={{fontSize: '12px'}}>{`      或按Enter`}</Text>
+                    </Menu.Item>
+                    <Menu.Item key={`关于${searchText === '' ? '...' : searchText}的文章`}>
+                      <SearchOutlined/>
+                      <Text>{`搜索关于${searchText === '' ? '...' : searchText}的文章`}</Text>
+                    </Menu.Item>
+                  </Menu>
+                </Space>
+                </div>
               </Modal>
               {
                 authCtx.isLoggedIn ? 
