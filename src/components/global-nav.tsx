@@ -115,43 +115,46 @@ const NavBar = () => {
               </Menu></div>
           </Space>
           <Space size="middle" className="navbar">
+              <Button type="text" onClick={()=>{setSearchModalOpen(true);}} icon={<SearchOutlined />} />
+              <Modal open={searchModalOpen} style={{ top: 0 }} className="search-modal"
+                closeIcon={null}
+                footer={null}
+                width={800}
+                onCancel={()=>{setSearchModalOpen(false);setSearchText('');}}
+              >
+                <div className="modal-content-wrapper">
+                  <Search
+                    style={{marginTop: '16px'}}
+                    enterButton
+                    placeholder="请输入关键词"
+                    onSearch={handleSearch}
+                    value={searchText}
+                    onChange={(e)=>{setSearchText(e.target.value);console.log(e.target.value);}}
+                  />
+                  {searchText.trim() !== '' && 
+                    <Menu mode='vertical' onClick={handleSearchMenuClick} 
+                      style={{ minWidth: 0, flex: "auto", border: 'none', marginTop: '8px' }}
+                    >
+                      <Menu.Item key={`关于${searchText}的物品`}>
+                        <Space>
+                          <SearchOutlined/>
+                          <Text>{`搜索关于 ${searchText} 的物品`}</Text>
+                          <Text type='secondary' style={{fontSize: '12px'}}>{'或按Enter'}</Text>
+                        </Space>
+                      </Menu.Item>
+                      <Menu.Item key={`关于${searchText}的文章`}>
+                        <Space>
+                          <SearchOutlined/>
+                          <Text>{`搜索关于 ${searchText} 的文章`}</Text>
+                        </Space>
+                      </Menu.Item>
+                    </Menu>}
+                </div>
+              </Modal>
               <Button type="text"
                   onClick={() => {themeCtx.changeTheme(themeCtx.userTheme === 'light' ? 'dark' : 'light')}}
                   icon = {themeCtx.userTheme === 'light' ? <MoonOutlined /> : <SunOutlined />}
               />
-              <Button type="text" onClick={()=>{setSearchModalOpen(true);}} icon={<SearchOutlined />} />
-              <Modal open={searchModalOpen} style={{ top: 0 }}
-                title={<Title level={4} style={{marginTop: '0px'}}>搜索物品</Title>}
-                footer={null}
-                width={800}
-                maskClosable={true}
-                onCancel={()=>{setSearchModalOpen(false);setSearchText('');}}
-              >
-                <div className="modal-content-wrapper">
-                <Search
-                  style={{marginTop: '16px'}}
-                  allowClear
-                  enterButton
-                  placeholder="请输入物品名称"
-                  onSearch={handleSearch}
-                  value={searchText}
-                  onChange={(e)=>{setSearchText(e.target.value);console.log(e.target.value);}}
-                />
-                <Space direction='vertical' style={{marginTop: '15px'}}>
-                  <Menu mode='vertical' onClick={handleSearchMenuClick} style={{ minWidth: 0, flex: "auto", border: 'none' }}>
-                    <Menu.Item key={`关于${searchText === '' ? '...' : searchText}的物品`}>
-                      <SearchOutlined/>
-                      <Text>{`搜索关于${searchText === '' ? '...' : searchText}的物品`}</Text>
-                      <Text type='secondary' style={{fontSize: '12px'}}>{`      或按Enter`}</Text>
-                    </Menu.Item>
-                    <Menu.Item key={`关于${searchText === '' ? '...' : searchText}的文章`}>
-                      <SearchOutlined/>
-                      <Text>{`搜索关于${searchText === '' ? '...' : searchText}的文章`}</Text>
-                    </Menu.Item>
-                  </Menu>
-                </Space>
-                </div>
-              </Modal>
               {
                 authCtx.isLoggedIn ? 
                 <Dropdown menu={{ items }} placement="bottom">
