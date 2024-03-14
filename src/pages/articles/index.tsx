@@ -110,7 +110,7 @@ const ArticleList: React.FC = () => {
                                             <Flex justify="space-between" align="flex-start" style={{ height: '24px', marginTop: '5px' }}>
                                                 <Link className="primary-text" href={`/articles/${item.id}`}>{item.title}</Link>
                                                 <div>
-                                                    <CalendarOutlined/>
+                                                    <CalendarOutlined className="secondary-text"/>
                                                     <Text type="secondary" style={{ fontWeight: 'normal', marginLeft: '4px' }}>
                                                         {new Date(item.publish_time).toISOString().split('T')[0]}
                                                     </Text>
