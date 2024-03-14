@@ -4,86 +4,40 @@ import {AxCoin} from "@/components/axcoin";
 import React from "react";
 import { useState } from 'react';
 import { useEffect } from 'react';
+import {ProductSummary} from "@/models/products";
 const { Title, Text, Link } = Typography;
 const { Panel } = Collapse;
+import {product} from "@/pages/order"
 
-function getProductSummary(id: number, itemNumber: number) {
-    return ({
-        id: id,
-        itemNumber: itemNumber,
-        image_url: ["https://aixinwu.sjtu.edu.cn/uploads/product/6395/202203_347.jpg",
-            "https://aixinwu.sjtu.edu.cn/uploads/product/6394/202203_347.jpg",
-            "https://aixinwu.sjtu.edu.cn/uploads/product/6457/202306_347.jpg"],
-        product_name: "新航道2023考研政治900题",
-        detailed_product_name: "新航道考研政治2023年徐之明思想政治理论金榜书900题新航道考",
-        desc: "//此部分后续可更换为嵌入html代码，需注意DOM-based XSS\n\n商品名称：新航道2023考研政治900题\n出版社：世界知识出版社\n本书有以下特点：\n1.根据考试大纲、2021版新教材编写，考点覆盖，重点突出，讲解详实。\n2.中国人民大学教授、原考研政治命题专家主编。\n3.偶数页题目、奇数页答案对应编排，人性化设计方便考生刷题。",
-        cost: 24,
-        stock: 907,
-
-    });
+export interface OrderPanelProps {
+    totalCost: number;
 }
 
-export const Ordering = () => {
-    const data = [
-        getProductSummary(1, 1),
-        getProductSummary(2, 4),
-    ];
-    
-     // 假设data是你的商品数据数组
-     const [totalCost, setTotalCost] = useState(0);
-
-     // 计算总价
-     const calculateTotalCost = () => {
-         const total = data.reduce((acc, item) => {
-             return acc + (item.cost * item.itemNumber);
-         }, 0);
-         setTotalCost(total);
-     };
-
-      // 在组件挂载时计算总价
-    useEffect(() => {
-        calculateTotalCost();
-    }, []);
-
-    // 更多地址
-    // const menu = (
-    //     <Menu>
-    //       <Menu.Item key="0">
-    //         <a href="#">地址1</a>
-    //       </Menu.Item>
-    //       <Menu.Item key="1">
-    //         <a href="#">地址2</a>
-    //       </Menu.Item>
-    //       <Menu.Item key="2">
-    //         <a href="#">地址3</a>
-    //       </Menu.Item>
-    //       {/* 添加更多地址 */}
-    //     </Menu>
-    //   );
-
+export const OrderPanel: React.FC<OrderPanelProps> = ({totalCost}) => {
+    // 下单界面右边的收货人信息、备注、总计、确认订单的面板
     const addresses = [
         {
-          name: '李华',
+          name: '李一',
           phone: ' 18845678910',
           address: '上海交通大学闵行校区思源湖'
         },
         {
-          name: '李华',
+          name: '李二',
           phone: ' 18845678910',
           address: '上海交通大学闵行校区思源湖'
         },
         {
-          name: '李华',
+          name: '李三',
           phone: ' 18845678910',
           address: '上海交通大学闵行校区思源湖'
         },
         {
-          name: '李华',
+          name: '李四',
           phone: ' 18845678910',
           address: '上海交通大学闵行校区思源湖'
         },
         {
-          name: '李华',
+          name: '李五',
           phone: ' 18845678910',
           address: '上海交通大学闵行校区思源湖'
         },
@@ -156,4 +110,4 @@ export const Ordering = () => {
 }
 
 
-export default Ordering;
+export default OrderPanel;
