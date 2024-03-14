@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from 'next/router';
-import { Grid, Row, Col, Divider, List, Typography, Menu, Spin, Empty } from "antd";
+import { Grid, Row, Col, Divider, List, Typography, Menu, Spin, Empty, Flex } from "antd";
+import { CalendarOutlined } from "@ant-design/icons"
 
 import { PageHeader } from "@/components/page-header";
 import { ArticleSummaries } from "@/models/article";
 
-const { Title, Link } = Typography;
+const { Title, Link, Text } = Typography;
 const { useBreakpoint } = Grid;
 
 const TestData: ArticleSummaries[] = [{
@@ -105,8 +106,18 @@ const ArticleList: React.FC = () => {
                             renderItem={item => (
                                 <List.Item>
                                     <List.Item.Meta
-                                        title={<Link href={`/articles/${item.id}`}>{item.title}</Link>}
-                                        description={item.description}
+                                        title={
+                                            <Flex justify="space-between" align="flex-start" style={{ height: '24px', marginTop: '5px' }}>
+                                                <Link className="primary-text" href={`/articles/${item.id}`}>{item.title}</Link>
+                                                <div>
+                                                    <CalendarOutlined/>
+                                                    <Text type="secondary" style={{ fontWeight: 'normal', marginLeft: '4px' }}>
+                                                        {new Date(item.publish_time).toISOString().split('T')[0]}
+                                                    </Text>
+                                                </div>
+                                            </Flex>
+                                        }
+                                        description={<Text type="secondary">{item.description}</Text>}
                                     />
                                 </List.Item>
                             )}
