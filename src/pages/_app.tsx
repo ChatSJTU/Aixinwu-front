@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     setMounted(true);
   }, []);
 
-  if (!mounted) 
+  if (!mounted)
     return (
       <>
         <Head>
@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <></>
       </>
     );
-  
+
   return (
     <AuthContextProvider>
       <ThemeContextProvider>

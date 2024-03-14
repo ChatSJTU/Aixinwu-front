@@ -35,7 +35,7 @@ export const ThemeContextProvider = (props : LayoutProps) => {
       <ConfigProvider
         theme={{ 
             algorithm: userTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
-            token: { colorPrimary: "#1677ff", colorInfo: "#1677ff" },
+            token: { colorPrimary: "#1677ff", colorInfo: "#1677ff", screenXXLMin: 1920, screenXXL: 2560, },
         }}
         locale={zhCN}
       >
