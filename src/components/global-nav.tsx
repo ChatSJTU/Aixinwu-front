@@ -116,7 +116,7 @@ const NavBar = () => {
           </Space>
           <Space size="middle" className="navbar">
               <Button type="text" onClick={()=>{setSearchModalOpen(true);}} icon={<SearchOutlined />} />
-              <Modal open={searchModalOpen} style={{ top: 0 }} className="search-modal"
+              <Modal open={searchModalOpen} style={{ top: 4 }} className="search-modal"
                 closeIcon={null}
                 footer={null}
                 width={800}
@@ -124,7 +124,7 @@ const NavBar = () => {
               >
                 <div className="modal-content-wrapper">
                   <Search
-                    style={{marginTop: '16px'}}
+                    style={{marginTop: '12px'}}
                     enterButton
                     placeholder="请输入关键词"
                     onSearch={handleSearch}
@@ -135,14 +135,14 @@ const NavBar = () => {
                     <Menu mode='vertical' onClick={handleSearchMenuClick} 
                       style={{ minWidth: 0, flex: "auto", border: 'none', marginTop: '8px' }}
                     >
-                      <Menu.Item key={`关于${searchText}的物品`}>
+                      <Menu.Item style={{ marginInline: "unset", marginBlock: "unset", width: "100%" }} key={`关于${searchText}的物品`}>
                         <Space>
                           <SearchOutlined/>
                           <Text>{`搜索关于 ${searchText} 的物品`}</Text>
-                          <Text type='secondary' style={{fontSize: '12px'}}>{'或按Enter'}</Text>
+                          <Text keyboard>Enter</Text>
                         </Space>
                       </Menu.Item>
-                      <Menu.Item key={`关于${searchText}的文章`}>
+                      <Menu.Item style={{ marginInline: "unset", marginBlock: "unset", width: "100%" }} key={`关于${searchText}的文章`}>
                         <Space>
                           <SearchOutlined/>
                           <Text>{`搜索关于 ${searchText} 的文章`}</Text>
