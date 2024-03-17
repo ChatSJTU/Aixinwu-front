@@ -97,6 +97,13 @@ export const OrderPanel: React.FC<OrderPanelProps> = ({totalCost}) => {
          ))}
        </Menu>
      );
+
+    // 在组件挂载时计算总价
+    useEffect(() => {
+      if (addresses.length > 0 && !selectedAddress) {
+          setSelectedAddress(addresses[0]);
+      }
+  }, [selectedAddress]);
      
       
  
