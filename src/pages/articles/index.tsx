@@ -80,7 +80,7 @@ const ArticleList: React.FC = () => {
                 <Col span={screens.md ? 6 : 24}>
                     <div className="container basic-card">
                         <Title level={5}>分类</Title>
-                        <Divider style={{ marginTop: '-10px', marginBottom: '8px' }} />
+                        <Divider style={{ marginTop: '-6px', marginBottom: '12px' }} />
                         <Menu
                             mode={screens.md ? 'vertical' : 'horizontal'}
                             selectedKeys={[currentCategory]}
@@ -99,24 +99,25 @@ const ArticleList: React.FC = () => {
                 <Col span={screens.md ? 18 : 24}>
                     <div className="container basic-card">
                         <Title level={5}>{`共有${articleSummaries.length}篇文章`}</Title>
-                        <Divider style={{ marginTop: '-10px', marginBottom: '0px' }} />
+                        <Divider style={{ marginTop: '-6px', marginBottom: '4px' }} />
                         <List
                             itemLayout="horizontal"
                             dataSource={articleSummaries}
                             renderItem={item => (
-                                <List.Item>
+                                <List.Item
+                                    extra={
+                                        <Flex justify="space-between" align="flex-start">
+                                            <div>
+                                                <CalendarOutlined className="secondary-text"/>
+                                                <Text type="secondary" style={{ fontWeight: 'normal', marginLeft: '4px' }}>
+                                                    {new Date(item.publish_time).toISOString().split('T')[0]}
+                                                </Text>
+                                            </div>
+                                        </Flex>
+                                    }
+                                >
                                     <List.Item.Meta
-                                        title={
-                                            <Flex justify="space-between" align="flex-start" style={{ height: '24px', marginTop: '5px' }}>
-                                                <Link className="primary-text" href={`/articles/${item.id}`}>{item.title}</Link>
-                                                <div>
-                                                    <CalendarOutlined className="secondary-text"/>
-                                                    <Text type="secondary" style={{ fontWeight: 'normal', marginLeft: '4px' }}>
-                                                        {new Date(item.publish_time).toISOString().split('T')[0]}
-                                                    </Text>
-                                                </div>
-                                            </Flex>
-                                        }
+                                        title={<a href={`/articles/${item.id}`}>{item.title}</a>}
                                         description={<Text type="secondary">{item.description}</Text>}
                                     />
                                 </List.Item>
