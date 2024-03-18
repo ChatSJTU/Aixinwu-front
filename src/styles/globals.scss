@@ -144,11 +144,11 @@ code {
     display: flex;
     flex-direction: column;
     width: 100%;
-  
+
     .ant-input-affix-wrapper,
-    .ant-menu-vertical { 
-      width: 100%;
-      min-width: 0;
+    .ant-menu-vertical {
+        width: 100%;
+        min-width: 0;
     }
 }
 
@@ -160,6 +160,26 @@ code {
 .container.homebanner .ant-carousel {
     border-radius: 7px;
     overflow: hidden;
+}
+
+.link-container-ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 170px;
+    display: block;
+}
+
+.link-ellipsis{
+    @include themify {
+        color: themed('primary-text-color') !important;
+    }
+
+    &:hover {
+        @include themify {
+            color: themed('secondary-ant-color') !important;
+        }
+    }
 }
 
 /* basic card */

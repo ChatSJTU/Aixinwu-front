@@ -108,7 +108,7 @@ const ArticleList: React.FC = () => {
                                     extra={
                                         <Flex justify="space-between" align="flex-start">
                                             <div>
-                                                <CalendarOutlined className="secondary-text"/>
+                                                <CalendarOutlined className="secondary-text" />
                                                 <Text type="secondary" style={{ fontWeight: 'normal', marginLeft: '4px' }}>
                                                     {new Date(item.publish_time).toISOString().split('T')[0]}
                                                 </Text>
@@ -117,7 +117,11 @@ const ArticleList: React.FC = () => {
                                     }
                                 >
                                     <List.Item.Meta
-                                        title={<a href={`/articles/${item.id}`}>{item.title}</a>}
+                                        title={
+                                            <div className="link-container-ellipsis" style={{maxWidth: '800px'}}>
+                                                <Link className="link-ellipsis" href={`/articles/${item.id}`} target="_blank">{item.title}</Link>
+                                            </div>
+                                        }
                                         description={<Text type="secondary">{item.description}</Text>}
                                     />
                                 </List.Item>
