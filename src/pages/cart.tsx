@@ -220,7 +220,7 @@ export const OrderPageView = () => {
                 <title>预捐赠 - 上海交通大学绿色爱心屋</title>
             </Head>
             <Row>
-                <Col span={18}>
+                <Col  xs={24} sm={24} md={18}>
                     <div className={"container"}>
                         <Table
                             rowSelection={rowSelection}
@@ -358,20 +358,18 @@ export const OrderPageView = () => {
                     
                 </Col>
                 
-                <Col span={6}>
+                <Col xs={24} sm={24} md={6}>
                 <Affix offsetTop={top}>
                 {/* <Ordering selectedProducts={selectedProducts} /> */}
                 <div className={"container"}>
                     <div> 
                         {/* 地址 */}
-                        
-
                                 <Collapse defaultActiveKey={["1"]} style={{ marginBottom: "13px" }} ghost size="small">
                                     <Panel header="收货人信息：" key="1" style={{ maxHeight: "300px", textOverflow: "ellipsis", fontWeight: "bold" }}>
                                     <Dropdown overlay={menu} trigger={["click"]}>
                                         {/* 点击选择更多地址 */}
                                         
-                                        <Button type="text" style={{ maxWidth: "14vw", maxHeight: "300px", overflow: "auto", fontWeight: "lighter", height: "auto" }}>
+                                        <Button type="text" style={{ maxWidth: "23vmin", maxHeight: "300px", overflow: "auto", fontWeight: "lighter", height: "auto" }}>
                                         <Space>
                                             <Space direction="vertical" size="small" style={{ textAlign: "left" }}>
                                                 <Space>
@@ -381,7 +379,7 @@ export const OrderPageView = () => {
                                             <span style={{ fontSize: "12px", color: "#888", overflow: "hidden", textOverflow: "ellipsis" }}>{selectedAddress ? selectedAddress.address : ""}</span>
                                             
                                             </Space>                                                                                 
-                                            <EllipsisOutlined />
+                                                <EllipsisOutlined/>
                                         </Space>  
                                         </Button>
                                            
