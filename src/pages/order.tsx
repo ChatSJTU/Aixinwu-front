@@ -102,7 +102,7 @@ const OrderPageView = () => {
                 <title>预捐赠 - 上海交通大学绿色爱心屋</title>
             </Head>
             <Row>
-                <Col span={18}>
+                <Col xs={24} sm={24} md={18}>
                     <OrderProductList
                         OrderListProducts={listProducts}
                         onClickDelete={onClickDelete}
@@ -112,7 +112,7 @@ const OrderPageView = () => {
                     />
                 </Col>
                 
-                <Col span={6}>
+                <Col xs={24} sm={24} md={6}>
                   <OrderPanel totalCost={totalCost}/>
                 </Col>
 
