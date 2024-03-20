@@ -1,15 +1,19 @@
+import exp from "node:constants";
+
+export interface OrderProductName {
+    product_name: string,
+    detailed_product_name: string,
+}
 export interface OrderProduct {
     id: number,
     itemNumber: number,
     image_url: string[],
-    pruduct : {
-        product_name: string,
-        detailed_product_name: string
-    }
+    product: OrderProductName,
     cost: number
     stock: number
     subtotal: number
 }
+
 
 export interface OrderProductSingleProps {
     id: number;
