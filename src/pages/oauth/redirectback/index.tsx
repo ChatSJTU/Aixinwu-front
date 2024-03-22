@@ -6,43 +6,26 @@ import { useContext, useEffect, useState } from "react";
 import { SmileOutlined, FrownOutlined } from '@ant-design/icons';
 import Head from "next/head";
 import { MessageContext } from "@/contexts/message";
+import { fetchToken } from "@/services/oauth";
 
 const OauthRedirctBack = () => {
     const router = useRouter();
     const authCtx = useContext(AuthContext);
     const client = authCtx.client;
-    const [oidcFetchTokenMutation] = useOidcTokenFetchMutation({client});
     const [isError, setIsError] = useState<boolean>(false);
     const [errMessage, setErrMessage] = useState<string>("");
     const message = useContext(MessageContext);
 
     const doFetchToken = (code: string, state: string) => {
-      oidcFetchTokenMutation({
-        variables: {
-          input: JSON.stringify({
-            code: code,
-            state: state,
-          }), 
-          pluginId: "aixinwu.authentication.openidconnect"
-        }
-      }).then((value) => {
-        if (!value.data || 
-            !value.data.externalObtainAccessTokens) {
-          throw "认证失败";
-        }
-        if (value.data.externalObtainAccessTokens.errors.length != 0)
-        {
-          throw value.data.externalObtainAccessTokens.errors[0].message;
-        }
-        return value;
-      }).then((value) => {
-        authCtx.onLogin(value.data?.externalObtainAccessTokens! as ExternalObtainAccessTokens)
-        router.push('/', undefined, { shallow: true })
-      },(err)=>{
-        message.error(err);
-        setErrMessage(err);
-        setIsError(true);
-      });
+      fetchToken(client!, code, state)
+        .then((data) => {
+          authCtx.onLogin(data);
+          router.push('/', undefined, { shallow: true })
+        },(err)=>{
+          message.error(err);
+          setErrMessage(err);
+          setIsError(true);
+        });
     };
 
     useEffect(()=>{

@@ -3,11 +3,12 @@ import { SunOutlined, MoonOutlined, UserOutlined, SearchOutlined } from '@ant-de
 import ThemeContext from '@/contexts/theme';
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useContext, useState } from 'react';
-import { useOidcRedirectMutation } from '@/graphql/hooks';
+import { useContext, useEffect, useState } from 'react';
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
 import { AxCoin } from './axcoin';
+import { fetchUserBasicInfo } from '@/services/user';
+import { externalLogin } from '@/services/oauth';
 
 const { Title, Text } = Typography;
 const { Search } = Input;
@@ -17,7 +18,6 @@ const NavBar = () => {
   const themeCtx = useContext(ThemeContext);
   const authCtx = useContext(AuthContext);
   const client = authCtx.client;
-  const [oidcRedirectMutation] = useOidcRedirectMutation({client});
   const message = useContext(MessageContext);
   const [ searchModalOpen, setSearchModalOpen ] = useState(false);
   const [ searchText, setSearchText ] = useState<string>('');
@@ -28,7 +28,7 @@ const NavBar = () => {
       label: (
         <a target="_blank" rel="noopener noreferrer">
           <span>已登录：</span>
-          <span>{authCtx.userInfo?.account}</span>
+          <span>{authCtx.userInfo?.name}</span>
         </a>
       ),
     },
@@ -51,36 +51,24 @@ const NavBar = () => {
         </a>
       ),
     },
-  ]
+  ];
 
+  useEffect(()=>{
+    if (authCtx.isLoggedIn)
+    {
+      fetchUserBasicInfo(client!)
+        .then(data => authCtx.updateUserInfo(data))
+        .catch(err => message.error(err));
+    }
+  }, [authCtx.isLoggedIn]);
+  
   const doExternalLogin = () => {
-    oidcRedirectMutation({
-      variables: {
-        input: JSON.stringify({
-          redirectUri: window.location.origin + router.basePath + "/oauth/redirectback"
-        }),
-        pluginId: "aixinwu.authentication.openidconnect"
-      }
-    }).then((value) => {
-      if (!value.data || 
-          !value.data.externalAuthenticationUrl) {
-        throw "认证失败";
-      }
-      if (value.data.externalAuthenticationUrl.errors.length != 0)
-      {
-        throw value.data.externalAuthenticationUrl.errors[0].message;
-      }
-      var data = JSON.parse(value.data?.externalAuthenticationUrl?.authenticationData) as AuthenticationData;
-      if (!data.authorizationUrl)
-      {
-        throw "获取数据失败，请稍后重试";
-      }
-      return data;
-    }).then((data) => {
-      window.location.replace(data.authorizationUrl)
-    },(err)=>{
-      message.error(err);
-    });
+    externalLogin(client!, window.location.origin + router.basePath + "/oauth/redirectback")
+      .then((data) => {
+        window.location.replace(data)
+      },(err)=>{
+        message.error(err);
+      });
   };
 
   const menuItems = [

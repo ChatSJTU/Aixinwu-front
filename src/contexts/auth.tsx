@@ -4,23 +4,27 @@ import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client"
 import useLocalStorage from "@/hooks/useLocalStorage"
 import { LayoutProps } from "@/models/layout"
 import { useRouter } from 'next/router'
+import { Token } from "@/models/token"
+import { UserBasicInfo } from "@/models/user"
 
 interface AuthContextType {
   token: string,
   refreshToken: string,
   isLoggedIn: boolean,
-  onLogin: (data: ExternalObtainAccessTokens) => void,
+  onLogin: (data: Token) => void,
+  updateUserInfo: (user: UserBasicInfo) => void,
   onLogout: () => void,
   onLoggedInOr403: () => boolean,
   client: ApolloClient<object> | undefined,
-  userInfo: User | undefined
+  userInfo: UserBasicInfo | undefined
 }
 
 const AuthContext = React.createContext<AuthContextType>({
   token: "",
   refreshToken: "",
   isLoggedIn: false,
-  onLogin: (data: ExternalObtainAccessTokens) => {},
+  onLogin: (data: Token) => {},
+  updateUserInfo: (user: UserBasicInfo) => {},
   onLogout: () => {},
   onLoggedInOr403: () => false,
   client: undefined,
@@ -56,7 +60,7 @@ export const AuthContextProvider = (props : LayoutProps) => {
   const [refreshToken, setRefreshToken] = useLocalStorage<string>("refreshToken", "");
   const [token, setToken] = useLocalStorage<string>("token", "");
   const [exp, setExp] = useLocalStorage<number>("expTime", 0);
-  const [userInfo, setUserInfo] = useState<User>({} as User);
+  const [userInfo, setUserInfo] = useState<UserBasicInfo>({} as UserBasicInfo);
   const router = useRouter();
   
   const isLoggedIn = (!!token) && (calculateRemainDuration(exp) > 0)
@@ -65,18 +69,17 @@ export const AuthContextProvider = (props : LayoutProps) => {
     return createGraphqlClient(token, isLoggedIn);
   }, [token, isLoggedIn]);
 
-  const loginHandler = (data: ExternalObtainAccessTokens) => {
+  const loginHandler = (data: Token) => {
     setRefreshToken(data.refreshToken!)
     setToken(data.token!)
     setExp((new Date().getTime() + 1800*1000))
-    setUserInfo(data.user!)
   }
 
   const logoutHandler = useCallback(() => {
     setRefreshToken("")
     setToken("")
     setExp(1)
-    setUserInfo({} as User)
+    setUserInfo({} as UserBasicInfo)
     location.reload();
   }, [])
 
@@ -89,11 +92,16 @@ export const AuthContextProvider = (props : LayoutProps) => {
     return true;
   }
 
+  const updateUserInfo = (user: UserBasicInfo) => {
+    setUserInfo(user);
+  };
+
   const contextValue = {
     token: token || "",
     refreshToken: refreshToken || "",
     isLoggedIn: isLoggedIn,
     onLogin: loginHandler,
+    updateUserInfo: updateUserInfo,
     onLogout: logoutHandler,
     onLoggedInOr403: loggedInOr403,
     client: client,

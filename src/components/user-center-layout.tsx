@@ -8,7 +8,7 @@ import { PageHeader } from "@/components/page-header";
 import { UserBasicInfoCard } from '@/components/user-basic-info-card';
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
-import { useUserBasicInfoLazyQuery } from '@/graphql/hooks';
+import { fetchUserBasicInfo } from '@/services/user';
 
 const UserCenterTabs = [
     {
@@ -48,36 +48,15 @@ const UserLayout: React.FC<LayoutProps> = ({ children }) => {
     const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo>({} as UserBasicInfo);
     const authCtx = useContext(AuthContext);
     const client = authCtx.client;
-    const [ userBasicInfoQuery, opts ] = useUserBasicInfoLazyQuery({client});
     const message = useContext(MessageContext);
     
     const handleTabChange = (key : string) => {
         router.push(key);
     };
 
-    const doQueryUserBasicInfo = () => {
-      userBasicInfoQuery().then((value) => {
-        if (!value.data || 
-            !value.data.me) {
-          throw "获取用户数据失败";
-        }
-        return value.data.me;
-      }).then((data) => {
-        setUserBasicInfo({
-            name: data.firstName,
-            email: data.email,
-            type: data.userType,
-            balance: data.balance,
-            continuous_login_days: data.continuous
-        } as UserBasicInfo);
-      },(err)=>{
-        message.error(err);
-      });
-    };
-
     useEffect(()=>{
       if (!authCtx.onLoggedInOr403()) return;
-      doQueryUserBasicInfo();
+      fetchUserBasicInfo(client!).then(data => setUserBasicInfo(data)).catch(err => message.error(err));
     }, []);
 
     return (
