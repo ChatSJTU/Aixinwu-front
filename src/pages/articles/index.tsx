@@ -11,27 +11,24 @@ const { Title, Link, Text } = Typography;
 const { useBreakpoint } = Grid;
 
 const TestData: ArticleSummaries[] = [{
-    "id": 1,
+    "id": "1",
     "title": "Hello Markdown",
     "description": "这是一篇示例文章，在这里你可以看到常用页面元素的显示效果。",
-    "author": "aixinwu",
     "publish_time": "2024-02-11T15:19:38.2493411+08:00",
-    "navigation": [{ name: "通知公告", id: 0 },],
-    "reads_count": 114514,
-    "sort": 1,
+    "navigation": [{ name: "通知公告", id: "0" },],
 }]
 
 const ArticleList: React.FC = () => {
     const router = useRouter();
     const screens = useBreakpoint();
-    const [articleCategories, setArticleCategories] = useState<{ name: string, id: number }[] | null>(null);
+    const [articleCategories, setArticleCategories] = useState<{ name: string, id: string }[] | null>(null);
     const [articleSummaries, setArticleSummaries] = useState<ArticleSummaries[] | null>(null);
     const [currentCategory, setCurrentCategory] = useState<string>('');
 
     const fetchArticleCategories = async () => {
         try {
             // fetch articleCategories(type: string[]) from backend
-            setArticleCategories([{ name: '通知', id: 1 }, { name: '动态', id: 2 }])
+            setArticleCategories([{ name: '通知', id: "1" }, { name: '动态', id: "2" }])
         }
         catch (error) {
             console.log(error);
@@ -39,7 +36,7 @@ const ArticleList: React.FC = () => {
         }
     };
 
-    const fetchArticleSummaries = async (articleCategory: number) => {
+    const fetchArticleSummaries = async (articleCategory: string) => {
         try {
             // fetch articleSummarie(type: ArticleSummaries[]) from backend
             setArticleSummaries([...TestData, ...TestData, ...TestData, ...TestData]);

@@ -1,11 +1,11 @@
 export interface ArticleDetails {
-    id: number;
+    id: string;
     title: string;
     description: string | null;
     author: string;
     content: string;
     publish_time: string;
-    navigation: { name: string; id: number; }[];
+    navigation: { name: string; id: string; }[];
     reads_count: number;
     sort: number;
     next: { id: number; title: string; } | null;
@@ -13,12 +13,10 @@ export interface ArticleDetails {
 }
 
 export interface ArticleSummaries {
-    id: number;
+    id: string;
     title: string;
     description: string | null;
-    author: string;
     publish_time: string;
-    navigation: { name: string; id: number; }[];
-    reads_count: number;
-    sort: number;
+    navigation: { name: string; id: string; }[];
+    sort?: number;
 }
