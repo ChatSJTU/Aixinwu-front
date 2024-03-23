@@ -32541,6 +32541,11 @@ export type OidcTokenFetchMutationVariables = Exact<{
 
 export type OidcTokenFetchMutation = { __typename?: 'Mutation', externalObtainAccessTokens?: { __typename?: 'ExternalObtainAccessTokens', token?: string | null, csrfToken?: string | null, refreshToken?: string | null, user?: { __typename?: 'User', id: string, account: string, balance: number, email: string, lastLogin?: any | null, firstName: string, continuous: number, avatar?: { __typename?: 'Image', url: string, alt?: string | null } | null } | null, errors: Array<{ __typename?: 'AccountError', message?: string | null, field?: string | null, code: AccountErrorCode, addressType?: AddressTypeEnum | null }>, accountErrors: Array<{ __typename?: 'AccountError', addressType?: AddressTypeEnum | null, code: AccountErrorCode, field?: string | null, message?: string | null }> } | null };
 
+export type ArticleCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ArticleCategoriesQuery = { __typename?: 'Query', pageTypes?: { __typename?: 'PageTypeCountableConnection', edges: Array<{ __typename?: 'PageTypeCountableEdge', node: { __typename?: 'PageType', id: string, name: string } }> } | null };
+
 export type UserBasicInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -32654,6 +32659,50 @@ export function useOidcTokenFetchMutation(baseOptions?: Apollo.MutationHookOptio
 export type OidcTokenFetchMutationHookResult = ReturnType<typeof useOidcTokenFetchMutation>;
 export type OidcTokenFetchMutationResult = Apollo.MutationResult<OidcTokenFetchMutation>;
 export type OidcTokenFetchMutationOptions = Apollo.BaseMutationOptions<OidcTokenFetchMutation, OidcTokenFetchMutationVariables>;
+export const ArticleCategoriesDocument = gql`
+    query ArticleCategories {
+  pageTypes(first: 8, sortBy: {direction: ASC, field: NAME}) {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useArticleCategoriesQuery__
+ *
+ * To run a query within a React component, call `useArticleCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useArticleCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useArticleCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useArticleCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<ArticleCategoriesQuery, ArticleCategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ArticleCategoriesQuery, ArticleCategoriesQueryVariables>(ArticleCategoriesDocument, options);
+      }
+export function useArticleCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticleCategoriesQuery, ArticleCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ArticleCategoriesQuery, ArticleCategoriesQueryVariables>(ArticleCategoriesDocument, options);
+        }
+export function useArticleCategoriesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ArticleCategoriesQuery, ArticleCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ArticleCategoriesQuery, ArticleCategoriesQueryVariables>(ArticleCategoriesDocument, options);
+        }
+export type ArticleCategoriesQueryHookResult = ReturnType<typeof useArticleCategoriesQuery>;
+export type ArticleCategoriesLazyQueryHookResult = ReturnType<typeof useArticleCategoriesLazyQuery>;
+export type ArticleCategoriesSuspenseQueryHookResult = ReturnType<typeof useArticleCategoriesSuspenseQuery>;
+export type ArticleCategoriesQueryResult = Apollo.QueryResult<ArticleCategoriesQuery, ArticleCategoriesQueryVariables>;
 export const UserBasicInfoDocument = gql`
     query UserBasicInfo {
   me {

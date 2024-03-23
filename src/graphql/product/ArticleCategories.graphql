@@ -1,0 +1,10 @@
+query ArticleCategories {
+  pageTypes(first: 8, sortBy: {direction: ASC, field: NAME}) {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}
