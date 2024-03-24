@@ -13,13 +13,6 @@ import { fetchArticleCategories, fetchArticles } from "@/services/article";
 const { Title, Link, Text } = Typography;
 const { useBreakpoint } = Grid;
 
-const TestData: ArticleSummaries[] = [{
-    "id": "1",
-    "title": "Hello Markdown",
-    "description": "这是一篇示例文章，在这里你可以看到常用页面元素的显示效果。",
-    "publish_time": "2024-02-11T15:19:38.2493411+08:00",
-}]
-
 const ArticleList: React.FC = () => {
     const router = useRouter();
     const screens = useBreakpoint();
@@ -28,26 +21,28 @@ const ArticleList: React.FC = () => {
     const client = authCtx.client;
     const [articleCategories, setArticleCategories] = useState<{ name: string, id: string }[] | null>(null);
     const [articleSummaries, setArticleSummaries] = useState<ArticleSummaries[] | null>(null);
-    const [currentCategoryID, setcurrentCategoryID] = useState<string>('');
+    const [currentCategoryID, setcurrentCategoryID] = useState<string | null>(null);
 
     useEffect(() => {
         fetchArticleCategories(client!)
-            .then(res => setArticleCategories(res))
-            .catch(err =>  message.error(err));
-        if (articleCategories && articleCategories[0]) setcurrentCategoryID(articleCategories[0].id);
+            .then(res => {
+                setArticleCategories(res);
+                setcurrentCategoryID(res[0].id);
+            })
+            .catch(err => message.error(err));
     }, []);
 
     useEffect(() => {
         if (currentCategoryID) {
-            fetchArticles(client!,currentCategoryID, 20, false)
+            fetchArticles(client!, currentCategoryID, 20, false)
                 .then(res => setArticleSummaries(res))
-                .catch(err =>  message.error(err))
+                .catch(err => message.error(err))
         }
+
     }, [currentCategoryID]);
 
     const handleMenuClick = (e: any) => {
         setcurrentCategoryID(e.key);
-        fetchArticles(client!,e.key, 20, false);
     };
 
     if (!articleCategories || !articleSummaries) {
@@ -67,7 +62,7 @@ const ArticleList: React.FC = () => {
                         <Divider style={{ marginTop: '-6px', marginBottom: '12px' }} />
                         <Menu
                             mode={screens.md ? 'vertical' : 'horizontal'}
-                            selectedKeys={[currentCategoryID]}
+                            selectedKeys={[currentCategoryID!]}
                             onClick={handleMenuClick}
                             style={{ border: 'none' }}
                         >
@@ -102,7 +97,7 @@ const ArticleList: React.FC = () => {
                                 >
                                     <List.Item.Meta
                                         title={
-                                            <div className="link-container-ellipsis" style={{maxWidth: '800px'}}>
+                                            <div className="link-container-ellipsis" style={{ maxWidth: '800px' }}>
                                                 <Link className="link-ellipsis" href={`/articles/${item.id}`} target="_blank">{item.title}</Link>
                                             </div>
                                         }
