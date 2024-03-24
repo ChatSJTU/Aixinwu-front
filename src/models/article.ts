@@ -5,9 +5,8 @@ export interface ArticleDetails {
     author: string;
     content: string;
     publish_time: string;
-    navigation: { name: string; id: string; }[];
     reads_count: number;
-    sort: number;
+    cursor: string;
     next: { id: number; title: string; } | null;
     previous: { id: number; title: string; } | null;
 }
@@ -17,6 +16,4 @@ export interface ArticleSummaries {
     title: string;
     description: string | null;
     publish_time: string;
-    navigation: { name: string; id: string; }[];
-    sort?: number;
 }

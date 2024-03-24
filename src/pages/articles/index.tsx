@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Head from "next/head";
 import { useRouter } from 'next/router';
 import { Grid, Row, Col, Divider, List, Typography, Menu, Spin, Empty, Flex } from "antd";
 import { CalendarOutlined } from "@ant-design/icons"
 
+import AuthContext from '@/contexts/auth';
+import { MessageContext } from '@/contexts/message';
 import { PageHeader } from "@/components/page-header";
 import { ArticleSummaries } from "@/models/article";
+import { fetchArticleCategories, fetchArticles } from "@/services/article";
 
 const { Title, Link, Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -15,52 +18,36 @@ const TestData: ArticleSummaries[] = [{
     "title": "Hello Markdown",
     "description": "这是一篇示例文章，在这里你可以看到常用页面元素的显示效果。",
     "publish_time": "2024-02-11T15:19:38.2493411+08:00",
-    "navigation": [{ name: "通知公告", id: "0" },],
 }]
 
 const ArticleList: React.FC = () => {
     const router = useRouter();
     const screens = useBreakpoint();
+    const authCtx = useContext(AuthContext);
+    const message = useContext(MessageContext);
+    const client = authCtx.client;
     const [articleCategories, setArticleCategories] = useState<{ name: string, id: string }[] | null>(null);
     const [articleSummaries, setArticleSummaries] = useState<ArticleSummaries[] | null>(null);
-    const [currentCategory, setCurrentCategory] = useState<string>('');
-
-    const fetchArticleCategories = async () => {
-        try {
-            // fetch articleCategories(type: string[]) from backend
-            setArticleCategories([{ name: '通知', id: "1" }, { name: '动态', id: "2" }])
-        }
-        catch (error) {
-            console.log(error);
-            router.push('/404');
-        }
-    };
-
-    const fetchArticleSummaries = async (articleCategory: string) => {
-        try {
-            // fetch articleSummarie(type: ArticleSummaries[]) from backend
-            setArticleSummaries([...TestData, ...TestData, ...TestData, ...TestData]);
-        }
-        catch (error) {
-            console.log(error);
-            router.push('/404');
-        }
-    };
+    const [currentCategoryID, setcurrentCategoryID] = useState<string>('');
 
     useEffect(() => {
-        fetchArticleCategories();
+        fetchArticleCategories(client!)
+            .then(res => setArticleCategories(res))
+            .catch(err =>  message.error(err));
+        if (articleCategories && articleCategories[0]) setcurrentCategoryID(articleCategories[0].id);
     }, []);
 
     useEffect(() => {
-        if (articleCategories && articleCategories[0]) {
-            setCurrentCategory(articleCategories[0].name);
-            fetchArticleSummaries(articleCategories[0].id);
+        if (currentCategoryID) {
+            fetchArticles(client!,currentCategoryID, 20, false)
+                .then(res => setArticleSummaries(res))
+                .catch(err =>  message.error(err))
         }
-    }, [articleCategories]);
+    }, [currentCategoryID]);
 
     const handleMenuClick = (e: any) => {
-        setCurrentCategory(e.key);
-        fetchArticleSummaries(e.key);
+        setcurrentCategoryID(e.key);
+        fetchArticles(client!,e.key, 20, false);
     };
 
     if (!articleCategories || !articleSummaries) {
@@ -80,12 +67,12 @@ const ArticleList: React.FC = () => {
                         <Divider style={{ marginTop: '-6px', marginBottom: '12px' }} />
                         <Menu
                             mode={screens.md ? 'vertical' : 'horizontal'}
-                            selectedKeys={[currentCategory]}
+                            selectedKeys={[currentCategoryID]}
                             onClick={handleMenuClick}
                             style={{ border: 'none' }}
                         >
                             {articleCategories.map(category => (
-                                <Menu.Item key={category.name}>{category.name}</Menu.Item>
+                                <Menu.Item key={category.id}>{category.name}</Menu.Item>
                             ))}
                         </Menu>
                         {articleCategories.length === 0 &&
@@ -107,7 +94,7 @@ const ArticleList: React.FC = () => {
                                             <div>
                                                 <CalendarOutlined className="secondary-text" />
                                                 <Text type="secondary" style={{ fontWeight: 'normal', marginLeft: '4px' }}>
-                                                    {new Date(item.publish_time).toISOString().split('T')[0]}
+                                                    {item.publish_time.split('T')[0]}
                                                 </Text>
                                             </div>
                                         </Flex>

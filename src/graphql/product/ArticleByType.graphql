@@ -1,0 +1,21 @@
+query ArticleByType($maxFetch: Int = 20, $type: [ID!], $fetchContent: Boolean = false) {
+  pages(
+    first: $maxFetch
+    sortBy: {direction: ASC, field: TITLE}
+    filter: {pageTypes: $type}
+  ) {
+    edges {
+      node {
+        id
+        title
+        created
+        isPublished
+        slug
+        seoDescription
+        publishedAt
+        content @include(if: $fetchContent)
+      }
+      cursor
+    }
+  }
+}
