@@ -32,11 +32,14 @@
     text-align: center;
 }
 
-.basic-card .ant-typography {
+.basic-card .ant-typography:first-of-type {
     margin-top: -6px;
     margin-bottom: 24px;
 }
 
+.basic-card .ant-typography {
+    margin-bottom: 24px;
+}
 .ant-statistic-content-suffix {
     overflow: hidden;
     text-overflow: ellipsis;
