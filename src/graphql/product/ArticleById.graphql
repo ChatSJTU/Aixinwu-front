@@ -1,0 +1,19 @@
+query ArticleById($id: [ID!]) {
+  pages(filter: {ids: $id}, first: 1) {
+    edges {
+      node {
+        id
+        title
+        slug
+        seoDescription
+        publishedAt
+        content
+        pageType {
+          id
+          name
+        }
+      }
+      cursor
+    }
+  }
+}

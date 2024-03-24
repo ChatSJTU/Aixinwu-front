@@ -7,6 +7,7 @@ export interface ArticleDetails {
     publish_time: string;
     reads_count: number;
     cursor: string;
+    navigation: { name: string, id: string };
     next: { id: number; title: string; } | null;
     previous: { id: number; title: string; } | null;
 }

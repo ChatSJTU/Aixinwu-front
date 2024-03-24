@@ -32541,6 +32541,13 @@ export type OidcTokenFetchMutationVariables = Exact<{
 
 export type OidcTokenFetchMutation = { __typename?: 'Mutation', externalObtainAccessTokens?: { __typename?: 'ExternalObtainAccessTokens', token?: string | null, csrfToken?: string | null, refreshToken?: string | null, user?: { __typename?: 'User', id: string, account: string, balance: number, email: string, lastLogin?: any | null, firstName: string, continuous: number, avatar?: { __typename?: 'Image', url: string, alt?: string | null } | null } | null, errors: Array<{ __typename?: 'AccountError', message?: string | null, field?: string | null, code: AccountErrorCode, addressType?: AddressTypeEnum | null }>, accountErrors: Array<{ __typename?: 'AccountError', addressType?: AddressTypeEnum | null, code: AccountErrorCode, field?: string | null, message?: string | null }> } | null };
 
+export type ArticleByIdQueryVariables = Exact<{
+  id?: InputMaybe<Array<Scalars['ID']['input']> | Scalars['ID']['input']>;
+}>;
+
+
+export type ArticleByIdQuery = { __typename?: 'Query', pages?: { __typename?: 'PageCountableConnection', edges: Array<{ __typename?: 'PageCountableEdge', cursor: string, node: { __typename?: 'Page', id: string, title: string, slug: string, seoDescription?: string | null, publishedAt?: any | null, content?: any | null, pageType: { __typename?: 'PageType', id: string, name: string } } }> } | null };
+
 export type ArticleByTypeQueryVariables = Exact<{
   maxFetch?: InputMaybe<Scalars['Int']['input']>;
   type?: InputMaybe<Array<Scalars['ID']['input']> | Scalars['ID']['input']>;
@@ -32548,7 +32555,7 @@ export type ArticleByTypeQueryVariables = Exact<{
 }>;
 
 
-export type ArticleByTypeQuery = { __typename?: 'Query', pages?: { __typename?: 'PageCountableConnection', edges: Array<{ __typename?: 'PageCountableEdge', cursor: string, node: { __typename?: 'Page', id: string, title: string, created: any, isPublished: boolean, slug: string, seoDescription?: string | null, publishedAt?: any | null, content?: any | null } }> } | null };
+export type ArticleByTypeQuery = { __typename?: 'Query', pages?: { __typename?: 'PageCountableConnection', edges: Array<{ __typename?: 'PageCountableEdge', cursor: string, node: { __typename?: 'Page', id: string, title: string, slug: string, seoDescription?: string | null, publishedAt?: any | null, content?: any | null } }> } | null };
 
 export type ArticleCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -32668,6 +32675,60 @@ export function useOidcTokenFetchMutation(baseOptions?: Apollo.MutationHookOptio
 export type OidcTokenFetchMutationHookResult = ReturnType<typeof useOidcTokenFetchMutation>;
 export type OidcTokenFetchMutationResult = Apollo.MutationResult<OidcTokenFetchMutation>;
 export type OidcTokenFetchMutationOptions = Apollo.BaseMutationOptions<OidcTokenFetchMutation, OidcTokenFetchMutationVariables>;
+export const ArticleByIdDocument = gql`
+    query ArticleById($id: [ID!]) {
+  pages(filter: {ids: $id}, first: 1) {
+    edges {
+      node {
+        id
+        title
+        slug
+        seoDescription
+        publishedAt
+        content
+        pageType {
+          id
+          name
+        }
+      }
+      cursor
+    }
+  }
+}
+    `;
+
+/**
+ * __useArticleByIdQuery__
+ *
+ * To run a query within a React component, call `useArticleByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useArticleByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useArticleByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useArticleByIdQuery(baseOptions?: Apollo.QueryHookOptions<ArticleByIdQuery, ArticleByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ArticleByIdQuery, ArticleByIdQueryVariables>(ArticleByIdDocument, options);
+      }
+export function useArticleByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticleByIdQuery, ArticleByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ArticleByIdQuery, ArticleByIdQueryVariables>(ArticleByIdDocument, options);
+        }
+export function useArticleByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ArticleByIdQuery, ArticleByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ArticleByIdQuery, ArticleByIdQueryVariables>(ArticleByIdDocument, options);
+        }
+export type ArticleByIdQueryHookResult = ReturnType<typeof useArticleByIdQuery>;
+export type ArticleByIdLazyQueryHookResult = ReturnType<typeof useArticleByIdLazyQuery>;
+export type ArticleByIdSuspenseQueryHookResult = ReturnType<typeof useArticleByIdSuspenseQuery>;
+export type ArticleByIdQueryResult = Apollo.QueryResult<ArticleByIdQuery, ArticleByIdQueryVariables>;
 export const ArticleByTypeDocument = gql`
     query ArticleByType($maxFetch: Int = 20, $type: [ID!], $fetchContent: Boolean = false) {
   pages(
@@ -32679,8 +32740,6 @@ export const ArticleByTypeDocument = gql`
       node {
         id
         title
-        created
-        isPublished
         slug
         seoDescription
         publishedAt

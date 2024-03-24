@@ -5,7 +5,7 @@ import { useState, useEffect, useContext } from "react";
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
 import { ArticleSummaries } from "@/models/article";
-import { fetchArticles } from "@/services/article";
+import { fetchArticlesByType } from "@/services/article";
 
 const { Text, Link } = Typography;
 
@@ -19,10 +19,10 @@ export const HomeLeftContent = () => {
 
     useEffect(() => {
         // 暂时硬编码了通知和公告两个PageType的ID
-        fetchArticles(client!, "UGFnZVR5cGU6MQ==", 6, false)
+        fetchArticlesByType(client!, "UGFnZVR5cGU6MQ==", 6)
             .then(res => setNoticeSummaries(res))
             .catch(err => message.error(err));
-        fetchArticles(client!, "UGFnZVR5cGU6NA==", 6, false)
+        fetchArticlesByType(client!, "UGFnZVR5cGU6NA==", 6)
             .then(res => setNewsSummaries(res))
             .catch(err => message.error(err))
     }, [])

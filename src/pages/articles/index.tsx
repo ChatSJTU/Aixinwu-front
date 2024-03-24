@@ -8,7 +8,7 @@ import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
 import { PageHeader } from "@/components/page-header";
 import { ArticleSummaries } from "@/models/article";
-import { fetchArticleCategories, fetchArticles } from "@/services/article";
+import { fetchArticleCategories, fetchArticlesByType } from "@/services/article";
 
 const { Title, Link, Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -34,7 +34,7 @@ const ArticleList: React.FC = () => {
 
     useEffect(() => {
         if (currentCategoryID) {
-            fetchArticles(client!, currentCategoryID, 20, false)
+            fetchArticlesByType(client!, currentCategoryID, 20)
                 .then(res => setArticleSummaries(res))
                 .catch(err => message.error(err))
         }

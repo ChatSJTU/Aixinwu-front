@@ -8,8 +8,6 @@ query ArticleByType($maxFetch: Int = 20, $type: [ID!], $fetchContent: Boolean = 
       node {
         id
         title
-        created
-        isPublished
         slug
         seoDescription
         publishedAt
