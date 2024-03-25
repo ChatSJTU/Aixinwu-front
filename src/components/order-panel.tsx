@@ -149,7 +149,7 @@ export const OrderPanel: React.FC<OrderPanelProps> = ({totalCost}) => {
                         <Space align='center' style={{width: '100%', display: 'flex', justifyContent: 'flex-end'}}>
                             
                             <Text style={{display: 'flex', alignItems: "center"}}>
-                            总计： <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{totalCost}</span>
+                            总计： <AxCoin value={totalCost} coloredValue/>
                             </Text>
                             <Button type="primary">提交订单</Button>
                         </Space>

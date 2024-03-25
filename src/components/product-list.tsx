@@ -95,7 +95,7 @@ export const OrderProductList: React.FC<OrderListProductsProps> = (
                         align={"center"}
                         render={(cost) => (
                             <div style={{display: 'flex', alignItems: "center", justifyContent: "center"}}>
-                                <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{cost}</span>
+                                <AxCoin value={cost} coloredValue/>
                             </div>
                         )}
                     />
@@ -162,7 +162,7 @@ export const OrderProductList: React.FC<OrderListProductsProps> = (
                         width={"10%"}
                         render={(_: any, x: OrderProduct) => (
                             <div style={{display: 'flex', alignItems: "center", justifyContent: "center"}}>
-                                <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{x.itemNumber * x.cost}</span>
+                                <AxCoin value={x.itemNumber * x.cost} coloredValue/>
                             </div>
                         )}
                     />
@@ -231,7 +231,9 @@ export const OrderProductList: React.FC<OrderListProductsProps> = (
                                            justify="space-between"
                                        >
                                            <div style={{display: 'flex', alignItems: "center", justifyContent: "center"}}>
-                                               <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{x.cost}</span>
+                                               {/* <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{x.cost}</span> */}
+                                               <AxCoin size={22} value={x.cost} coloredValue/>
+
                                            </div>
                                            <Space.Compact style={{width: '45%'}}>
                                                <Button
@@ -245,7 +247,7 @@ export const OrderProductList: React.FC<OrderListProductsProps> = (
                                                    -
                                                </Button>
                                                <InputNumber
-                                                   style={{width: '50%'}}
+                                                   style={{width: '50%', height:'56.5%'}}
                                                    // size={"small"}
                                                    min={1} max={x.stock} value={x.itemNumber}
                                                    controls={false}
