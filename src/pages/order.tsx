@@ -95,13 +95,38 @@ const OrderPageView = () => {
         calculateTotalCost();
     }
 
+    const [screenSize, setScreenSize] = useState('lg'); // 默认为大屏幕
+    useEffect(() => {
+        const handleResize = () => {
+            // if (window.innerWidth < 768) {
+            //     setScreenSize('xs');
+            // } else
+            if (window.innerWidth < 992) {
+                setScreenSize('sm');
+            } else if (window.innerWidth < 1200) {
+                setScreenSize('md');
+            } else {
+                setScreenSize('lg');
+            }
+        };
+
+        // 初始化时调用一次，以设置初始屏幕大小
+        handleResize();
+
+        // 监听窗口大小变化
+        window.addEventListener('resize', handleResize);
+
+        // 清除事件监听器
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     useEffect(() => {calculateTotalCost()});
     return (
         <>
             <Head>
                 <title>预捐赠 - 上海交通大学绿色爱心屋</title>
             </Head>
-            <Row>
+            {/* <Row>
                 <Col xs={24} sm={24} md={18}>
                     <OrderProductList
                         OrderListProducts={listProducts}
@@ -116,7 +141,42 @@ const OrderPageView = () => {
                   <OrderPanel totalCost={totalCost}/>
                 </Col>
 
+            </Row> */}
+            { screenSize !== 'sm' && (
+            <Row>
+                <Col xs={24} sm={24} md={18}>
+                    <OrderProductList 
+                    OrderListProducts={listProducts}
+                    onClickDelete={onClickDelete}
+                    onItemNumberChange={onItemNumberChange}
+                    onItemNumberMinus={onItemNumberMinus}
+                    onItemNumberPlus={onItemNumberPlus}
+                    />
+                </Col>
+
+                <Col xs={24} sm={24} md={6}>
+                    <OrderPanel totalCost={totalCost}/>                  
+                </Col>
             </Row>
+            )}
+            { screenSize == 'sm' && (
+            <Row>
+                <Col xs={24} sm={24} >
+                <OrderPanel totalCost={totalCost}/>  
+                </Col>
+
+                <Col xs={24} sm={24}>
+
+                    <OrderProductList 
+                    OrderListProducts={listProducts}
+                    onClickDelete={onClickDelete}
+                    onItemNumberChange={onItemNumberChange}
+                    onItemNumberMinus={onItemNumberMinus}
+                    onItemNumberPlus={onItemNumberPlus}
+                    />               
+                </Col>
+            </Row>
+            )}
         </>
     );
 }
