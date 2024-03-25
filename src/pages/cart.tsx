@@ -157,7 +157,7 @@ export const OrderPageView = () => {
         {
           name: '谢委屈华',
           phone: ' 18845678910',
-          address: '上海交通大学闵行校区思源湖'
+          address: '上海交通大学闵行校区思源湖上海交通大学上海交通大学'
         },
         {
           name: '王潇洒华',
@@ -190,7 +190,7 @@ export const OrderPageView = () => {
     
      const menu = (
         <Menu style={{ maxHeight: "220px", maxWidth: "200px", overflowY: "auto" }}>
-          {filteredAddresses.map((address, index) => (
+          {addresses.map((address, index) => (
             <Menu.Item key={index} onClick={() => handleAddressClick(address)}>
               <p style={{ maxHeight: "300px", overflow: "auto" }}>
                 <span>{address.name}</span>
@@ -371,15 +371,16 @@ export const OrderPageView = () => {
                                     <Dropdown overlay={menu} trigger={["click"]}>
                                         {/* 点击选择更多地址 */}
                                         
-                                        <Button type="text" style={{ maxWidth: "23vmin", maxHeight: "300px", overflow: "auto", fontWeight: "lighter", height: "auto" }}>
+                                        <Button type="text" style={{ maxHeight: "300px",fontWeight: "lighter", height: "auto", overflow:'hidden',  textOverflow: "ellipsis"}}>
                                         <Space>
-                                            <Space direction="vertical" size="small" style={{ textAlign: "left" }}>
+                                            <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'152px', textOverflow:'ellipsis' }}>
                                                 <Space>
                                                     <span>{selectedAddress ? selectedAddress.name : "请选择地址"}</span>
                                                     <span>{selectedAddress ? selectedAddress.phone : ""}</span>
                                                 </Space>
-                                            <span style={{ fontSize: "12px", color: "#888", overflow: "hidden", textOverflow: "ellipsis" }}>{selectedAddress ? selectedAddress.address : ""}</span>
-                                            
+                                                {/* 地址 */}
+                                            <span style={{ fontSize: "12px", color: "#888", textOverflow: "ellipsis"}}>{selectedAddress ? selectedAddress.address : ""}</span>
+                               
                                             </Space>                                                                                 
                                                 <EllipsisOutlined/>
                                         </Space>  
