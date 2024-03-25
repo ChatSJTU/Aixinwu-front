@@ -274,7 +274,8 @@ export const OrderPageView = () => {
                                 align={"center"}
                                 render={(cost) => (
                                     <div style={{display: 'flex', alignItems: "center", justifyContent: "center"}}>
-                                        <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{cost}</span>
+                                        {/* <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{cost}</span> */}
+                                        <AxCoin value={cost} coloredValue/>
                                     </div>
                                 )}
                             />
@@ -330,7 +331,8 @@ export const OrderPageView = () => {
                                 width={"10%"}
                                 render={(_: any, x: product) => (
                                     <div style={{display: 'flex', alignItems: "center", justifyContent: "center"}}>
-                                        <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{x.itemNumber * x.cost}</span>
+                                        {/* <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{x.itemNumber * x.cost}</span> */}
+                                        <AxCoin value={x.itemNumber * x.cost} coloredValue/>
                                     </div>
                                 )}
                             />
@@ -395,7 +397,8 @@ export const OrderPageView = () => {
                         <Space align='center' style={{width: '100%', display: 'flex', justifyContent: 'flex-end'}}>
                             
                             <Text style={{display: 'flex', alignItems: "center"}}>
-                            总计： <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{totalCost}</span>
+                            {/* 总计： <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{totalCost}</span> */}
+                            总计： <AxCoin value={totalCost} coloredValue/>
                             </Text>
                             <Button type="primary">提交订单</Button>
                         </Space>
