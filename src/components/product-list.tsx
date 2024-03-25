@@ -230,14 +230,15 @@ export const OrderProductList: React.FC<OrderListProductsProps> = (
                                        <Flex
                                            justify="space-between"
                                        >
+                                        <Space>
                                            <div style={{display: 'flex', alignItems: "center", justifyContent: "center"}}>
                                                {/* <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{x.cost}</span> */}
                                                <AxCoin size={22} value={x.cost} coloredValue/>
 
                                            </div>
-                                           <Space.Compact style={{width: '45%'}}>
+                                           <Space.Compact style={{width: '110%'}}>
                                                <Button
-                                                   style={{width: '25%', padding: 0}}
+                                                   style={{width: '27%', padding: 0}}
                                                    // size={"small"}
                                                    // type={"ghost"}
                                                    // style={{paddingLeft: '10%', paddingRight: '10%'}}
@@ -247,7 +248,7 @@ export const OrderProductList: React.FC<OrderListProductsProps> = (
                                                    -
                                                </Button>
                                                <InputNumber
-                                                   style={{width: '50%', height:'56.5%'}}
+                                                   style={{width: '46%', padding: 0}}
                                                    // size={"small"}
                                                    min={1} max={x.stock} value={x.itemNumber}
                                                    controls={false}
@@ -258,7 +259,7 @@ export const OrderProductList: React.FC<OrderListProductsProps> = (
                                                    }}
                                                />
                                                <Button
-                                                   style={{width: '25%', padding: 0}}
+                                                   style={{width: '27%', padding: 0}}
                                                    // size={"small"}
                                                    // type={"ghost"}
                                                    // style={{paddingLeft: '10%', paddingRight: '10%'}}
@@ -272,6 +273,7 @@ export const OrderProductList: React.FC<OrderListProductsProps> = (
                                            <Button style={{padding: 0}} type={"link"}
                                                    onClick={(() => onClickDelete(x.id))}>删除
                                            </Button>
+                                        </Space>   
                                        </Flex>
                                    </Flex>
                             </Flex>
