@@ -1,5 +1,5 @@
 import Head from "next/head";
-import {Col, Row, Space, InputNumber, Typography, Image, Button, Table, Affix, Popconfirm, Menu, Collapse, Dropdown, Input} from "antd";
+import {Col, Row, Space, InputNumber, Typography, Image, Button, Table, Affix, Popconfirm, Menu, Collapse, Dropdown, Input, Flex} from "antd";
 const { Column } = Table;
 import {AxCoin} from "@/components/axcoin";
 import { DownOutlined, EllipsisOutlined } from '@ant-design/icons';
@@ -34,8 +34,8 @@ export function getProductSummary(key:number, id: number, itemNumber: number) {
             "https://aixinwu.sjtu.edu.cn/uploads/product/6394/202203_347.jpg",
             "https://aixinwu.sjtu.edu.cn/uploads/product/6457/202306_347.jpg"],
         product: {
-            product_name: "新航道2023考研政治900题新航道2023考研政治900题新航道2023考研政治900题新航道2023考研政治900题新航道2023考研政治900题",
-            detailed_product_name: "新航道考研政治2023年徐之明思想政治理论金榜书900题新航道考研政治2023年徐之明思想政治理论金榜书900题新航道考研政治2023年徐之明思想政治理论金榜书900题新航道考研政治2023年徐之明思想政治理论金榜书900题新航道考研政治2023年徐之明思想政治理论金榜书900题",
+            product_name: "新航道2023考研政治900题",
+            detailed_product_name: "新航道考研政治2023年徐之明思想政治理论金榜书900题",
         },
         cost: 24,
         stock: 907,
@@ -151,6 +151,31 @@ export const OrderPageView = () => {
 
     const cancel = () => {
     };
+
+    const [screenSize, setScreenSize] = useState('lg'); // 默认为大屏幕
+    useEffect(() => {
+        const handleResize = () => {
+            // if (window.innerWidth < 768) {
+            //     setScreenSize('xs');
+            // } else
+            if (window.innerWidth < 992) {
+                setScreenSize('sm');
+            } else if (window.innerWidth < 1200) {
+                setScreenSize('md');
+            } else {
+                setScreenSize('lg');
+            }
+        };
+
+        // 初始化时调用一次，以设置初始屏幕大小
+        handleResize();
+
+        // 监听窗口大小变化
+        window.addEventListener('resize', handleResize);
+
+        // 清除事件监听器
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
     
 
     const addresses = [
@@ -212,21 +237,14 @@ export const OrderPageView = () => {
         }
     }, [selectedProducts, selectedAddress]);
 
-
-
-    return (
-        <>
-            <Head>
-                <title>预捐赠 - 上海交通大学绿色爱心屋</title>
-            </Head>
-            <Row>
-                <Col  xs={24} sm={24} md={18}>
-                    <div className={"container"}>
-                        <Table
-                            rowSelection={rowSelection}
-                            dataSource={listProducts}
-                        >
-                            <Column
+    const ProductListComponent = () => {
+        return (
+            <div className={"container"}>
+                <Table
+                        rowSelection={rowSelection}
+                        dataSource={listProducts}
+                >
+                     <Column
                                 title={"图片"}
                                 dataIndex={"image_url"}
                                 width={"15%"}
@@ -355,15 +373,131 @@ export const OrderPageView = () => {
                                   </Popconfirm>
                                 )}
                             />
-                        </Table>
-                    </div>
-                    
-                </Col>
-                
-                <Col xs={24} sm={24} md={6}>
-                <Affix offsetTop={top}>
-                {/* <Ordering selectedProducts={selectedProducts} /> */}
+
+                </Table>
+            </div>
+        );
+    };
+
+    const ProductListComponentMobile = () => {
+        return (
+            <div className={"container"}>
+                <Table
+                        rowSelection={rowSelection}
+                        dataSource={listProducts}
+                >
+                          <Column
+                        title={" "}
+                        dataIndex={"itemNumber"}
+                        width={"100%"}
+                        align={"center"}
+                        ellipsis={true}
+                        render={(_: any, x: product) => (
+                            <div>
+                            <Flex align="space-between">
+                                <div className={"container"} style={{aspectRatio: "1/1", overflow: "auto", width: "40%"}}>
+                                    <Image src={x.image_url[0]} preview={false} style={{objectFit: "cover", aspectRatio: "1/1"}}/>
+                                </div>
+                                   <Flex
+                                       vertical
+                                       style={{width: "60%"}}
+                                       align="flex-start"
+                                       justify="space-evenly"
+                                   >
+                                       <Text
+                                           strong={true}
+                                           ellipsis={true}
+                                           style={{
+                                               margin: '0px',
+                                               height: '20%',
+                                           }}
+                                       >
+                                           {x.product.product_name}
+                                       </Text>
+                                       <Paragraph
+                                           type={"secondary"}
+                                           style={{
+                                               margin: '0px',
+                                               fontSize: "12px", color: "gray",
+                                               whiteSpace: "pre-wrap",
+                                               height: '30%'
+                                           }}
+                                           ellipsis={{rows: 2, expandable: false}}
+                                       >
+                                           {x.product.detailed_product_name}
+                                       </Paragraph>
+                              
+                                       <Flex
+                                           justify="space-between"
+                                       >
+                                        <Space>
+                                            <div style={{display: 'flex', alignItems: "center", justifyContent: "center"}}>
+                                                {/* <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{x.cost}</span> */}
+                                                <AxCoin size={17} value={x.cost} coloredValue/>
+
+                                            </div>
+                                            
+                                            <Space.Compact style={{width: '110%'}}>
+                                                <Button
+                                                    style={{width: '27%', padding: 0}}
+                                                    // size={"small"}
+                                                    // type={"ghost"}
+                                                    // style={{paddingLeft: '10%', paddingRight: '10%'}}
+                                                    onClick={() => onItemNumberMinus(x.id)}
+                                                    disabled={x.itemNumber <= 1}
+                                                >
+                                                    -
+                                                </Button>
+                                                <InputNumber
+                                                    style={{width: '46%',padding: 0}}
+                                                    // size={"small"}
+                                                    min={1} max={x.stock} value={x.itemNumber}
+                                                    controls={false}
+                                                    onChange={value => {
+                                                        if (value !== null) {
+                                                            onItemNumberChange(x.id, value);
+                                                        } 
+                                                    }}
+                                                />
+                                                <Button
+                                                    style={{width: '27%', padding: 0}}
+                                                    // size={"small"}
+                                                    // type={"ghost"}
+                                                    // style={{paddingLeft: '10%', paddingRight: '10%'}}
+                                                    onClick={() => onItemNumberPlus(x.id)}
+                                                    disabled={x.itemNumber >= x.stock}
+                                                >
+                                                    +
+                                                </Button>
+                                            </Space.Compact>
+
+                                            <Popconfirm
+                                                    title="确认要删除商品吗？"
+                                                    // description="确认要删除商品吗？"
+                                                    onConfirm={() => confirm(x)}
+                                                    onCancel={() => cancel()}
+                                                    okText="确认删除"
+                                                    cancelText="取消"
+                                                >
+                                                <Button style={{padding: 0}} type={"link"} >删除</Button>
+                                                </Popconfirm>
+                                        </Space>
+                                       </Flex>
+                                   </Flex>
+                            </Flex>
+                            </div>
+                        )}
+                    />
+
+                </Table>
+            </div>
+        );
+    };
+    // Order component
+    const OrderComponent = () => {
+        return (
                 <div className={"container"}>
+                    {/* Content of the OrderComponent */}
                     <div> 
                         {/* 地址 */}
                                 <Collapse defaultActiveKey={["1"]} style={{ marginBottom: "13px" }} ghost size="small">
@@ -405,10 +539,96 @@ export const OrderPageView = () => {
                         </Space>
                     </div>
                 </div>
-                </Affix>
+        );
+    };
+
+    const OrderComponentMobile = () => {
+        return (
+                <div className={"container"}>
+                    {/* Content of the OrderComponent */}
+                    <div> 
+                        {/* 地址 */}
+                                <Collapse defaultActiveKey={["1"]} style={{ marginBottom: "13px" }} ghost size="small">
+                                    <Panel header="收货人信息：" key="1" style={{ maxHeight: "300px", textOverflow: "ellipsis", fontWeight: "bold" }}>
+                                    <Dropdown overlay={menu} trigger={["click"]}>
+                                        {/* 点击选择更多地址 */}
+                                        
+                                        <Button type="text" style={{ maxHeight: "300px",fontWeight: "lighter", height: "auto", overflow:'hidden',  textOverflow: "ellipsis"}}>
+                                        <Space>
+                                            <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'152px', textOverflow:'ellipsis' }}>
+                                                <Space>
+                                                    <span>{selectedAddress ? selectedAddress.name : "请选择地址"}</span>
+                                                    <span>{selectedAddress ? selectedAddress.phone : ""}</span>
+                                                </Space>
+                                                {/* 地址 */}
+                                            <span style={{ fontSize: "12px", color: "#888", textOverflow: "ellipsis"}}>{selectedAddress ? selectedAddress.address : ""}</span>
+                               
+                                            </Space>                                                                                 
+                                                <EllipsisOutlined/>
+                                        </Space>  
+                                        </Button>
+                                           
+                                        </Dropdown>
+                                    </Panel>        
+
+                                    <Panel header="订单备注" key="2" style={{ maxHeight: '150px', fontWeight: 'bold'}}>
+                                        <Input.TextArea rows={4} style={{maxHeight: '100px', overflow: 'auto'}}/>
+                                    </Panel>  
+                                </Collapse>
+
+                    </div>
+                </div>
+                
+        );
+    };
+    
+    return (
+        <>
+            <Head>
+                <title>预捐赠 - 上海交通大学绿色爱心屋</title>
+            </Head>
+    
+            { screenSize !== 'sm' && (
+            <Row>
+                <Col xs={24} sm={24} md={18}>
+                    <ProductListComponent />
                 </Col>
 
+                <Col xs={24} sm={24} md={6}>
+                    <Affix offsetTop={top}>
+                        <OrderComponent />
+                    </Affix>                    
+                </Col>
             </Row>
+            )}
+            
+            {/* 小屏幕 */}
+            {screenSize == 'sm'  && (
+
+            <Row>
+                <Col sm={24} xs={24}>
+                        <OrderComponentMobile />
+                </Col>
+
+                <Col  sm={24} xs={24}>
+                    <ProductListComponentMobile />
+                </Col>
+            
+
+            <div style={{ position: 'fixed', bottom: 0, width: '100%', background: '#fff', padding: '20px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }}>
+                <Space align='center' style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                    <Text style={{ display: 'flex', alignItems: "center" }}>
+                        总计： <AxCoin value={totalCost} coloredValue/>
+                    </Text>
+                    <Button type="primary">提交订单</Button>
+                </Space>
+            </div>
+            </Row>
+
+        
+
+            )}
+
         </>
     );
 }
