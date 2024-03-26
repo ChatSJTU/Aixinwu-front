@@ -58,7 +58,7 @@ const ArticleList: React.FC = () => {
             <Head>
                 <title>文章总览 - 上海交通大学绿色爱心屋</title>
             </Head>
-            <PageHeader title={`文章列表 / ${currentCategoryName}`} />
+            <PageHeader title='文章列表' />
             <Row>
                 <Col span={screens.md ? 6 : 24}>
                     <div className="container basic-card">

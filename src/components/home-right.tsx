@@ -1,19 +1,27 @@
 import { Typography } from "antd";
 import ProductGrid from "@/components/product-grid";
 import { ProductSummaryExampleList } from "@/models/products";
+import BasicCard from "@/components/basic-card";
 
-const { Title } = Typography;
+const { Link } = Typography;
 
 export const HomeRightContent = () => {
     return (
         <>
-            <div className="container basic-card">
-                <Title level={5}>热门置换</Title>
+            <BasicCard title="热门置换" divider
+                titleExtra={
+                    <Link href="/products" target="_blank">{'全部>>'}</Link>
+                }
+                >
                 <ProductGrid products={[...ProductSummaryExampleList, ...ProductSummaryExampleList, ...ProductSummaryExampleList]} />
-            </div>
-            <div className="container basic-card">
-                <Title level={5}>租赁专区</Title>
-            </div>
+            </BasicCard>
+            <BasicCard title="热门租赁" divider
+                titleExtra={
+                    <Link href="/products" target="_blank">{'全部>>'}</Link>
+                }
+                >
+                <ProductGrid products={[...ProductSummaryExampleList, ...ProductSummaryExampleList, ...ProductSummaryExampleList]} />
+            </BasicCard>
         </>
     )
 }

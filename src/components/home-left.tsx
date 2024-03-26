@@ -1,7 +1,8 @@
-import { Typography, List, Divider, Flex, Spin } from "antd";
+import { Typography, List, Divider, Spin } from "antd";
 import { CalendarOutlined } from "@ant-design/icons"
 import { useState, useEffect, useContext } from "react";
 
+import BasicCard from "@/components/basic-card";
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
 import { ArticleSummaries } from "@/models/article";
@@ -19,7 +20,7 @@ export const HomeLeftContent = () => {
 
     useEffect(() => {
         // 暂时硬编码了通知和公告两个PageType的ID
-        fetchArticlesByType(client!, "UGFnZVR5cGU6MQ==", 6)
+        fetchArticlesByType(client!, "UGFnZVR5cGU6NQ==", 6)
             .then(res => setNoticeSummaries(res))
             .catch(err => message.error(err));
         fetchArticlesByType(client!, "UGFnZVR5cGU6NA==", 6)
@@ -29,12 +30,11 @@ export const HomeLeftContent = () => {
 
     return (
         <>
-            <div className="container basic-card">
-                <Flex align="center" justify="space-between">
-                    <Text strong style={{ fontSize: '16px' }}>通知</Text>
-                    <Link href="/articles" target="_blank">{"更多>>"}</Link>
-                </Flex>
-                <Divider style={{ marginTop: '-8px', marginBottom: '4px' }} />
+            <BasicCard title="通知" divider
+                titleExtra={
+                    <Link href="/articles" target="_blank">{'更多>>'}</Link>
+                }
+            >
                 {noticeSummaries &&
                     <List
                         itemLayout="horizontal"
@@ -64,13 +64,12 @@ export const HomeLeftContent = () => {
                 {!noticeSummaries &&
                     <center><Spin size="default" style={{ marginTop: '50px', marginBottom: '50px' }} /></center>
                 }
-            </div>
-            <div className="container basic-card">
-                <Flex align="center" justify="space-between">
-                    <Text strong style={{ fontSize: '16px' }}>动态</Text>
-                    <Link href="/articles">{"更多>>"}</Link>
-                </Flex>
-                <Divider style={{ marginTop: '-8px', marginBottom: '4px' }} />
+            </BasicCard>
+            <BasicCard title="动态" divider
+                titleExtra={
+                    <Link href="/articles" target="_blank">{'更多>>'}</Link>
+                }
+                >
                 {newsSummaries &&
                     <List
                         itemLayout="horizontal"
@@ -100,7 +99,7 @@ export const HomeLeftContent = () => {
                 {!newsSummaries &&
                     <center><Spin size="default" style={{ marginTop: '50px', marginBottom: '50px' }} /></center>
                 }
-            </div>
+            </BasicCard>
         </>
     )
 }

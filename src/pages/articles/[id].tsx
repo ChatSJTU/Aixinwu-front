@@ -40,8 +40,8 @@ const ArticlePage = () => {
                     <Breadcrumb style={{ margin: "4px 12px 4px 12px" }}
                         items={[
                             { title: <Link href="/">首页</Link> },
-                            { title: <Link href={`/articles`}>文章列表</Link> },
-                            { title: <a>{articleDetails.navigation.name}</a> }
+                            { title: <Link href={`/articles`}>{articleDetails.navigation.name}</Link> },
+                            { title: <a>正文</a> }
                         ]} />
                     <div className="container article-content">
                         <Space direction="vertical" style={{ width: "100%" }}>

@@ -1,7 +1,7 @@
 import { PageHeader } from "@/components/page-header";
-import { LoadingSpin } from "@/components/loading-spin";
+import BasicCard from "@/components/basic-card";
 import { AxCoin } from "@/components/axcoin";
-import { Space } from "antd";
+import { Space, Typography } from "antd";
 import Head from "next/head";
 
 const TestPage = () => {
@@ -21,6 +21,11 @@ const TestPage = () => {
             <AxCoin value={10} originValue={100} coloredValue style={{color: "#F57A25"}}/>
           </Space>
         </div>
+        <BasicCard title="测试卡片"
+        titleExtra={
+            <Typography.Link href="/articles" target="_blank">{"更多>>"}</Typography.Link>
+        }>
+        </BasicCard>
     </>
   );
 };
