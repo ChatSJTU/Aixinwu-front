@@ -22,12 +22,15 @@ const ArticleList: React.FC = () => {
     const [articleCategories, setArticleCategories] = useState<{ name: string, id: string }[] | null>(null);
     const [articleSummaries, setArticleSummaries] = useState<ArticleSummaries[] | null>(null);
     const [currentCategoryID, setcurrentCategoryID] = useState<string | null>(null);
+    const [currentCategoryName, setcurrentCategoryName] = useState<string | null>(null);
 
     useEffect(() => {
         fetchArticleCategories(client!)
             .then(res => {
+                res = res.filter(ori => ori.name !== 'Default');
                 setArticleCategories(res);
                 setcurrentCategoryID(res[0].id);
+                setcurrentCategoryName(res[0].name);
             })
             .catch(err => message.error(err));
     }, []);
@@ -42,7 +45,8 @@ const ArticleList: React.FC = () => {
     }, [currentCategoryID]);
 
     const handleMenuClick = (e: any) => {
-        setcurrentCategoryID(e.key);
+        setcurrentCategoryID(e.key.split('---')[0]);
+        setcurrentCategoryName(e.key.split('---')[1]);
     };
 
     if (!articleCategories || !articleSummaries) {
@@ -54,7 +58,7 @@ const ArticleList: React.FC = () => {
             <Head>
                 <title>文章总览 - 上海交通大学绿色爱心屋</title>
             </Head>
-            <PageHeader title="文章列表" />
+            <PageHeader title={`文章列表 / ${currentCategoryName}`} />
             <Row>
                 <Col span={screens.md ? 6 : 24}>
                     <div className="container basic-card">
@@ -62,12 +66,12 @@ const ArticleList: React.FC = () => {
                         <Divider style={{ marginTop: '-6px', marginBottom: '12px' }} />
                         <Menu
                             mode={screens.md ? 'vertical' : 'horizontal'}
-                            selectedKeys={[currentCategoryID!]}
+                            selectedKeys={[`${currentCategoryID!}---${currentCategoryName!}`]}
                             onClick={handleMenuClick}
                             style={{ border: 'none' }}
                         >
                             {articleCategories.map(category => (
-                                <Menu.Item key={category.id}>{category.name}</Menu.Item>
+                                <Menu.Item key={`${category.id}---${category.name}`}>{category.name}</Menu.Item>
                             ))}
                         </Menu>
                         {articleCategories.length === 0 &&
