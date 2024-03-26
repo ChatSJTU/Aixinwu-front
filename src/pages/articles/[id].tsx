@@ -41,7 +41,7 @@ const ArticlePage = () => {
                         items={[
                             { title: <Link href="/">首页</Link> },
                             { title: <Link href={`/articles`}>文章列表</Link> },
-                            { title: <a>正文</a> }
+                            { title: <a>{articleDetails.navigation.name}</a> }
                         ]} />
                     <div className="container article-content">
                         <Space direction="vertical" style={{ width: "100%" }}>
