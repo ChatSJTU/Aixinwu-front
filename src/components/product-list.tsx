@@ -35,7 +35,8 @@ export const OrderProductList: React.FC<OrderListProductsProps> = (
         onClickDelete,
         onItemNumberChange,
         onItemNumberMinus,
-        onItemNumberPlus
+        onItemNumberPlus,
+        rowSelection,
     }
 ) => {
     const screens = useBreakpoint();
@@ -45,6 +46,7 @@ export const OrderProductList: React.FC<OrderListProductsProps> = (
             <div className={"container"}>
                 <Table
                     dataSource={OrderListProducts}
+                    rowSelection={rowSelection}
                 >
                     <Column
                         title={"图片"}
@@ -185,6 +187,7 @@ export const OrderProductList: React.FC<OrderListProductsProps> = (
             <div className={"container"}>
                 <Table
                     dataSource={OrderListProducts}
+                    rowSelection={rowSelection}
                 >
                     <Column
                         title={""}

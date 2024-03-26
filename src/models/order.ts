@@ -1,3 +1,4 @@
+import { TableRowSelection } from "antd/es/table/interface";
 import exp from "node:constants";
 
 export interface OrderProductName {
@@ -5,6 +6,7 @@ export interface OrderProductName {
     detailed_product_name: string,
 }
 export interface OrderProduct {
+    key: React.Key,
     id: number,
     itemNumber: number,
     image_url: string[],
@@ -13,8 +15,6 @@ export interface OrderProduct {
     stock: number
     subtotal: number
 }
-
-
 export interface OrderProductSingleProps {
     id: number;
     itemNumber: number;
@@ -32,4 +32,5 @@ export interface OrderListProductsProps {
     onItemNumberChange: Function;
     onItemNumberMinus: Function;
     onItemNumberPlus: Function;
+    rowSelection?: TableRowSelection<OrderProduct>;
 }
