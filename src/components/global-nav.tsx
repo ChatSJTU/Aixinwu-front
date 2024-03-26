@@ -1,5 +1,5 @@
 import { Space, Menu, Button, MenuProps, Dropdown, Modal, Input, Typography } from 'antd';
-import { SunOutlined, MoonOutlined, UserOutlined, SearchOutlined } from '@ant-design/icons';
+import { SunOutlined, MoonOutlined, UserOutlined, SearchOutlined, LogoutOutlined } from '@ant-design/icons';
 import ThemeContext from '@/contexts/theme';
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -26,7 +26,7 @@ const NavBar = () => {
     {
       key: '1',
       label: (
-        <a target="_blank" rel="noopener noreferrer">
+        <a href="/user" target="_blank" rel="noopener noreferrer">
           <span>已登录：</span>
           <span>{authCtx.userInfo?.name}</span>
         </a>
@@ -35,12 +35,20 @@ const NavBar = () => {
     {
       key: '2',
       label: (
-        <a target="_blank" rel="noopener noreferrer">
-          <span>账户余额：{authCtx.userInfo?.balance}</span>
+        <a href="user/coin-log" target="_blank" rel="noopener noreferrer">
+          <span>账户余额：</span>
+          <AxCoin size={14} 
+            value={authCtx.userInfo?.balance}
+            valueStyle={{
+                margin: '0px 0px 0px -4px',
+                fontWeight: 'normal',
+                fontSize: '14px',
+            }}/>
         </a>
       ),
-      icon: <AxCoin size={12} style={{ marginRight: '4px' }}/>,
-      // disabled: true,
+    },
+    {
+        type: 'divider'
     },
     {
       key: '4',
@@ -50,6 +58,7 @@ const NavBar = () => {
           <span>退出登录</span>
         </a>
       ),
+      icon: <LogoutOutlined />,
     },
   ];
 
