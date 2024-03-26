@@ -1,5 +1,5 @@
 import Head from "next/head";
-import {Col, Row, List, Space, Input, Avatar, Skeleton, InputNumber, Typography, Image, Button, Table} from "antd";
+import {Col, Row, List, Space, Input, Avatar, Skeleton, InputNumber, Typography, Image, Button, Table, Grid} from "antd";
 const { Column } = Table;
 import {AxCoin} from "@/components/axcoin";
 import React, {useEffect, useState} from "react";
@@ -7,10 +7,12 @@ import {OrderPanel} from "@/components/order-panel";
 import {OrderProductList} from "@/components/product-list"
 const { Title, Text, Link, Paragraph } = Typography;
 import type {OrderProduct} from "@/models/order";
+const { useBreakpoint } = Grid;
 
 
-function getProductSummary(id: number, itemNumber: number): OrderProduct {
+function getProductSummary(key:number, id: number, itemNumber: number): OrderProduct {
     return ({
+        key: key,
         id: id,
         itemNumber: itemNumber,
         image_url: ["https://aixinwu.sjtu.edu.cn/uploads/product/6395/202203_347.jpg",
@@ -28,8 +30,8 @@ function getProductSummary(id: number, itemNumber: number): OrderProduct {
 
 const OrderPageView = () => {
     var data = [
-        getProductSummary(1, 1),
-        getProductSummary(2, 4),
+        getProductSummary(1, 1, 1),
+        getProductSummary(2, 4, 2),
     ];
     const [listProducts , setListProduts] = useState(data);
     const [totalCost, setTotalCost] = useState(0)
@@ -121,12 +123,15 @@ const OrderPageView = () => {
     }, []);
 
     useEffect(() => {calculateTotalCost()});
+    const screens = useBreakpoint();
+
+    if (screens.md) {
     return (
         <>
             <Head>
                 <title>预捐赠 - 上海交通大学绿色爱心屋</title>
             </Head>
-            {/* <Row>
+            <Row>
                 <Col xs={24} sm={24} md={18}>
                     <OrderProductList
                         OrderListProducts={listProducts}
@@ -141,44 +146,35 @@ const OrderPageView = () => {
                   <OrderPanel totalCost={totalCost}/>
                 </Col>
 
-            </Row> */}
-            { screenSize !== 'sm' && (
-            <Row>
-                <Col xs={24} sm={24} md={18}>
-                    <OrderProductList 
-                    OrderListProducts={listProducts}
-                    onClickDelete={onClickDelete}
-                    onItemNumberChange={onItemNumberChange}
-                    onItemNumberMinus={onItemNumberMinus}
-                    onItemNumberPlus={onItemNumberPlus}
-                    />
-                </Col>
-
-                <Col xs={24} sm={24} md={6}>
-                    <OrderPanel totalCost={totalCost}/>                  
-                </Col>
             </Row>
-            )}
-            { screenSize == 'sm' && (
-            <Row>
-                <Col xs={24} sm={24} >
-                <OrderPanel totalCost={totalCost}/>  
-                </Col>
-
-                <Col xs={24} sm={24}>
-
-                    <OrderProductList 
-                    OrderListProducts={listProducts}
-                    onClickDelete={onClickDelete}
-                    onItemNumberChange={onItemNumberChange}
-                    onItemNumberMinus={onItemNumberMinus}
-                    onItemNumberPlus={onItemNumberPlus}
-                    />               
-                </Col>
-            </Row>
-            )}
+            
         </>
     );
+    }else{
+        return (
+            <>
+                <Head>
+                    <title>预捐赠 - 上海交通大学绿色爱心屋</title>
+                </Head>
+                <Row>
+                    <Col xs={24} sm={24} md={6}>
+                      <OrderPanel totalCost={totalCost}/>
+                    </Col>
+                    <Col xs={24} sm={24} md={18}>
+                        <OrderProductList
+                            OrderListProducts={listProducts}
+                            onClickDelete={onClickDelete}
+                            onItemNumberChange={onItemNumberChange}
+                            onItemNumberMinus={onItemNumberMinus}
+                            onItemNumberPlus={onItemNumberPlus}
+                        />
+                    </Col>
+                </Row>
+                
+            </>
+        );
+        
+    }
 }
 
 export default OrderPageView;
