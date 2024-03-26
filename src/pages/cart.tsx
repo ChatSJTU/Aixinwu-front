@@ -4,6 +4,7 @@ const { Column } = Table;
 import {AxCoin} from "@/components/axcoin";
 import { DownOutlined, EllipsisOutlined } from '@ant-design/icons';
 import React, {useState} from "react";
+import { useRef } from 'react';
 import { useEffect } from 'react';
 import {OrderProductList} from "@/components/product-list"
 import { OrderProduct } from "@/models/order";
@@ -135,34 +136,6 @@ export const OrderPageView = () => {
     const cancel = () => {
     };
 
-    const [screenSize, setScreenSize] = useState('lg'); // 默认为大屏幕
-    useEffect(() => {
-        const handleResize = () => {
-            // if (window.innerWidth < 768) {
-            //     setScreenSize('xs');
-            // } else
-            if (window.innerWidth < 992) {
-                setScreenSize('sm');
-            } else if (window.innerWidth < 1200) {
-                setScreenSize('md');
-            } else {
-                setScreenSize('lg');
-            }
-        };
-
-        // 初始化时调用一次，以设置初始屏幕大小
-        handleResize();
-
-        // 监听窗口大小变化
-        window.addEventListener('resize', handleResize);
-
-        // 清除事件监听器
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-
-    
-
     const addresses = [
         {
           name: '谢委屈华',
@@ -222,7 +195,6 @@ export const OrderPageView = () => {
         }
     }, [selectedProducts, selectedAddress]);
 
-    // Order component
     const OrderComponent = () => {
         return (
                 <div className={"container"}>
@@ -230,29 +202,40 @@ export const OrderPageView = () => {
                     <div> 
                         {/* 地址 */}
                                 <Collapse defaultActiveKey={["1"]} style={{ marginBottom: "13px" }} ghost size="small">
-                                    <Panel header="收货人信息：" key="1" style={{ maxHeight: "300px", textOverflow: "ellipsis", fontWeight: "bold" }}>
-                                    <Dropdown overlay={menu} trigger={["click"]}>
-                                        {/* 点击选择更多地址 */}
-                                        
-                                        <Button type="text" style={{ maxHeight: "300px",fontWeight: "lighter", height: "auto", overflow:'hidden',  textOverflow: "ellipsis"}}>
-                                        <Space>
-                                            <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'162px', textOverflow:'ellipsis' }}>
+                                    <Panel header="收货人信息" key="1" style={{ maxHeight: "300px", textOverflow: "ellipsis", fontWeight: "bold" }}>
+                                    <Dropdown
+                                    overlay={menu}
+                                    trigger={["click"]}
+                                    >
+                                    <Button
+                                        type="text"
+                                        style={{ width: '100%', fontWeight: "lighter", height: "auto", overflow:'hidden',  textOverflow: "ellipsis"}}
+                                    >
+                                        <Flex justify='space-between'>
+                                            <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'85%', textOverflow:'ellipsis' }}>
                                                 <Space>
                                                     <span>{selectedAddress ? selectedAddress.name : "请选择地址"}</span>
                                                     <span>{selectedAddress ? selectedAddress.phone : ""}</span>
                                                 </Space>
                                                 {/* 地址 */}
-                                            <span style={{fontSize: "12px", color: "#888", textOverflow: "ellipsis"}}>{selectedAddress ? selectedAddress.address : ""}</span>
-                               
+                                            <Paragraph style={{ 
+                                              fontSize: "12px", 
+                                              color: "gray", 
+                                              whiteSpace:'pre-wrap',
+                                               marginBottom:'4px'
+                                              }}
+                                              ellipsis={{rows:2, expandable:false}}>
+                                              {selectedAddress ? selectedAddress.address: ""}
+                                            </Paragraph>
                                             </Space>                                                                                 
                                                 <EllipsisOutlined/>
-                                        </Space>  
+                                        </Flex>  
                                         </Button>
                                            
                                         </Dropdown>
                                     </Panel>        
 
-                                    <Panel header="订单备注：" key="2" style={{ maxHeight: '150px', fontWeight: 'bold'}}>
+                                    <Panel header="订单备注" key="2" style={{ maxHeight: '150px', fontWeight: 'bold'}}>
                                         <Input.TextArea rows={4} style={{maxHeight: '100px', overflow: 'auto'}}/>
                                     </Panel>  
 
@@ -278,23 +261,30 @@ export const OrderPageView = () => {
                     <div> 
                         {/* 地址 */}
                                 <Collapse defaultActiveKey={["1"]} style={{ marginBottom: "13px" }} ghost size="small">
-                                    <Panel header="收货人信息：" key="1" style={{ maxHeight: "300px", textOverflow: "ellipsis", fontWeight: "bold" }}>
+                                    <Panel header="收货人信息" key="1" style={{ maxHeight: "300px", textOverflow: "ellipsis", fontWeight: "bold" }}>
                                     <Dropdown overlay={menu} trigger={["click"]}>
                                         {/* 点击选择更多地址 */}
                                         
-                                        <Button type="text" style={{ maxHeight: "300px",fontWeight: "lighter", height: "auto", overflow:'hidden',  textOverflow: "ellipsis"}}>
-                                        <Space>
-                                            <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'152px', textOverflow:'ellipsis' }}>
+                                        <Button type="text" style={{ width:'100%', maxHeight: "300px",fontWeight: "lighter", height: "auto", overflow:'hidden',  textOverflow: "ellipsis"}}>
+                                        <Flex justify='space-between'>
+                                            <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'85%', textOverflow:'ellipsis' }}>
                                                 <Space>
                                                     <span>{selectedAddress ? selectedAddress.name : "请选择地址"}</span>
                                                     <span>{selectedAddress ? selectedAddress.phone : ""}</span>
                                                 </Space>
                                                 {/* 地址 */}
-                                            <span style={{ fontSize: "12px", color: "#888", textOverflow: "ellipsis"}}>{selectedAddress ? selectedAddress.address : ""}</span>
-                               
+                                            <Paragraph style={{ 
+                                              fontSize: "12px", 
+                                              color: "gray", 
+                                              whiteSpace:'pre-wrap',
+                                               marginBottom:'4px'
+                                              }}
+                                              ellipsis={{rows:2, expandable:false}}>
+                                              {selectedAddress ? selectedAddress.address: ""}
+                                            </Paragraph>
                                             </Space>                                                                                 
                                                 <EllipsisOutlined/>
-                                        </Space>  
+                                        </Flex> 
                                         </Button>
                                            
                                         </Dropdown>

@@ -1,10 +1,12 @@
-import {Col, Row, List, Divider, InputNumber, Typography, Image, Button, Input, Collapse, Menu, Dropdown, Space} from 'antd';
+import {Typography, Flex, Button, Input, Collapse, Menu, Dropdown, Space} from 'antd';
 import { DownOutlined, EllipsisOutlined } from '@ant-design/icons';
 import {AxCoin} from "@/components/axcoin";
 import React from "react";
 import { useState } from 'react';
 import { useEffect } from 'react';
 import {ProductSummary} from "@/models/products";
+const { Paragraph } = Typography;
+
 const { Title, Text, Link } = Typography;
 const { Panel } = Collapse;
 // import {product} from "@/pages/order"
@@ -13,37 +15,6 @@ export interface OrderPanelProps {
     totalCost: number;
 }
 
-
-// export const Ordering = () => {
-//     const data = [
-//         getProductSummary(1, 1),
-//         getProductSummary(2, 4),
-//     ];
-    
-//      const [selectedAddress, setSelectedAddress] = useState<{ name: string; phone: string; address: string; } | null>(null);
-//      // 假设data是你的商品数据数组
-//      const [totalCost, setTotalCost] = useState(0);
-
-//      // 计算总价
-//      const calculateTotalCost = () => {
-//          const total = data.reduce((acc, item) => {
-//              return acc + (item.cost * item.itemNumber);
-//          }, 0);
-//          setTotalCost(total);
-//      };
-
-//       // 在组件挂载时计算总价
-//     useEffect(() => {
-//         calculateTotalCost();
-//         if (addresses.length > 0 && !selectedAddress) {
-//             setSelectedAddress(addresses[0]);
-//         }
-//     }, [selectedAddress]);
-
-
-//     const addresses = [
-//         {
-//           name: '谢委屈华',
 export const OrderPanel: React.FC<OrderPanelProps> = ({totalCost}) => {
     // 下单界面右边的收货人信息、备注、总计、确认订单的面板
     const [selectedAddress, setSelectedAddress] = useState<{ name: string; phone: string; address: string; } | null>(null);
@@ -116,23 +87,30 @@ export const OrderPanel: React.FC<OrderPanelProps> = ({totalCost}) => {
                         
 
                                 <Collapse defaultActiveKey={["1"]} style={{ marginBottom: "13px" }} ghost size="small">
-                                    <Panel header="收货人信息：" key="1" style={{ maxHeight: "300px", textOverflow: "ellipsis", fontWeight: "bold" }}>
+                                    <Panel header="收货人信息" key="1" style={{ maxHeight: "300px", textOverflow: "ellipsis", fontWeight: "bold" }}>
                                     <Dropdown overlay={menu} trigger={["click"]}>
                                         {/* 点击选择更多地址 */}
                                         
-                                        <Button type="text" style={{ maxHeight: "300px",fontWeight: "lighter", height: "auto", overflow:'hidden',  textOverflow: "ellipsis"}}>
-                                        <Space>
-                                            <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'152px', textOverflow:'ellipsis' }}>
+                                        <Button type="text" style={{ width:'100%', maxHeight: "300px",fontWeight: "lighter", height: "auto", overflow:'hidden',  textOverflow: "ellipsis"}}>
+                                        <Flex justify='space-between'>
+                                            <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'85%', textOverflow:'ellipsis' }}>
                                                 <Space>
                                                     <span>{selectedAddress ? selectedAddress.name : "请选择地址"}</span>
                                                     <span>{selectedAddress ? selectedAddress.phone : ""}</span>
                                                 </Space>
                                                 {/* 地址 */}
-                                            <span style={{ fontSize: "12px", color: "#888", textOverflow: "ellipsis"}}>{selectedAddress ? selectedAddress.address : ""}</span>
-                               
+                                            <Paragraph style={{ 
+                                              fontSize: "12px", 
+                                              color: "gray", 
+                                              whiteSpace:'pre-wrap',
+                                               marginBottom:'4px'
+                                              }}
+                                              ellipsis={{rows:2, expandable:false}}>
+                                              {selectedAddress ? selectedAddress.address: ""}
+                                            </Paragraph>
                                             </Space>                                                                                 
                                                 <EllipsisOutlined/>
-                                        </Space>  
+                                        </Flex>  
                                         </Button>
                                         </Dropdown>
                                     </Panel>        
