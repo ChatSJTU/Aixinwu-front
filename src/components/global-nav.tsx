@@ -1,5 +1,5 @@
-import { Space, Menu, Button, MenuProps, Dropdown, Modal, Input, Typography } from 'antd';
-import { SunOutlined, MoonOutlined, UserOutlined, SearchOutlined, LogoutOutlined } from '@ant-design/icons';
+import { Space, Menu, Button, MenuProps, Dropdown, Modal, Input, Typography, Badge } from 'antd';
+import { SunOutlined, MoonOutlined, UserOutlined, SearchOutlined, LogoutOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import ThemeContext from '@/contexts/theme';
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import { MessageContext } from '@/contexts/message';
 import { AxCoin } from './axcoin';
 import { fetchUserBasicInfo } from '@/services/user';
 import { externalLogin } from '@/services/oauth';
+import CartContext from '@/contexts/cart';
 
 const { Title, Text } = Typography;
 const { Search } = Input;
@@ -17,6 +18,7 @@ const NavBar = () => {
   const router = useRouter();
   const themeCtx = useContext(ThemeContext);
   const authCtx = useContext(AuthContext);
+  const cartCtx = useContext(CartContext);
   const client = authCtx.client;
   const message = useContext(MessageContext);
   const [ searchModalOpen, setSearchModalOpen ] = useState(false);
@@ -152,6 +154,13 @@ const NavBar = () => {
                   onClick={() => {themeCtx.changeTheme(themeCtx.userTheme === 'light' ? 'dark' : 'light')}}
                   icon = {themeCtx.userTheme === 'light' ? <MoonOutlined /> : <SunOutlined />}
               />
+              <Badge count={cartCtx.totalQuantity} size="small">
+                <Button type="text"
+                    onClick={()=>{router.push("/cart")}}
+                    icon = {<ShoppingCartOutlined />}
+                />
+              </Badge>
+              
               {
                 authCtx.isLoggedIn ? 
                 <Dropdown menu={{ items }} placement="bottom">
