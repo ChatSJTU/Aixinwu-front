@@ -32562,6 +32562,11 @@ export type ArticleCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ArticleCategoriesQuery = { __typename?: 'Query', pageTypes?: { __typename?: 'PageTypeCountableConnection', edges: Array<{ __typename?: 'PageTypeCountableEdge', node: { __typename?: 'PageType', id: string, name: string } }> } | null };
 
+export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CategoriesQuery = { __typename?: 'Query', categories?: { __typename?: 'CategoryCountableConnection', edges: Array<{ __typename?: 'CategoryCountableEdge', node: { __typename?: 'Category', id: string, level: number, description?: any | null, name: string, seoDescription?: string | null, seoTitle?: string | null, slug: string, parent?: { __typename?: 'Category', id: string } | null } }> } | null };
+
 export type UserBasicInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -32829,6 +32834,58 @@ export type ArticleCategoriesQueryHookResult = ReturnType<typeof useArticleCateg
 export type ArticleCategoriesLazyQueryHookResult = ReturnType<typeof useArticleCategoriesLazyQuery>;
 export type ArticleCategoriesSuspenseQueryHookResult = ReturnType<typeof useArticleCategoriesSuspenseQuery>;
 export type ArticleCategoriesQueryResult = Apollo.QueryResult<ArticleCategoriesQuery, ArticleCategoriesQueryVariables>;
+export const CategoriesDocument = gql`
+    query Categories {
+  categories(first: 100) {
+    edges {
+      node {
+        id
+        level
+        description
+        name
+        seoDescription
+        seoTitle
+        slug
+        parent {
+          id
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useCategoriesQuery__
+ *
+ * To run a query within a React component, call `useCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<CategoriesQuery, CategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CategoriesQuery, CategoriesQueryVariables>(CategoriesDocument, options);
+      }
+export function useCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CategoriesQuery, CategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CategoriesQuery, CategoriesQueryVariables>(CategoriesDocument, options);
+        }
+export function useCategoriesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CategoriesQuery, CategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CategoriesQuery, CategoriesQueryVariables>(CategoriesDocument, options);
+        }
+export type CategoriesQueryHookResult = ReturnType<typeof useCategoriesQuery>;
+export type CategoriesLazyQueryHookResult = ReturnType<typeof useCategoriesLazyQuery>;
+export type CategoriesSuspenseQueryHookResult = ReturnType<typeof useCategoriesSuspenseQuery>;
+export type CategoriesQueryResult = Apollo.QueryResult<CategoriesQuery, CategoriesQueryVariables>;
 export const UserBasicInfoDocument = gql`
     query UserBasicInfo {
   me {

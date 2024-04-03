@@ -1,0 +1,18 @@
+query Categories {
+  categories(first: 100) {
+    edges {
+      node {
+        id
+        level
+        description
+        name
+        seoDescription
+        seoTitle
+        slug
+        parent {
+          id
+        }
+      }
+    }
+  }
+}
