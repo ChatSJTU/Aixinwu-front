@@ -1,0 +1,13 @@
+mutation CheckoutCreate($channel: String!) {
+  checkoutCreate(input: {channel: $channel, lines: []}) {
+    checkout {
+      id
+      quantity
+    }
+    errors {
+      field
+      code
+      message
+    }
+  }
+}

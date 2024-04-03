@@ -32562,6 +32562,22 @@ export type ArticleCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ArticleCategoriesQuery = { __typename?: 'Query', pageTypes?: { __typename?: 'PageTypeCountableConnection', edges: Array<{ __typename?: 'PageTypeCountableEdge', node: { __typename?: 'PageType', id: string, name: string } }> } | null };
 
+export type CheckoutAddLineMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  productVariantId: Scalars['ID']['input'];
+  quantity: Scalars['Int']['input'];
+}>;
+
+
+export type CheckoutAddLineMutation = { __typename?: 'Mutation', checkoutLinesAdd?: { __typename?: 'CheckoutLinesAdd', checkout?: { __typename?: 'Checkout', id: string, quantity: number, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, variant: { __typename?: 'ProductVariant', name: string, product: { __typename?: 'Product', name: string } } }> } | null, errors: Array<{ __typename?: 'CheckoutError', field?: string | null, code: CheckoutErrorCode, message?: string | null }> } | null };
+
+export type CheckoutCreateMutationVariables = Exact<{
+  channel: Scalars['String']['input'];
+}>;
+
+
+export type CheckoutCreateMutation = { __typename?: 'Mutation', checkoutCreate?: { __typename?: 'CheckoutCreate', checkout?: { __typename?: 'Checkout', id: string, quantity: number } | null, errors: Array<{ __typename?: 'CheckoutError', field?: string | null, code: CheckoutErrorCode, message?: string | null }> } | null };
+
 export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -32834,6 +32850,103 @@ export type ArticleCategoriesQueryHookResult = ReturnType<typeof useArticleCateg
 export type ArticleCategoriesLazyQueryHookResult = ReturnType<typeof useArticleCategoriesLazyQuery>;
 export type ArticleCategoriesSuspenseQueryHookResult = ReturnType<typeof useArticleCategoriesSuspenseQuery>;
 export type ArticleCategoriesQueryResult = Apollo.QueryResult<ArticleCategoriesQuery, ArticleCategoriesQueryVariables>;
+export const CheckoutAddLineDocument = gql`
+    mutation CheckoutAddLine($id: ID!, $productVariantId: ID!, $quantity: Int!) {
+  checkoutLinesAdd(
+    id: $id
+    lines: [{quantity: $quantity, variantId: $productVariantId}]
+  ) {
+    checkout {
+      id
+      quantity
+      lines {
+        id
+        quantity
+        variant {
+          name
+          product {
+            name
+          }
+        }
+      }
+    }
+    errors {
+      field
+      code
+      message
+    }
+  }
+}
+    `;
+export type CheckoutAddLineMutationFn = Apollo.MutationFunction<CheckoutAddLineMutation, CheckoutAddLineMutationVariables>;
+
+/**
+ * __useCheckoutAddLineMutation__
+ *
+ * To run a mutation, you first call `useCheckoutAddLineMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCheckoutAddLineMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [checkoutAddLineMutation, { data, loading, error }] = useCheckoutAddLineMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      productVariantId: // value for 'productVariantId'
+ *      quantity: // value for 'quantity'
+ *   },
+ * });
+ */
+export function useCheckoutAddLineMutation(baseOptions?: Apollo.MutationHookOptions<CheckoutAddLineMutation, CheckoutAddLineMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CheckoutAddLineMutation, CheckoutAddLineMutationVariables>(CheckoutAddLineDocument, options);
+      }
+export type CheckoutAddLineMutationHookResult = ReturnType<typeof useCheckoutAddLineMutation>;
+export type CheckoutAddLineMutationResult = Apollo.MutationResult<CheckoutAddLineMutation>;
+export type CheckoutAddLineMutationOptions = Apollo.BaseMutationOptions<CheckoutAddLineMutation, CheckoutAddLineMutationVariables>;
+export const CheckoutCreateDocument = gql`
+    mutation CheckoutCreate($channel: String!) {
+  checkoutCreate(input: {channel: $channel, lines: []}) {
+    checkout {
+      id
+      quantity
+    }
+    errors {
+      field
+      code
+      message
+    }
+  }
+}
+    `;
+export type CheckoutCreateMutationFn = Apollo.MutationFunction<CheckoutCreateMutation, CheckoutCreateMutationVariables>;
+
+/**
+ * __useCheckoutCreateMutation__
+ *
+ * To run a mutation, you first call `useCheckoutCreateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCheckoutCreateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [checkoutCreateMutation, { data, loading, error }] = useCheckoutCreateMutation({
+ *   variables: {
+ *      channel: // value for 'channel'
+ *   },
+ * });
+ */
+export function useCheckoutCreateMutation(baseOptions?: Apollo.MutationHookOptions<CheckoutCreateMutation, CheckoutCreateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CheckoutCreateMutation, CheckoutCreateMutationVariables>(CheckoutCreateDocument, options);
+      }
+export type CheckoutCreateMutationHookResult = ReturnType<typeof useCheckoutCreateMutation>;
+export type CheckoutCreateMutationResult = Apollo.MutationResult<CheckoutCreateMutation>;
+export type CheckoutCreateMutationOptions = Apollo.BaseMutationOptions<CheckoutCreateMutation, CheckoutCreateMutationVariables>;
 export const CategoriesDocument = gql`
     query Categories {
   categories(first: 100) {
