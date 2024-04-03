@@ -1,6 +1,15 @@
-import ProductDetailsPage from "@/pages/products/single/[id]";
-import exp from "node:constants";
-
+export interface Category {
+    id: string;
+    level: number;
+    description: string | null;
+    name: string;
+    seoDescription: string | null;
+    seoTitle: string | null;
+    slug: string;
+    parent: string | null;
+    children: Category[] | null;
+}
+  
 export interface ProductDetails {
     image_url: string[]; // 长度至少为1
     product_name: string;
