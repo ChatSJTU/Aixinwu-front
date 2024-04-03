@@ -27,7 +27,7 @@ export async function fetchCategories(client: ApolloClient<object>) {
             if (category.level === 0) {
                 rootCategories.push(category);
             } else if (category.parent) {
-                const parentCategory = idToCategoryMap[category.parent];
+                const parentCategory = idToCategoryMap[category.parent.id];
                 if (parentCategory) {
                     if (!parentCategory.children) {
                         parentCategory.children = [];

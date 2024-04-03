@@ -6,7 +6,7 @@ export interface Category {
     seoDescription: string | null;
     seoTitle: string | null;
     slug: string;
-    parent: string | null;
+    parent: {id: string} | null;
     children: Category[] | null;
 }
   
