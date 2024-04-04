@@ -1,0 +1,41 @@
+query ProductDetail($channel: String, $slug: String) {
+  product(channel: $channel, slug: $slug) {
+    id
+    slug
+    seoTitle
+    seoDescription
+    channel
+    created
+    description
+    availableForPurchaseAt
+    collections {
+      id
+      name
+      slug
+      description
+    }
+    isAvailableForPurchase
+    name
+    variants {
+      id
+      name
+      sku
+      pricing {
+        priceUndiscounted {
+          gross {
+            amount
+          }
+        }
+      }
+      quantityAvailable(countryCode: CN)
+      updatedAt
+    }
+    media {
+      alt
+      id
+      url(size: 1024, format: ORIGINAL)
+      sortOrder
+      type
+    }
+  }
+}

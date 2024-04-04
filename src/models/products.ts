@@ -10,15 +10,23 @@ export interface Category {
     children: Category[] | null;
 }
   
-export interface ProductDetails {
-    image_url: string[]; // 长度至少为1
-    product_name: string;
-    product_id: number;
-    detailed_product_name?: string;
+export interface ProductDetail {
+    images: string[] | null;
+    name: string;
+    id: string;
+    slug: string;
+    detailed_product_name: string | null;
     desc: string;
-    cost: number;
-    stock?: number;
-    upload_time?: string;
+    varients: VarientDetail[]
+}
+
+export interface VarientDetail {
+    name: string;
+    id: string;
+    sku: string;
+    stock: number;
+    update_time: string;
+    price: number
     [propName: string]: any;
 }
 

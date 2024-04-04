@@ -129,7 +129,7 @@ const OrderPageView = () => {
     return (
         <>
             <Head>
-                <title>预捐赠 - 上海交通大学绿色爱心屋</title>
+                <title>订单 - 上海交通大学绿色爱心屋</title>
             </Head>
             <Row>
                 <Col xs={24} sm={24} md={18}>
@@ -154,7 +154,7 @@ const OrderPageView = () => {
         return (
             <>
                 <Head>
-                    <title>预捐赠 - 上海交通大学绿色爱心屋</title>
+                    <title>订单 - 上海交通大学绿色爱心屋</title>
                 </Head>
                 <Row>
                     <Col xs={24} sm={24} md={6}>

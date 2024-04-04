@@ -3,6 +3,8 @@ import {
     CheckoutCreateDocument,
     CheckoutAddLineMutation, 
     CheckoutAddLineDocument,
+    CheckoutGetQuantityQuery,
+    CheckoutGetQuantityDocument
 } from "@/graphql/hooks";
 import { CheckoutCreateResult } from "@/models/checkout";
 import { Token } from "@/models/token";
@@ -54,6 +56,28 @@ export async function checkoutAddLine(client: ApolloClient<object>, checkoutId: 
           throw resp.data.checkoutLinesAdd.errors[0].message;
         }
         var data = resp.data?.checkoutLinesAdd.checkout as CheckoutCreateResult;
+        return data;
+    } catch (error) {
+        var errmessage = `请求失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+};
+
+//查询购物车商品数量（显示在navbar）
+export async function checkoutGetQuantity(client: ApolloClient<object>, checkoutId: string) {
+    try {
+        const resp = await client.query<CheckoutGetQuantityQuery>({
+            query: CheckoutGetQuantityDocument,
+            variables: {
+                id: checkoutId
+            }
+        }); 
+        if (!resp.data || 
+            !resp.data.checkout) {
+          throw "获取购物车商品数量失败";
+        }
+        var data = resp.data?.checkout.quantity as number;
         return data;
     } catch (error) {
         var errmessage = `请求失败：${error}`
