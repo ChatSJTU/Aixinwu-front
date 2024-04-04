@@ -32578,10 +32578,25 @@ export type CheckoutCreateMutationVariables = Exact<{
 
 export type CheckoutCreateMutation = { __typename?: 'Mutation', checkoutCreate?: { __typename?: 'CheckoutCreate', checkout?: { __typename?: 'Checkout', id: string, quantity: number } | null, errors: Array<{ __typename?: 'CheckoutError', field?: string | null, code: CheckoutErrorCode, message?: string | null }> } | null };
 
+export type CheckoutGetQuantityQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type CheckoutGetQuantityQuery = { __typename?: 'Query', checkout?: { __typename?: 'Checkout', id: string, quantity: number } | null };
+
 export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CategoriesQuery = { __typename?: 'Query', categories?: { __typename?: 'CategoryCountableConnection', edges: Array<{ __typename?: 'CategoryCountableEdge', node: { __typename?: 'Category', id: string, level: number, description?: any | null, name: string, seoDescription?: string | null, seoTitle?: string | null, slug: string, parent?: { __typename?: 'Category', id: string } | null } }> } | null };
+
+export type ProductDetailQueryVariables = Exact<{
+  channel?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ProductDetailQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, slug: string, seoTitle?: string | null, seoDescription?: string | null, channel?: string | null, created: any, description?: any | null, availableForPurchaseAt?: any | null, isAvailableForPurchase?: boolean | null, name: string, collections?: Array<{ __typename?: 'Collection', id: string, name: string, slug: string, description?: any | null }> | null, variants?: Array<{ __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, quantityAvailable?: number | null, updatedAt: any, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null }> | null, media?: Array<{ __typename?: 'ProductMedia', alt: string, id: string, url: string, sortOrder?: number | null, type: ProductMediaType }> | null } | null };
 
 export type UserBasicInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -32947,6 +32962,47 @@ export function useCheckoutCreateMutation(baseOptions?: Apollo.MutationHookOptio
 export type CheckoutCreateMutationHookResult = ReturnType<typeof useCheckoutCreateMutation>;
 export type CheckoutCreateMutationResult = Apollo.MutationResult<CheckoutCreateMutation>;
 export type CheckoutCreateMutationOptions = Apollo.BaseMutationOptions<CheckoutCreateMutation, CheckoutCreateMutationVariables>;
+export const CheckoutGetQuantityDocument = gql`
+    query CheckoutGetQuantity($id: ID = "") {
+  checkout(id: $id) {
+    id
+    quantity
+  }
+}
+    `;
+
+/**
+ * __useCheckoutGetQuantityQuery__
+ *
+ * To run a query within a React component, call `useCheckoutGetQuantityQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckoutGetQuantityQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCheckoutGetQuantityQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCheckoutGetQuantityQuery(baseOptions?: Apollo.QueryHookOptions<CheckoutGetQuantityQuery, CheckoutGetQuantityQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CheckoutGetQuantityQuery, CheckoutGetQuantityQueryVariables>(CheckoutGetQuantityDocument, options);
+      }
+export function useCheckoutGetQuantityLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CheckoutGetQuantityQuery, CheckoutGetQuantityQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CheckoutGetQuantityQuery, CheckoutGetQuantityQueryVariables>(CheckoutGetQuantityDocument, options);
+        }
+export function useCheckoutGetQuantitySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CheckoutGetQuantityQuery, CheckoutGetQuantityQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CheckoutGetQuantityQuery, CheckoutGetQuantityQueryVariables>(CheckoutGetQuantityDocument, options);
+        }
+export type CheckoutGetQuantityQueryHookResult = ReturnType<typeof useCheckoutGetQuantityQuery>;
+export type CheckoutGetQuantityLazyQueryHookResult = ReturnType<typeof useCheckoutGetQuantityLazyQuery>;
+export type CheckoutGetQuantitySuspenseQueryHookResult = ReturnType<typeof useCheckoutGetQuantitySuspenseQuery>;
+export type CheckoutGetQuantityQueryResult = Apollo.QueryResult<CheckoutGetQuantityQuery, CheckoutGetQuantityQueryVariables>;
 export const CategoriesDocument = gql`
     query Categories {
   categories(first: 100) {
@@ -32999,6 +33055,83 @@ export type CategoriesQueryHookResult = ReturnType<typeof useCategoriesQuery>;
 export type CategoriesLazyQueryHookResult = ReturnType<typeof useCategoriesLazyQuery>;
 export type CategoriesSuspenseQueryHookResult = ReturnType<typeof useCategoriesSuspenseQuery>;
 export type CategoriesQueryResult = Apollo.QueryResult<CategoriesQuery, CategoriesQueryVariables>;
+export const ProductDetailDocument = gql`
+    query ProductDetail($channel: String, $slug: String) {
+  product(channel: $channel, slug: $slug) {
+    id
+    slug
+    seoTitle
+    seoDescription
+    channel
+    created
+    description
+    availableForPurchaseAt
+    collections {
+      id
+      name
+      slug
+      description
+    }
+    isAvailableForPurchase
+    name
+    variants {
+      id
+      name
+      sku
+      pricing {
+        priceUndiscounted {
+          gross {
+            amount
+          }
+        }
+      }
+      quantityAvailable(countryCode: CN)
+      updatedAt
+    }
+    media {
+      alt
+      id
+      url(size: 1024, format: ORIGINAL)
+      sortOrder
+      type
+    }
+  }
+}
+    `;
+
+/**
+ * __useProductDetailQuery__
+ *
+ * To run a query within a React component, call `useProductDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProductDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProductDetailQuery({
+ *   variables: {
+ *      channel: // value for 'channel'
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useProductDetailQuery(baseOptions?: Apollo.QueryHookOptions<ProductDetailQuery, ProductDetailQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProductDetailQuery, ProductDetailQueryVariables>(ProductDetailDocument, options);
+      }
+export function useProductDetailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProductDetailQuery, ProductDetailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProductDetailQuery, ProductDetailQueryVariables>(ProductDetailDocument, options);
+        }
+export function useProductDetailSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ProductDetailQuery, ProductDetailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ProductDetailQuery, ProductDetailQueryVariables>(ProductDetailDocument, options);
+        }
+export type ProductDetailQueryHookResult = ReturnType<typeof useProductDetailQuery>;
+export type ProductDetailLazyQueryHookResult = ReturnType<typeof useProductDetailLazyQuery>;
+export type ProductDetailSuspenseQueryHookResult = ReturnType<typeof useProductDetailSuspenseQuery>;
+export type ProductDetailQueryResult = Apollo.QueryResult<ProductDetailQuery, ProductDetailQueryVariables>;
 export const UserBasicInfoDocument = gql`
     query UserBasicInfo {
   me {

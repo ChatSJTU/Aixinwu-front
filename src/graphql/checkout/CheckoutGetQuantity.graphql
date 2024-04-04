@@ -1,0 +1,6 @@
+query CheckoutGetQuantity($id: ID = "") {
+  checkout(id: $id) {
+    id
+    quantity
+  }
+}

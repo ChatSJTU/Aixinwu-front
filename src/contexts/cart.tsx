@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react"
 import useLocalStorage from "@/hooks/useLocalStorage"
 import { LayoutProps } from "@/models/layout"
 import AuthContext from "./auth"
-import { checkoutAddLine, checkoutCreate } from "@/services/checkout"
+import { checkoutAddLine, checkoutCreate, checkoutGetQuantity } from "@/services/checkout"
 import { MessageContext } from "./message"
 
 interface CartContextType {
@@ -30,6 +30,14 @@ export const CartContextProvider = (props : LayoutProps) => {
                 .then(data => {
                     setCheckoutId(data.id);
                     setTotalQuantity(data.quantity)
+                })
+                .catch(err => message.error(err));
+        }
+        else
+        {
+            checkoutGetQuantity(client!, checkoutId)
+                .then(data => {
+                    setTotalQuantity(data);
                 })
                 .catch(err => message.error(err));
         }

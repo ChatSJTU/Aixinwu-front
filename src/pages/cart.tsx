@@ -310,7 +310,7 @@ export const OrderPageView = () => {
         <>
         
             <Head>
-                <title>预捐赠 - 上海交通大学绿色爱心屋</title>
+                <title>购物车 - 上海交通大学绿色爱心屋</title>
             </Head>
             <Row>
                 <Col xs={24} sm={24} md={18}>
@@ -341,7 +341,7 @@ export const OrderPageView = () => {
             <>
             
                 <Head>
-                    <title>预捐赠 - 上海交通大学绿色爱心屋</title>
+                    <title>购物车 - 上海交通大学绿色爱心屋</title>
                 </Head>
                             {/* 小屏幕 */}
 
