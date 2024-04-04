@@ -1,49 +1,28 @@
 import Head from "next/head";
-import {Col, Row, Space, InputNumber, Typography, Image, Button, Table, Affix, Popconfirm, Menu, Collapse, Dropdown, Input, Flex, Grid} from "antd";
+import {Col, Row, Space, Typography, Button, Table, Affix, Menu, Collapse, Dropdown, Input, Flex, Grid, Spin} from "antd";
 const { Column } = Table;
 import {AxCoin} from "@/components/axcoin";
-import { DownOutlined, EllipsisOutlined } from '@ant-design/icons';
-import React, {useState} from "react";
-import { useRef } from 'react';
+import { EllipsisOutlined } from '@ant-design/icons';
+import React, {useContext, useState} from "react";
 import { useEffect } from 'react';
-import {OrderProductList} from "@/components/product-list"
+import {CheckoutTableList} from "@/components/product-list"
 import { OrderProduct } from "@/models/order";
+import AuthContext from "@/contexts/auth";
+import CartContext from "@/contexts/cart";
+import { CheckoutDetail } from "@/models/checkout";
+import { checkoutFind } from "@/services/checkout";
+import { MessageContext } from "@/contexts/message";
 const { Title, Text, Link, Paragraph } = Typography;
 const { Panel } = Collapse;
 const { useBreakpoint } = Grid;
 
-export function getProductSummary(key:number, id: number, itemNumber: number) {
-    return ({
-        key: key,
-        id: id,
-        itemNumber: itemNumber,
-        image_url: ["https://aixinwu.sjtu.edu.cn/uploads/product/6395/202203_347.jpg",
-            "https://aixinwu.sjtu.edu.cn/uploads/product/6394/202203_347.jpg",
-            "https://aixinwu.sjtu.edu.cn/uploads/product/6457/202306_347.jpg"],
-        product: {
-            product_name: "新航道2023考研政治900题",
-            detailed_product_name: "新航道考研政治2023年徐之明思想政治理论金榜书900题",
-        },
-        cost: 24,
-        stock: 907,
-        subtotal: 0
-    });
-}
-
 export const OrderPageView = () => {
-    var data = [
-        getProductSummary(1, 1, 1),
-        getProductSummary(2, 2, 2),
-        getProductSummary(3, 3, 3),
-        getProductSummary(4, 4, 4),
-        getProductSummary(5, 5, 5), 
-        getProductSummary(6, 6, 6), 
-        getProductSummary(7, 7, 7), 
-        getProductSummary(8, 8, 8), 
-        getProductSummary(9, 9, 9), 
-        getProductSummary(10, 10, 10), 
-    ];
-    const [listProducts, setListProducts] = useState(data);
+    const authCtx = useContext(AuthContext);
+    const cartCtx = useContext(CartContext);
+    const client = authCtx.client;
+    const message = useContext(MessageContext);
+    const screens = useBreakpoint();
+    const [checkout, setCheckout] = useState<CheckoutDetail | undefined>(undefined);
     const [totalCost, setTotalCost] = useState(0);
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const [selectedProducts, setSelectedProducts] = useState<OrderProduct[]>([]);
@@ -60,74 +39,61 @@ export const OrderPageView = () => {
 
     function onClickDelete(id: number) {
 
-        const newListProduct = listProducts.filter(item => (item.id != id));
-        setListProducts(newListProduct);
+        // const newListProduct = listProducts.filter(item => (item.id != id));
+        // setListProducts(newListProduct);
     }
  
 
     function onItemNumberChange(id: number, value: number) {
-        const newListProduct = listProducts.map(
-            (item) => {
-                if (item.id === id) {
-                    // 创建一个新的对象，以避免直接修改状态
-                    return {...item, itemNumber: value};
-                } 
-                else {
-                    return item;
-                }
-            }
-        );
-        setListProducts(newListProduct);
+        // const newListProduct = listProducts.map(
+        //     (item) => {
+        //         if (item.id === id) {
+        //             // 创建一个新的对象，以避免直接修改状态
+        //             return {...item, itemNumber: value};
+        //         } 
+        //         else {
+        //             return item;
+        //         }
+        //     }
+        // );
+        // setListProducts(newListProduct);
 
         
     }
 
     function onItemNumberMinus(id: number) {
-        const newListProduct = listProducts.map(
-            (item) => {
-                if (item.id == id) {
-                    item.itemNumber = item.itemNumber - 1;
-                    return item;
-                }
-                else {
-                    return item;
-                }
-            }
-        );
+        // const newListProduct = listProducts.map(
+        //     (item) => {
+        //         if (item.id == id) {
+        //             item.itemNumber = item.itemNumber - 1;
+        //             return item;
+        //         }
+        //         else {
+        //             return item;
+        //         }
+        //     }
+        // );
 
-        setListProducts(newListProduct);
-        calculateTotalCost(selectedProducts);
+        // setListProducts(newListProduct);
+        // calculateTotalCost(selectedProducts);
     }
 
     function onItemNumberPlus(id: number) {
-        const newListProduct = listProducts.map(
-            (item) => {
-                if (item.id == id) {
-                    item.itemNumber = item.itemNumber + 1;
-                    return item;
-                }
-                else {
-                    return item;
-                }
-            }
-        );
-        setListProducts(newListProduct);
-        calculateTotalCost(selectedProducts);
+        // const newListProduct = listProducts.map(
+        //     (item) => {
+        //         if (item.id == id) {
+        //             item.itemNumber = item.itemNumber + 1;
+        //             return item;
+        //         }
+        //         else {
+        //             return item;
+        //         }
+        //     }
+        // );
+        // setListProducts(newListProduct);
+        // calculateTotalCost(selectedProducts);
 
     }
-   
-    // 在选择框变化时更新选中的商品列表
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-        const newSelectedProducts = listProducts.filter((item) => newSelectedRowKeys.includes(item.key));
-        setSelectedProducts(newSelectedProducts);
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
-
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: onSelectChange,
-    };
 
     const confirm = (x: OrderProduct) => {
        onClickDelete(x.id)
@@ -186,14 +152,29 @@ export const OrderPageView = () => {
         </Menu>
       );
 
+
+    useEffect(() => {
+        if (cartCtx.checkoutId != undefined)
+        {
+            checkoutFind(client!, cartCtx.checkoutId)
+                .then(data => setCheckout(data))
+                .catch(err => message.error(err));
+        }
+    }, [cartCtx.checkoutId]);
     
     useEffect(() => {
-        calculateTotalCost(selectedProducts);
-        // calculateTotalCost();
         if (addresses.length > 0 && !selectedAddress) {
             setSelectedAddress(addresses[0]);
         }
-    }, [selectedProducts, selectedAddress]);
+    }, [selectedAddress]);
+
+    if (!checkout) {
+        return (
+            <center>
+                <Spin size="large" style={{ marginTop: '200px' }} />
+            </center>
+        );
+    }
 
     const OrderComponent = () => {
         return (
@@ -301,7 +282,6 @@ export const OrderPageView = () => {
         );
     };
 
-    const screens = useBreakpoint();
     
     if (screens.md) {
 
@@ -315,14 +295,13 @@ export const OrderPageView = () => {
             <Row>
                 <Col xs={24} sm={24} md={18}>
             
-                    <OrderProductList 
-                    OrderListProducts={listProducts}
-                    onClickDelete={onClickDelete}
-                    onItemNumberChange={onItemNumberChange}
-                    onItemNumberMinus={onItemNumberMinus}
-                    onItemNumberPlus={onItemNumberPlus}
-                    rowSelection={rowSelection}
-                    />
+                <CheckoutTableList 
+                            CheckoutLines={checkout.lines!}
+                            onClickDelete={onClickDelete}
+                            onItemNumberChange={onItemNumberChange}
+                            onItemNumberMinus={onItemNumberMinus}
+                            onItemNumberPlus={onItemNumberPlus}
+                            />   
                 </Col>
 
                 <Col xs={24} sm={24} md={6}>
@@ -353,13 +332,12 @@ export const OrderPageView = () => {
 
                         <Col xs={24} sm={24}>
 
-                            <OrderProductList 
-                            OrderListProducts={listProducts}
+                            <CheckoutTableList 
+                            CheckoutLines={checkout.lines!}
                             onClickDelete={onClickDelete}
                             onItemNumberChange={onItemNumberChange}
                             onItemNumberMinus={onItemNumberMinus}
                             onItemNumberPlus={onItemNumberPlus}
-                            rowSelection={rowSelection}
                             />               
                         </Col>
 

@@ -32578,6 +32578,13 @@ export type CheckoutCreateMutationVariables = Exact<{
 
 export type CheckoutCreateMutation = { __typename?: 'Mutation', checkoutCreate?: { __typename?: 'CheckoutCreate', checkout?: { __typename?: 'Checkout', id: string, quantity: number } | null, errors: Array<{ __typename?: 'CheckoutError', field?: string | null, code: CheckoutErrorCode, message?: string | null }> } | null };
 
+export type CheckoutFindQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type CheckoutFindQuery = { __typename?: 'Query', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } } | null };
+
 export type CheckoutGetQuantityQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
 }>;
@@ -32962,6 +32969,87 @@ export function useCheckoutCreateMutation(baseOptions?: Apollo.MutationHookOptio
 export type CheckoutCreateMutationHookResult = ReturnType<typeof useCheckoutCreateMutation>;
 export type CheckoutCreateMutationResult = Apollo.MutationResult<CheckoutCreateMutation>;
 export type CheckoutCreateMutationOptions = Apollo.BaseMutationOptions<CheckoutCreateMutation, CheckoutCreateMutationVariables>;
+export const CheckoutFindDocument = gql`
+    query CheckoutFind($id: ID!) {
+  checkout(id: $id) {
+    id
+    email
+    lines {
+      id
+      quantity
+      totalPrice {
+        gross {
+          amount
+          currency
+        }
+      }
+      variant {
+        product {
+          id
+          name
+          slug
+          thumbnail(format: WEBP, size: 256) {
+            url
+            alt
+          }
+          category {
+            name
+          }
+        }
+        pricing {
+          priceUndiscounted {
+            gross {
+              amount
+              currency
+            }
+          }
+        }
+        name
+        id
+      }
+    }
+    totalPrice {
+      gross {
+        amount
+        currency
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useCheckoutFindQuery__
+ *
+ * To run a query within a React component, call `useCheckoutFindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckoutFindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCheckoutFindQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCheckoutFindQuery(baseOptions: Apollo.QueryHookOptions<CheckoutFindQuery, CheckoutFindQueryVariables> & ({ variables: CheckoutFindQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CheckoutFindQuery, CheckoutFindQueryVariables>(CheckoutFindDocument, options);
+      }
+export function useCheckoutFindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CheckoutFindQuery, CheckoutFindQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CheckoutFindQuery, CheckoutFindQueryVariables>(CheckoutFindDocument, options);
+        }
+export function useCheckoutFindSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CheckoutFindQuery, CheckoutFindQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CheckoutFindQuery, CheckoutFindQueryVariables>(CheckoutFindDocument, options);
+        }
+export type CheckoutFindQueryHookResult = ReturnType<typeof useCheckoutFindQuery>;
+export type CheckoutFindLazyQueryHookResult = ReturnType<typeof useCheckoutFindLazyQuery>;
+export type CheckoutFindSuspenseQueryHookResult = ReturnType<typeof useCheckoutFindSuspenseQuery>;
+export type CheckoutFindQueryResult = Apollo.QueryResult<CheckoutFindQuery, CheckoutFindQueryVariables>;
 export const CheckoutGetQuantityDocument = gql`
     query CheckoutGetQuantity($id: ID = "") {
   checkout(id: $id) {

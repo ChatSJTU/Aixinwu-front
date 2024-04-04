@@ -7,23 +7,25 @@ import { MessageContext } from "./message"
 
 interface CartContextType {
     totalQuantity: number,
-    addLines: (variantId : string, quantity : number) => {}
+    addLines: (variantId : string, quantity : number) => {},
+    checkoutId: string | undefined,
 }
 
 const CartContext = React.createContext<CartContextType>({
     totalQuantity: 0,
     addLines: (variantId : string, quantity : number) => false,
+    checkoutId: undefined
 })
 
 export const CartContextProvider = (props : LayoutProps) => {
     const [totalQuantity, setTotalQuantity] = useState<number>(0);
-    const [checkoutId, setCheckoutId] = useLocalStorage<string | null>("checkoutId", null);
+    const [checkoutId, setCheckoutId] = useLocalStorage<string | undefined>("checkoutId", undefined);
     const authCtx = useContext(AuthContext);
     const client = authCtx.client;
     const message = useContext(MessageContext);
 
     useEffect(()=>{
-        if (checkoutId === null)
+        if (checkoutId === undefined)
         {
             console.log("购物车 checkoutId 为空，新建 checkout！");
             checkoutCreate(client!, process.env.NEXT_PUBLIC_CHANNEL!)
@@ -44,7 +46,7 @@ export const CartContextProvider = (props : LayoutProps) => {
     });
   
     const addLines = useCallback((variantId : string, quantity : number) => {
-        if (checkoutId === null)
+        if (checkoutId === undefined)
         {
             message.error("系统出故障啦~刷新网页试试吧！");
             return {};
@@ -62,6 +64,7 @@ export const CartContextProvider = (props : LayoutProps) => {
     const contextValue = {
         totalQuantity: totalQuantity,
         addLines: addLines,
+        checkoutId: checkoutId,
     }
 
   return (
