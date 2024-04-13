@@ -1,0 +1,13 @@
+mutation CheckoutLineDelete($id: ID!,  $lineId: ID!) {
+  checkoutLineDelete(id: $id, lineId: $lineId) {
+    checkout {
+      ...CheckoutForCartFragment
+    }
+    errors {
+      code
+      field
+      message
+      lines
+    }
+  }
+}

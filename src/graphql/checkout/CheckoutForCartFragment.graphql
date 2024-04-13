@@ -1,0 +1,44 @@
+fragment CheckoutForCartFragment on Checkout {
+  id
+  email
+  lines {
+    id
+    quantity
+    totalPrice {
+      gross {
+        amount
+        currency
+      }
+    }
+    variant {
+      product {
+        id
+        name
+        slug
+        thumbnail(format: WEBP, size: 256) {
+          url
+          alt
+        }
+        category {
+          name
+        }
+      }
+      pricing {
+        priceUndiscounted {
+          gross {
+            amount
+            currency
+          }
+        }
+      }
+      name
+      id
+    }
+  }
+  totalPrice {
+    gross {
+      amount
+      currency
+    }
+  }
+}

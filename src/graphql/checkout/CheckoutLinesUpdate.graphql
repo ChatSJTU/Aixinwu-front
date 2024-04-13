@@ -1,0 +1,13 @@
+mutation CheckoutLinesUpdate($id: ID!, $lineId: ID!, $quantity: Int!) {
+  checkoutLinesUpdate(lines: {lineId: $lineId, quantity: $quantity}, id: $id) {
+    checkout {
+      ...CheckoutForCartFragment
+    }
+    checkoutErrors {
+      code
+      field
+      message
+      lines
+    }
+  }
+}

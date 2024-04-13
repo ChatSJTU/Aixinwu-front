@@ -10,13 +10,15 @@ import { OrderProduct } from "@/models/order";
 import AuthContext from "@/contexts/auth";
 import CartContext from "@/contexts/cart";
 import { CheckoutDetail } from "@/models/checkout";
-import { checkoutFind } from "@/services/checkout";
+import { checkoutDeleteLine, checkoutFind, checkoutUpdateLine } from "@/services/checkout";
 import { MessageContext } from "@/contexts/message";
+import { useRouter } from "next/router";
 const { Title, Text, Link, Paragraph } = Typography;
 const { Panel } = Collapse;
 const { useBreakpoint } = Grid;
 
 export const OrderPageView = () => {
+    const router = useRouter();
     const authCtx = useContext(AuthContext);
     const cartCtx = useContext(CartContext);
     const client = authCtx.client;
@@ -37,31 +39,47 @@ export const OrderPageView = () => {
         setTotalCost(total);
    };
 
-    function onClickDelete(id: number) {
-
-        // const newListProduct = listProducts.filter(item => (item.id != id));
-        // setListProducts(newListProduct);
+    function onClickDelete(id: string) {
+        if (checkout == undefined)
+        {
+            message.error("操作失败：购物车不存在。请刷新页面重试！");
+            return;
+        }
+        var line = checkout.lines?.find(x=>x.id == id);
+        if (line == undefined)
+        {
+            message.error("操作失败：商品不存在。请刷新页面重试！");
+            return;
+        }
+        checkoutDeleteLine(client!, checkout.id, id)
+            .then(data => setCheckout(data))
+            .catch(err => message.error(err));
     }
  
 
-    function onItemNumberChange(id: number, value: number) {
-        // const newListProduct = listProducts.map(
-        //     (item) => {
-        //         if (item.id === id) {
-        //             // 创建一个新的对象，以避免直接修改状态
-        //             return {...item, itemNumber: value};
-        //         } 
-        //         else {
-        //             return item;
-        //         }
-        //     }
-        // );
-        // setListProducts(newListProduct);
-
-        
+    function onItemNumberChange(id: string, value: number) {
+        if (checkout == undefined)
+        {
+            message.error("操作失败：购物车不存在。请刷新页面重试！");
+            return;
+        }
+        var line = checkout.lines?.find(x=>x.id == id);
+        if (line == undefined)
+        {
+            message.error("操作失败：商品不存在。请刷新页面重试！");
+            return;
+        }
+        if (value <= 0)
+        {
+            message.error("操作失败：数量必须是正整数");
+            return;
+        }
+        checkoutUpdateLine(client!, checkout.id, id, value)
+            .then(data => setCheckout(data))
+            .catch(err => message.error(err));
     }
 
-    function onItemNumberMinus(id: number) {
+    function onItemNumberMinus(id: string) {
         // const newListProduct = listProducts.map(
         //     (item) => {
         //         if (item.id == id) {
@@ -78,7 +96,7 @@ export const OrderPageView = () => {
         // calculateTotalCost(selectedProducts);
     }
 
-    function onItemNumberPlus(id: number) {
+    function onItemNumberPlus(id: string) {
         // const newListProduct = listProducts.map(
         //     (item) => {
         //         if (item.id == id) {
@@ -95,8 +113,8 @@ export const OrderPageView = () => {
 
     }
 
-    const confirm = (x: OrderProduct) => {
-       onClickDelete(x.id)
+    const confirm = () => {
+       
     };
 
     const cancel = () => {
@@ -152,7 +170,6 @@ export const OrderPageView = () => {
         </Menu>
       );
 
-
     useEffect(() => {
         if (cartCtx.checkoutId != undefined)
         {
@@ -160,7 +177,7 @@ export const OrderPageView = () => {
                 .then(data => setCheckout(data))
                 .catch(err => message.error(err));
         }
-    }, [cartCtx.checkoutId]);
+    }, [cartCtx.checkoutId, router]);
     
     useEffect(() => {
         if (addresses.length > 0 && !selectedAddress) {
