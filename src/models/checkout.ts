@@ -1,4 +1,5 @@
 import { TableRowSelection } from "antd/es/table/interface";
+import { AddressInfo } from "./address";
 
 export interface CheckoutCreateResult {
     id: string;
@@ -10,6 +11,8 @@ export interface CheckoutDetail {
     lines: CheckoutLineDetail[] | null;
     totalPrice: number;
     quantity: number;
+    shippingAddress: AddressInfo;
+    isShippingRequired: boolean;
 }
 
 export interface CheckoutLineDetail {

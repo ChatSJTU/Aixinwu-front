@@ -42,4 +42,8 @@ fragment CheckoutForCartFragment on Checkout {
     }
   }
   quantity
+  isShippingRequired
+  shippingAddress {
+    ...UserAddressFragment
+  }
 }

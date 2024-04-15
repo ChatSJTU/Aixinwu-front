@@ -1,0 +1,19 @@
+fragment UserAddressFragment on Address {
+  id
+  isDefaultBillingAddress
+  isDefaultShippingAddress
+  country {
+    code
+    country
+  }
+  countryArea
+  city
+  cityArea
+  streetAddress1
+  streetAddress2
+  postalCode
+  companyName
+  firstName
+  lastName
+  phone
+}

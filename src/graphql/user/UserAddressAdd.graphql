@@ -1,0 +1,12 @@
+mutation UserAddressAdd($input: AddressInput!) {
+  accountAddressCreate(type: SHIPPING, input: $input) {
+    address {
+      ...UserAddressFragment
+    }
+    errors {
+      code
+      field
+      message
+    }
+  }
+}

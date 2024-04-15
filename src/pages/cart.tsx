@@ -1,16 +1,18 @@
 import Head from "next/head";
-import {Col, Row, Space, Typography, Button, Table, Affix, Menu, Collapse, Dropdown, Input, Flex, Grid, Spin} from "antd";
-import {AxCoin} from "@/components/axcoin";
+import { Col, Row, Space, Typography, Button, Table, Affix, Menu, Collapse, Dropdown, Input, Flex, Grid, Spin } from "antd";
+import { AxCoin } from "@/components/axcoin";
 import { EllipsisOutlined } from '@ant-design/icons';
 import React, {useContext, useState} from "react";
 import { useEffect } from 'react';
-import {CheckoutTableList} from "@/components/product-list"
+import { CheckoutTableList } from "@/components/product-list"
 import AuthContext from "@/contexts/auth";
 import CartContext from "@/contexts/cart";
 import { CheckoutDetail } from "@/models/checkout";
-import { checkoutDeleteLine, checkoutFind, checkoutUpdateLine } from "@/services/checkout";
+import { checkoutAddressUpdate, checkoutDeleteLine, checkoutFind, checkoutUpdateLine } from "@/services/checkout";
 import { MessageContext } from "@/contexts/message";
 import { useRouter } from "next/router";
+import { fetchUserAddresses } from "@/services/user";
+import { AddressInfo } from "@/models/address";
 const { Title, Text, Link, Paragraph } = Typography;
 const { Panel } = Collapse;
 const { useBreakpoint } = Grid;
@@ -24,7 +26,8 @@ export const OrderPageView = () => {
     const screens = useBreakpoint();
     const [checkout, setCheckout] = useState<CheckoutDetail | undefined>(undefined);
     const [top, setTop] = React.useState<number>(70);
-    const [selectedAddress, setSelectedAddress] = useState<{ name: string; phone: string; address: string; } | null>(null);
+    const [selectedAddress, setSelectedAddress] = useState<AddressInfo | undefined>(undefined);
+    const [addresses, setAddresses] = useState<AddressInfo[]>([]);
     
     function updateCheckoutAndCartNum(checkout: CheckoutDetail) {
         //cartCtx.setCheckoutId(checkout.id);
@@ -119,55 +122,19 @@ export const OrderPageView = () => {
             .catch(err => message.error(err));
     }
 
-    const addresses = [
+    function updateSelectedAddress(addr: AddressInfo) {
+        if (checkout == undefined)
         {
-          name: '谢委屈华',
-          phone: ' 18845678910',
-          address: '上海交通大学闵行校区思源湖上海交通大学上海交通大学'
-        },
-        {
-          name: '王潇洒华',
-          phone: ' 18845678910',
-          address: '上海交通大学闵行校区思源湖'
-        },
-        {
-          name: '刘爱心华',
-          phone: ' 18845678910',
-          address: '上海交通大学闵行校区思源湖'
-        },
-        {
-          name: '黄测吃华',
-          phone: ' 18845678910',
-          address: '上海交通大学闵行校区思源湖'
-        },
-        {
-          name: '唐实习华',
-          phone: ' 18845678910',
-          address: '上海交通大学闵行校区思源湖'
-        },
-        // 添加更多地址
-      ];
-      
-      const handleAddressClick = (address: { name: string, phone: string, address: string }) => {
-        setSelectedAddress(address); // 更新选中的地址
-    };
+            return;
+        }
+        checkoutAddressUpdate(client!, checkout.id, addr)
+            .then(data => { setSelectedAddress(addr); })
+            .catch(err => message.error(err));
+    }
 
-    const filteredAddresses = addresses.filter(address => address !== selectedAddress);
-    
-    const menu = (
-        <Menu style={{ maxHeight: "220px", maxWidth: "200px", overflowY: "auto" }}>
-          {addresses.map((address, index) => (
-            <Menu.Item key={index} onClick={() => handleAddressClick(address)}>
-              <p style={{ maxHeight: "300px", overflow: "auto" }}>
-                <span>{address.name}</span>
-                <span>{address.phone}</span>
-                <br />
-                <span style={{ fontSize: "12px", color: "#888", overflow: "hidden", textOverflow: "ellipsis" }}>{address.address}</span>
-              </p>
-            </Menu.Item>
-          ))}
-        </Menu>
-    );
+    const handleAddressClick = (addr: AddressInfo) => {
+        updateSelectedAddress(addr);
+    };
 
     useEffect(() => {
         if (cartCtx.checkoutId != undefined)
@@ -177,12 +144,44 @@ export const OrderPageView = () => {
                 .catch(err => message.error(err));
         }
     }, [cartCtx.checkoutId, router]);
+
+    useEffect(() => {
+        fetchUserAddresses(client!)
+            .then(data => setAddresses(data))
+            .catch(err => message.error(err));
+    }, [cartCtx.checkoutId, router]);
     
     useEffect(() => {
-        if (addresses.length > 0 && !selectedAddress) {
-            setSelectedAddress(addresses[0]);
+        if (!addresses || addresses.length == 0)
+            return;
+        if (checkout == undefined || !checkout.isShippingRequired)
+            return;
+        if (selectedAddress == undefined) {
+            if (checkout?.shippingAddress == undefined)
+            {
+                updateSelectedAddress(addresses.find(x=>x.isDefaultShippingAddress)!);
+            }
+            else
+            {
+                setSelectedAddress(checkout?.shippingAddress);
+            }
         }
-    }, [selectedAddress]);
+    }, [checkout, addresses]);
+
+    const menu = (
+        <Menu style={{ maxHeight: "220px", maxWidth: "200px", overflowY: "auto" }}>
+          {addresses.map((address, index) => (
+            <Menu.Item key={index} onClick={() => handleAddressClick(address)}>
+              <p style={{ maxHeight: "300px", overflow: "auto" }}>
+                <span>{address.firstName}</span>
+                <span>{address.phone}</span>
+                <br />
+                <span style={{ fontSize: "12px", color: "#888", overflow: "hidden", textOverflow: "ellipsis" }}>{address.streetAddress1}</span>
+              </p>
+            </Menu.Item>
+          ))}
+        </Menu>
+    );
 
     if (!checkout) {
         return (
@@ -191,7 +190,7 @@ export const OrderPageView = () => {
             </center>
         );
     }
-
+    
     const OrderComponent = () => (
         <div className={"container"}>
             <div> 
@@ -207,22 +206,37 @@ export const OrderPageView = () => {
                     >
                         <Flex justify='space-between'>
                             <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'85%', textOverflow:'ellipsis' }}>
-                                <Space>
-                                    <span>{selectedAddress ? selectedAddress.name : "请选择地址"}</span>
-                                    <span>{selectedAddress ? selectedAddress.phone : ""}</span>
-                                </Space>
-                                {/* 地址 */}
-                            <Paragraph style={{ 
-                              fontSize: "12px", 
-                              color: "gray", 
-                              whiteSpace:'pre-wrap',
-                               marginBottom:'4px'
-                              }}
-                              ellipsis={{rows:2, expandable:false}}>
-                              {selectedAddress ? selectedAddress.address: ""}
-                            </Paragraph>
+                                {
+                                    selectedAddress ?
+                                    (
+                                        <>
+                                        <Space>
+                                            <span>{selectedAddress.firstName}</span>
+                                            <span>{selectedAddress.phone}</span>
+                                        </Space>
+                                        </>
+                                    ) :
+                                    (
+                                        <>
+                                            <span>{"请选择地址"}</span>
+                                        </>
+                                    )
+                                }
+                            {
+                                selectedAddress && (
+                                    <Paragraph style={{ 
+                                        fontSize: "12px", 
+                                        color: "gray", 
+                                        whiteSpace:'pre-wrap',
+                                        marginBottom:'4px'
+                                        }}
+                                        ellipsis={{rows:2, expandable:false}}>
+                                        {selectedAddress.streetAddress1}
+                                    </Paragraph>
+                                )
+                            }
                             </Space>                                                                                 
-                                <EllipsisOutlined/>
+                            <EllipsisOutlined/>
                         </Flex>  
                         </Button>
                            
@@ -255,7 +269,7 @@ export const OrderPageView = () => {
                         <Flex justify='space-between'>
                             <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'85%', textOverflow:'ellipsis' }}>
                                 <Space>
-                                    <span>{selectedAddress ? selectedAddress.name : "请选择地址"}</span>
+                                    <span>{selectedAddress ? selectedAddress.firstName : "请选择地址"}</span>
                                     <span>{selectedAddress ? selectedAddress.phone : ""}</span>
                                 </Space>
                                 {/* 地址 */}
@@ -266,7 +280,7 @@ export const OrderPageView = () => {
                                marginBottom:'4px'
                               }}
                               ellipsis={{rows:2, expandable:false}}>
-                              {selectedAddress ? selectedAddress.address: ""}
+                              {selectedAddress ? selectedAddress.streetAddress1: ""}
                             </Paragraph>
                             </Space>                                                                                 
                                 <EllipsisOutlined/>

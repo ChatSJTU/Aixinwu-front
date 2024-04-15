@@ -1,0 +1,7 @@
+query UserAddresses {
+  me {
+    addresses {
+      ...UserAddressFragment
+    }
+  }
+}

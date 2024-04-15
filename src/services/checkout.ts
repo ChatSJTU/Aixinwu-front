@@ -12,16 +12,24 @@ import {
     CheckoutLinesUpdateMutation,
     CheckoutLinesUpdateDocument,
     Checkout,
+    Address,
+    CheckoutShippingAddressUpdate,
+    CheckoutShippingAddressUpdateMutation,
+    CheckoutShippingAddressUpdateDocument,
 } from "@/graphql/hooks";
 import { CheckoutCreateResult, CheckoutDetail, CheckoutLineDetail, CheckoutLineVarientDetail } from "@/models/checkout";
 import { Token } from "@/models/token";
 import { ApolloClient } from "@apollo/client";
+import { mapAddressInfo } from "./user";
+import { AddressInfo } from "@/models/address";
 
 function mapCheckoutForCart(data: Checkout) : CheckoutDetail {
     return {
         id: data.id,
         totalPrice: data.totalPrice.gross.amount,
         quantity: data.quantity,
+        shippingAddress: data.shippingAddress == undefined ? undefined : mapAddressInfo(data.shippingAddress as Address),
+        isShippingRequired: data.isShippingRequired,
         lines: data.lines.map(x=>({
             id: x.id,
             quantity: x.quantity,
@@ -190,6 +198,44 @@ export async function checkoutDeleteLine(client: ApolloClient<object>, checkoutI
         }
         var data = resp.data?.checkoutLineDelete.checkout as Checkout;
         return mapCheckoutForCart(data);
+    } catch (error) {
+        var errmessage = `请求失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+};
+
+//更新购物车收货地址
+export async function checkoutAddressUpdate(client: ApolloClient<object>, checkoutId: string, address: AddressInfo) {
+    try {
+        const resp = await client.mutate<CheckoutShippingAddressUpdateMutation>({
+            mutation: CheckoutShippingAddressUpdateDocument,
+            variables: {
+                id: checkoutId,
+                shippingAddress: {
+                    country: address.country.code,
+                    countryArea: address.countryArea,
+                    city: address.city,
+                    cityArea: address.cityArea,
+                    streetAddress1: address.streetAddress1,
+                    streetAddress2: address.streetAddress2,
+                    postalCode: address.postalCode,
+                    companyName: address.companyName,
+                    firstName: address.firstName,
+                    lastName: address.lastName,
+                    phone: address.phone,
+                }
+            }
+        }); 
+        if (!resp.data || 
+            !resp.data.checkoutShippingAddressUpdate) {
+          throw "更新收货地址失败";
+        }
+        if (resp.data.checkoutShippingAddressUpdate.errors.length != 0)
+        {
+          throw resp.data.checkoutShippingAddressUpdate.errors[0].message;
+        }
+        return true;
     } catch (error) {
         var errmessage = `请求失败：${error}`
         console.error(errmessage);
