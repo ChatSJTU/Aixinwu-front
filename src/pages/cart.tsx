@@ -152,9 +152,9 @@ export const OrderPageView = () => {
         setSelectedAddress(address); // 更新选中的地址
     };
 
-     const filteredAddresses = addresses.filter(address => address !== selectedAddress);
+    const filteredAddresses = addresses.filter(address => address !== selectedAddress);
     
-     const menu = (
+    const menu = (
         <Menu style={{ maxHeight: "220px", maxWidth: "200px", overflowY: "auto" }}>
           {addresses.map((address, index) => (
             <Menu.Item key={index} onClick={() => handleAddressClick(address)}>
@@ -167,7 +167,7 @@ export const OrderPageView = () => {
             </Menu.Item>
           ))}
         </Menu>
-      );
+    );
 
     useEffect(() => {
         if (cartCtx.checkoutId != undefined)
@@ -192,171 +192,143 @@ export const OrderPageView = () => {
         );
     }
 
-    const OrderComponent = () => {
-        return (
-                <div className={"container"}>
-                    {/* Content of the OrderComponent */}
-                    <div> 
-                        {/* 地址 */}
-                                <Collapse defaultActiveKey={["1"]} style={{ marginBottom: "13px" }} ghost size="small">
-                                    <Panel header="收货人信息" key="1" style={{ maxHeight: "300px", textOverflow: "ellipsis", fontWeight: "bold" }}>
-                                    <Dropdown
-                                    overlay={menu}
-                                    trigger={["click"]}
-                                    >
-                                    <Button
-                                        type="text"
-                                        style={{ width: '100%', fontWeight: "lighter", height: "auto", overflow:'hidden',  textOverflow: "ellipsis"}}
-                                    >
-                                        <Flex justify='space-between'>
-                                            <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'85%', textOverflow:'ellipsis' }}>
-                                                <Space>
-                                                    <span>{selectedAddress ? selectedAddress.name : "请选择地址"}</span>
-                                                    <span>{selectedAddress ? selectedAddress.phone : ""}</span>
-                                                </Space>
-                                                {/* 地址 */}
-                                            <Paragraph style={{ 
-                                              fontSize: "12px", 
-                                              color: "gray", 
-                                              whiteSpace:'pre-wrap',
-                                               marginBottom:'4px'
-                                              }}
-                                              ellipsis={{rows:2, expandable:false}}>
-                                              {selectedAddress ? selectedAddress.address: ""}
-                                            </Paragraph>
-                                            </Space>                                                                                 
-                                                <EllipsisOutlined/>
-                                        </Flex>  
-                                        </Button>
-                                           
-                                        </Dropdown>
-                                    </Panel>        
+    const OrderComponent = () => (
+        <div className={"container"}>
+            <div> 
+                <Collapse defaultActiveKey={["1"]} style={{ marginBottom: "13px" }} ghost size="small">
+                    <Panel header="收货人信息" key="1" style={{ maxHeight: "300px", textOverflow: "ellipsis", fontWeight: "bold" }}>
+                    <Dropdown
+                    overlay={menu}
+                    trigger={["click"]}
+                    >
+                    <Button
+                        type="text"
+                        style={{ width: '100%', fontWeight: "lighter", height: "auto", overflow:'hidden',  textOverflow: "ellipsis"}}
+                    >
+                        <Flex justify='space-between'>
+                            <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'85%', textOverflow:'ellipsis' }}>
+                                <Space>
+                                    <span>{selectedAddress ? selectedAddress.name : "请选择地址"}</span>
+                                    <span>{selectedAddress ? selectedAddress.phone : ""}</span>
+                                </Space>
+                                {/* 地址 */}
+                            <Paragraph style={{ 
+                              fontSize: "12px", 
+                              color: "gray", 
+                              whiteSpace:'pre-wrap',
+                               marginBottom:'4px'
+                              }}
+                              ellipsis={{rows:2, expandable:false}}>
+                              {selectedAddress ? selectedAddress.address: ""}
+                            </Paragraph>
+                            </Space>                                                                                 
+                                <EllipsisOutlined/>
+                        </Flex>  
+                        </Button>
+                           
+                        </Dropdown>
+                    </Panel>        
 
-                                    <Panel header="订单备注" key="2" style={{ maxHeight: '150px', fontWeight: 'bold'}}>
-                                        <Input.TextArea rows={4} style={{maxHeight: '100px', overflow: 'auto'}}/>
-                                    </Panel>  
-
-                                </Collapse>
-                    
-                        <Space align='center' style={{width: '100%', display: 'flex', justifyContent: 'flex-end'}}>
-                            
-                            <Text style={{display: 'flex', alignItems: "center"}}>
-                            {/* 总计： <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{totalCost}</span> */}
-                            总计： <AxCoin value={checkout.totalPrice} coloredValue/>
-                            </Text>
-                            <Button type="primary">提交订单</Button>
-                        </Space>
-                    </div>
-                </div>
-        );
-    };
-
-    const OrderComponentMobile = () => {
-        return (
-                <div className={"container"}>
-                    {/* Content of the OrderComponent */}
-                    <div> 
-                        {/* 地址 */}
-                                <Collapse defaultActiveKey={["1"]} style={{ marginBottom: "13px" }} ghost size="small">
-                                    <Panel header="收货人信息" key="1" style={{ maxHeight: "300px", textOverflow: "ellipsis", fontWeight: "bold" }}>
-                                    <Dropdown overlay={menu} trigger={["click"]}>
-                                        {/* 点击选择更多地址 */}
-                                        
-                                        <Button type="text" style={{ width:'100%', maxHeight: "300px",fontWeight: "lighter", height: "auto", overflow:'hidden',  textOverflow: "ellipsis"}}>
-                                        <Flex justify='space-between'>
-                                            <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'85%', textOverflow:'ellipsis' }}>
-                                                <Space>
-                                                    <span>{selectedAddress ? selectedAddress.name : "请选择地址"}</span>
-                                                    <span>{selectedAddress ? selectedAddress.phone : ""}</span>
-                                                </Space>
-                                                {/* 地址 */}
-                                            <Paragraph style={{ 
-                                              fontSize: "12px", 
-                                              color: "gray", 
-                                              whiteSpace:'pre-wrap',
-                                               marginBottom:'4px'
-                                              }}
-                                              ellipsis={{rows:2, expandable:false}}>
-                                              {selectedAddress ? selectedAddress.address: ""}
-                                            </Paragraph>
-                                            </Space>                                                                                 
-                                                <EllipsisOutlined/>
-                                        </Flex> 
-                                        </Button>
-                                           
-                                        </Dropdown>
-                                    </Panel>        
-
-                                    <Panel header="订单备注" key="2" style={{ maxHeight: '150px', fontWeight: 'bold'}}>
-                                        <Input.TextArea rows={4} style={{maxHeight: '100px', overflow: 'auto'}}/>
-                                    </Panel>  
-                                </Collapse>
-
-                    </div>
-                </div>
-                
-        );
-    };
-
-    
-    if (screens.md) {
-
-    return (
-        
-        <>
-        
-            <Head>
-                <title>购物车 - 上海交通大学绿色爱心屋</title>
-            </Head>
-            <Row>
-                <Col xs={24} sm={24} md={18}>
-            
-                <CheckoutTableList 
-                            CheckoutLines={checkout.lines!}
-                            onClickDelete={onClickDelete}
-                            onItemNumberChange={onItemNumberChange}
-                            onItemNumberMinus={onItemNumberMinus}
-                            onItemNumberPlus={onItemNumberPlus}
-                            />   
-                </Col>
-
-                <Col xs={24} sm={24} md={6}>
-                    <Affix offsetTop={top}>
-                        <OrderComponent />
-                    </Affix>                    
-                </Col>
-            </Row>
-            
-
-        </>
+                    <Panel header="订单备注" key="2" style={{ maxHeight: '150px', fontWeight: 'bold'}}>
+                        <Input.TextArea rows={4} style={{maxHeight: '100px', overflow: 'auto'}}/>
+                    </Panel>
+                </Collapse>
+                <Space align='center' style={{width: '100%', display: 'flex', justifyContent: 'flex-end'}}>
+                    <Text style={{display: 'flex', alignItems: "center"}}>
+                    {/* 总计： <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{totalCost}</span> */}
+                    总计： <AxCoin value={checkout.totalPrice} coloredValue/>
+                    </Text>
+                    <Button type="primary">提交订单</Button>
+                </Space>
+            </div>
+        </div>
     );
-    }else{
+
+    const OrderComponentMobile = () => (
+        <div className={"container"}>
+            <div>
+                <Collapse defaultActiveKey={["1"]} style={{ marginBottom: "13px" }} ghost size="small">
+                    <Panel header="收货人信息" key="1" style={{ maxHeight: "300px", textOverflow: "ellipsis", fontWeight: "bold" }}>
+                    <Dropdown overlay={menu} trigger={["click"]}>
+                        {/* 点击选择更多地址 */}
+                        <Button type="text" style={{ width:'100%', maxHeight: "300px",fontWeight: "lighter", height: "auto", overflow:'hidden',  textOverflow: "ellipsis"}}>
+                        <Flex justify='space-between'>
+                            <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'85%', textOverflow:'ellipsis' }}>
+                                <Space>
+                                    <span>{selectedAddress ? selectedAddress.name : "请选择地址"}</span>
+                                    <span>{selectedAddress ? selectedAddress.phone : ""}</span>
+                                </Space>
+                                {/* 地址 */}
+                            <Paragraph style={{ 
+                              fontSize: "12px", 
+                              color: "gray", 
+                              whiteSpace:'pre-wrap',
+                               marginBottom:'4px'
+                              }}
+                              ellipsis={{rows:2, expandable:false}}>
+                              {selectedAddress ? selectedAddress.address: ""}
+                            </Paragraph>
+                            </Space>                                                                                 
+                                <EllipsisOutlined/>
+                        </Flex> 
+                        </Button>
+                           
+                        </Dropdown>
+                    </Panel>        
+
+                    <Panel header="订单备注" key="2" style={{ maxHeight: '150px', fontWeight: 'bold'}}>
+                        <Input.TextArea rows={4} style={{maxHeight: '100px', overflow: 'auto'}}/>
+                    </Panel>  
+                </Collapse>
+            </div>
+        </div>
+    );
+
+    if (screens.md) {
         return (
-        
             <>
-            
                 <Head>
                     <title>购物车 - 上海交通大学绿色爱心屋</title>
                 </Head>
-                            {/* 小屏幕 */}
-
-
-                    <Row>
-                        <Col sm={24} xs={24}>
-                                <OrderComponentMobile />
-                        </Col>
-
-                        <Col xs={24} sm={24}>
-
-                            <CheckoutTableList 
-                            CheckoutLines={checkout.lines!}
-                            onClickDelete={onClickDelete}
-                            onItemNumberChange={onItemNumberChange}
-                            onItemNumberMinus={onItemNumberMinus}
-                            onItemNumberPlus={onItemNumberPlus}
-                            />               
-                        </Col>
-
+                <Row>
+                    <Col xs={24} sm={24} md={18}>
+                    <CheckoutTableList 
+                                CheckoutLines={checkout.lines!}
+                                onClickDelete={onClickDelete}
+                                onItemNumberChange={onItemNumberChange}
+                                onItemNumberMinus={onItemNumberMinus}
+                                onItemNumberPlus={onItemNumberPlus}
+                                />   
+                    </Col>
+                    <Col xs={24} sm={24} md={6}>
+                        <Affix offsetTop={top}>
+                            <OrderComponent />
+                        </Affix>                    
+                    </Col>
+                </Row>
+            </>
+        );
+    }
+    else
+    {
+        return (
+            <>
+                <Head>
+                    <title>购物车 - 上海交通大学绿色爱心屋</title>
+                </Head>
+                <Row>
+                    <Col sm={24} xs={24}>
+                        <OrderComponentMobile />
+                    </Col>
+                    <Col xs={24} sm={24}>
+                        <CheckoutTableList 
+                        CheckoutLines={checkout.lines!}
+                        onClickDelete={onClickDelete}
+                        onItemNumberChange={onItemNumberChange}
+                        onItemNumberMinus={onItemNumberMinus}
+                        onItemNumberPlus={onItemNumberPlus}
+                        />               
+                    </Col>
 
                     <div style={{ position: 'fixed', bottom: 0, width: '100%', background: '#fff', padding: '20px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }}>
                         <Space align='center' style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
@@ -366,15 +338,10 @@ export const OrderPageView = () => {
                             <Button type="primary">提交订单</Button>
                         </Space>
                     </div>
-                    </Row>
+                </Row>
             </>
         );
-        
-
-
-        
     }
-
 }
 
 export default OrderPageView;
