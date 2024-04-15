@@ -21,6 +21,7 @@ function mapCheckoutForCart(data: Checkout) : CheckoutDetail {
     return {
         id: data.id,
         totalPrice: data.totalPrice.gross.amount,
+        quantity: data.quantity,
         lines: data.lines.map(x=>({
             id: x.id,
             quantity: x.quantity,
@@ -100,7 +101,8 @@ export async function checkoutGetQuantity(client: ApolloClient<object>, checkout
             query: CheckoutGetQuantityDocument,
             variables: {
                 id: checkoutId
-            }
+            },
+            fetchPolicy: 'no-cache'
         }); 
         if (!resp.data || 
             !resp.data.checkout) {

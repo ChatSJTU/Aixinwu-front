@@ -1,12 +1,10 @@
 import Head from "next/head";
 import {Col, Row, Space, Typography, Button, Table, Affix, Menu, Collapse, Dropdown, Input, Flex, Grid, Spin} from "antd";
-const { Column } = Table;
 import {AxCoin} from "@/components/axcoin";
 import { EllipsisOutlined } from '@ant-design/icons';
 import React, {useContext, useState} from "react";
 import { useEffect } from 'react';
 import {CheckoutTableList} from "@/components/product-list"
-import { OrderProduct } from "@/models/order";
 import AuthContext from "@/contexts/auth";
 import CartContext from "@/contexts/cart";
 import { CheckoutDetail } from "@/models/checkout";
@@ -25,19 +23,14 @@ export const OrderPageView = () => {
     const message = useContext(MessageContext);
     const screens = useBreakpoint();
     const [checkout, setCheckout] = useState<CheckoutDetail | undefined>(undefined);
-    const [totalCost, setTotalCost] = useState(0);
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    const [selectedProducts, setSelectedProducts] = useState<OrderProduct[]>([]);
     const [top, setTop] = React.useState<number>(70);
     const [selectedAddress, setSelectedAddress] = useState<{ name: string; phone: string; address: string; } | null>(null);
     
-    // 计算总价
-    const calculateTotalCost = (selectedProducts: OrderProduct[]) => {
-        const total = selectedProducts.reduce((acc, item) => {
-            return acc + (item.cost * item.itemNumber);
-        }, 0);
-        setTotalCost(total);
-   };
+    function updateCheckoutAndCartNum(checkout: CheckoutDetail) {
+        //cartCtx.setCheckoutId(checkout.id);
+        cartCtx.setTotalQuantity(checkout.quantity);
+        setCheckout(checkout);
+    }
 
     function onClickDelete(id: string) {
         if (checkout == undefined)
@@ -52,7 +45,7 @@ export const OrderPageView = () => {
             return;
         }
         checkoutDeleteLine(client!, checkout.id, id)
-            .then(data => setCheckout(data))
+            .then(data => updateCheckoutAndCartNum(data))
             .catch(err => message.error(err));
     }
  
@@ -75,50 +68,56 @@ export const OrderPageView = () => {
             return;
         }
         checkoutUpdateLine(client!, checkout.id, id, value)
-            .then(data => setCheckout(data))
+            .then(data => updateCheckoutAndCartNum(data))
             .catch(err => message.error(err));
     }
 
+    //Todo: 响应用户连点操作，延迟发送请求
     function onItemNumberMinus(id: string) {
-        // const newListProduct = listProducts.map(
-        //     (item) => {
-        //         if (item.id == id) {
-        //             item.itemNumber = item.itemNumber - 1;
-        //             return item;
-        //         }
-        //         else {
-        //             return item;
-        //         }
-        //     }
-        // );
-
-        // setListProducts(newListProduct);
-        // calculateTotalCost(selectedProducts);
+        if (checkout == undefined)
+        {
+            message.error("操作失败：购物车不存在。请刷新页面重试！");
+            return;
+        }
+        var line = checkout.lines?.find(x=>x.id == id);
+        if (line == undefined)
+        {
+            message.error("操作失败：商品不存在。请刷新页面重试！");
+            return;
+        }
+        var value = line.quantity - 1;
+        if (value <= 0)
+        {
+            message.error("操作失败：商品数量已达到最小值");
+            return;
+        }
+        checkoutUpdateLine(client!, checkout.id, id, value)
+            .then(data => updateCheckoutAndCartNum(data))
+            .catch(err => message.error(err));
     }
 
     function onItemNumberPlus(id: string) {
-        // const newListProduct = listProducts.map(
-        //     (item) => {
-        //         if (item.id == id) {
-        //             item.itemNumber = item.itemNumber + 1;
-        //             return item;
-        //         }
-        //         else {
-        //             return item;
-        //         }
-        //     }
-        // );
-        // setListProducts(newListProduct);
-        // calculateTotalCost(selectedProducts);
-
+        if (checkout == undefined)
+        {
+            message.error("操作失败：购物车不存在。请刷新页面重试！");
+            return;
+        }
+        var line = checkout.lines?.find(x=>x.id == id);
+        if (line == undefined)
+        {
+            message.error("操作失败：商品不存在。请刷新页面重试！");
+            return;
+        }
+        var value = line.quantity + 1;
+        if (value > 50)
+        {
+            message.error("操作失败：商品数量已达到最大值");
+            return;
+        }
+        checkoutUpdateLine(client!, checkout.id, id, value)
+            .then(data => updateCheckoutAndCartNum(data))
+            .catch(err => message.error(err));
     }
-
-    const confirm = () => {
-       
-    };
-
-    const cancel = () => {
-    };
 
     const addresses = [
         {
@@ -174,7 +173,7 @@ export const OrderPageView = () => {
         if (cartCtx.checkoutId != undefined)
         {
             checkoutFind(client!, cartCtx.checkoutId)
-                .then(data => setCheckout(data))
+                .then(data => updateCheckoutAndCartNum(data))
                 .catch(err => message.error(err));
         }
     }, [cartCtx.checkoutId, router]);
@@ -243,7 +242,7 @@ export const OrderPageView = () => {
                             
                             <Text style={{display: 'flex', alignItems: "center"}}>
                             {/* 总计： <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{totalCost}</span> */}
-                            总计： <AxCoin value={totalCost} coloredValue/>
+                            总计： <AxCoin value={checkout.totalPrice} coloredValue/>
                             </Text>
                             <Button type="primary">提交订单</Button>
                         </Space>
@@ -362,7 +361,7 @@ export const OrderPageView = () => {
                     <div style={{ position: 'fixed', bottom: 0, width: '100%', background: '#fff', padding: '20px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }}>
                         <Space align='center' style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
                             <Text style={{ display: 'flex', alignItems: "center" }}>
-                                总计： <AxCoin value={totalCost} coloredValue/>
+                                总计： <AxCoin value={checkout.totalPrice} coloredValue/>
                             </Text>
                             <Button type="primary">提交订单</Button>
                         </Space>

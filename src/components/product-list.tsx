@@ -7,6 +7,7 @@ import {
   Collapse,
   Space,
   Table, Flex,
+  Popconfirm,
 } from 'antd';
 const { Column } = Table;
 const { Paragraph } = Typography;
@@ -159,8 +160,16 @@ export const CheckoutTableList: React.FC<CheckoutTableListProps> = (
             width="10%"
             ellipsis={true}
             render={(_, line: CheckoutLineDetail) => (
-              <Button style={{padding: 0}} type="link"
-                  onClick={(() => onClickDelete(line.id))}>删除</Button>
+              <Popconfirm
+                title="删除购物车商品"
+                description="确定要执行此操作吗？"
+                onConfirm={() => onClickDelete(line.id)}
+                onCancel={() => {}}
+                okText="确定"
+                cancelText="取消"
+              >
+                <Button style={{padding: 0}} type="link">删除</Button>
+              </Popconfirm>
             )}
           />
         </Table>

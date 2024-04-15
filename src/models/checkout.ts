@@ -9,6 +9,7 @@ export interface CheckoutDetail {
     id: string;
     lines: CheckoutLineDetail[] | null;
     totalPrice: number;
+    quantity: number;
 }
 
 export interface CheckoutLineDetail {

@@ -41,4 +41,5 @@ fragment CheckoutForCartFragment on Checkout {
       currency
     }
   }
+  quantity
 }

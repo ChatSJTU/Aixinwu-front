@@ -8,12 +8,16 @@ import { MessageContext } from "./message"
 interface CartContextType {
     totalQuantity: number,
     addLines: (variantId : string, quantity : number) => {},
+    setTotalQuantity: (quantity: number) => void,
+    setCheckoutId: (checkoutId: string) => void,
     checkoutId: string | undefined,
 }
 
 const CartContext = React.createContext<CartContextType>({
     totalQuantity: 0,
     addLines: (variantId : string, quantity : number) => false,
+    setTotalQuantity: (quantity: number) => false,
+    setCheckoutId: (checkoutId: string) => false,
     checkoutId: undefined
 })
 
@@ -43,7 +47,7 @@ export const CartContextProvider = (props : LayoutProps) => {
                 })
                 .catch(err => message.error(err));
         }
-    });
+    }, [checkoutId]);
   
     const addLines = useCallback((variantId : string, quantity : number) => {
         if (checkoutId === undefined)
@@ -61,10 +65,20 @@ export const CartContextProvider = (props : LayoutProps) => {
         return true;//留着，万一之后要把错误处理交给caller
     }, []);
 
+    const setTotalQuantityOut = function(quantity: number) {
+        setTotalQuantity(quantity);
+    }
+
+    const setCheckoutIdOut = function(checkoutId: string) {
+        setCheckoutId(checkoutId);
+    }
+
     const contextValue = {
         totalQuantity: totalQuantity,
+        setTotalQuantity: setTotalQuantityOut,
         addLines: addLines,
         checkoutId: checkoutId,
+        setCheckoutId: setCheckoutIdOut,
     }
 
   return (
