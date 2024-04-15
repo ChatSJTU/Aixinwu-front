@@ -1,11 +1,14 @@
 import { ExternalObtainAccessTokens, User } from "@/graphql/hooks"
-import React, { useCallback, useMemo, useState } from "react"
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
+import { ApolloClient, HttpLink, InMemoryCache, from } from "@apollo/client"
+import { onError } from "@apollo/client/link/error";
 import useLocalStorage from "@/hooks/useLocalStorage"
 import { LayoutProps } from "@/models/layout"
 import { useRouter } from 'next/router'
 import { Token } from "@/models/token"
 import { UserBasicInfo } from "@/models/user"
+import { oidcRefreshToken } from "@/services/oauth";
+import { useInterval } from "ahooks";
 
 interface AuthContextType {
   token: string,
@@ -38,7 +41,7 @@ const calculateRemainDuration = (expTime : number) => {
   return remainDuration
 }
 
-const createGraphqlClient = (token: string | null, useToken: boolean) => {
+const createGraphqlClient = (token: string | null, useToken: boolean, refreshToken: string, setToken: React.Dispatch<React.SetStateAction<string>>, setExp: React.Dispatch<React.SetStateAction<number>>) => {
   const httpLink = useToken ? 
     new HttpLink({
       uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
@@ -50,8 +53,64 @@ const createGraphqlClient = (token: string | null, useToken: boolean) => {
       uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
     });
 
+    //fallback 策略，一般情况下不会触发
+    const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
+      if (graphQLErrors) {
+        for (let err of graphQLErrors) {
+          switch ((err.extensions.exception as any).code) {
+            // Apollo Server sets code to UNAUTHENTICATED
+            // when an AuthenticationError is thrown in a resolver
+            case "ExpiredSignatureError":
+              //console.log(`refreshToken is ${refreshToken}`)
+              if (refreshToken == "")
+                return;
+
+              // let fulfilled = false;
+              // let success = false;
+              // let token = "";
+              oidcRefreshToken(new ApolloClient({
+                link: new HttpLink({
+                  uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
+                }),
+                cache: new InMemoryCache()
+              }), refreshToken).then((data) => {
+                if (data)
+                {
+                  //success = true;
+                  setToken(data);
+                  setExp((new Date().getTime() + 20 * 60 * 1000));
+                  //token = data;
+                }
+                //fulfilled = true;
+              }).catch((err) => {
+                //fulfilled = true;
+              });
+              // while(!fulfilled){}
+              // if (!success)
+              //   return;
+              // // Modify the operation context with a new token
+              // const oldHeaders = operation.getContext().headers;
+              // operation.setContext({
+              //   headers: {
+              //     ...oldHeaders,
+              //     authorization: token,
+              //   },
+              // });
+              // // Retry the request, returning the new observable
+              // return forward(operation);
+          }
+        }
+      }
+    
+      // To retry on network errors, we recommend the RetryLink
+      // instead of the onError link. This just logs the error.
+      if (networkError) {
+        console.log(`[Network error]: ${networkError}`);
+      }
+    });
+
   return new ApolloClient({
-    link: httpLink,
+    link: from([errorLink, httpLink]),
     cache: new InMemoryCache()
   })
 }
@@ -61,18 +120,41 @@ export const AuthContextProvider = (props : LayoutProps) => {
   const [token, setToken] = useLocalStorage<string>("token", "");
   const [exp, setExp] = useLocalStorage<number>("expTime", 0);
   const [userInfo, setUserInfo] = useState<UserBasicInfo>({} as UserBasicInfo);
+  const [timerId, setTimerId] = useState<NodeJS.Timeout | undefined>(undefined);
   const router = useRouter();
   
   const isLoggedIn = (!!token) && (calculateRemainDuration(exp) > 0)
 
   const client = useMemo(() => {
-    return createGraphqlClient(token, isLoggedIn);
+    return createGraphqlClient(token, isLoggedIn, refreshToken, setToken, setExp);
   }, [token, isLoggedIn]);
+
+  useEffect(() => {
+    if (timerId == undefined)
+    {
+      var id = setInterval(() => {
+        if (refreshToken == "")
+          return;
+        oidcRefreshToken(new ApolloClient({
+          link: new HttpLink({
+            uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
+          }),
+          cache: new InMemoryCache()
+        }), refreshToken).then((data)=>{
+          if (!data)
+            return;
+          setToken(data);
+          setExp((new Date().getTime() + 20 * 60 * 1000));
+        });
+      }, 20 * 60 * 1000); //20 * 60
+      setTimerId(id);
+    }
+  });
 
   const loginHandler = (data: Token) => {
     setRefreshToken(data.refreshToken!)
     setToken(data.token!)
-    setExp((new Date().getTime() + 1800*1000))
+    setExp((new Date().getTime() + 20 * 60 * 1000))
   }
 
   const logoutHandler = useCallback(() => {

@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { SmileOutlined, FrownOutlined } from '@ant-design/icons';
 import Head from "next/head";
 import { MessageContext } from "@/contexts/message";
-import { fetchToken } from "@/services/oauth";
+import { oidcFetchToken } from "@/services/oauth";
 
 const OauthRedirctBack = () => {
     const router = useRouter();
@@ -17,7 +17,7 @@ const OauthRedirctBack = () => {
     const message = useContext(MessageContext);
 
     const doFetchToken = (code: string, state: string) => {
-      fetchToken(client!, code, state)
+      oidcFetchToken(client!, code, state)
         .then((data) => {
           authCtx.onLogin(data);
           router.push('/', undefined, { shallow: true })

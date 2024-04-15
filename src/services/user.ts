@@ -53,7 +53,8 @@ export async function fetchUserAddresses(client: ApolloClient<object>) {
     try {
         const resp = await client.query<UserAddressesQuery>(
             {
-                query: UserAddressesDocument
+                query: UserAddressesDocument,
+                fetchPolicy: 'network-only'
             }
         ); 
         if (!resp.data || 
@@ -63,7 +64,7 @@ export async function fetchUserAddresses(client: ApolloClient<object>) {
         var data = resp.data.me
         return data.addresses.map(x => mapAddressInfo(x as Address));
     } catch (error) {
-        var errmessage = `获取用户数据失败：${error}`
+        var errmessage = `获取用户收货地址失败：${error}`
         console.error(errmessage);
         throw errmessage;
     }

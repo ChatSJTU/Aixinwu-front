@@ -1,0 +1,10 @@
+mutation OIDCTokenRefresh($refreshToken: String!) {
+  tokenRefresh(refreshToken: $refreshToken) {
+    token
+    errors {
+      code
+      message
+      field
+    }
+  }
+}

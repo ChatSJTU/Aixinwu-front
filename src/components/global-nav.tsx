@@ -8,7 +8,7 @@ import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
 import { AxCoin } from './axcoin';
 import { fetchUserBasicInfo } from '@/services/user';
-import { externalLogin } from '@/services/oauth';
+import { oidcRedirectJaccount } from '@/services/oauth';
 import CartContext from '@/contexts/cart';
 
 const { Title, Text } = Typography;
@@ -74,7 +74,7 @@ const NavBar = () => {
   }, [authCtx.isLoggedIn]);
   
   const doExternalLogin = () => {
-    externalLogin(client!, window.location.origin + router.basePath + "/oauth/redirectback")
+    oidcRedirectJaccount(client!, window.location.origin + router.basePath + "/oauth/redirectback")
       .then((data) => {
         window.location.replace(data)
       },(err)=>{

@@ -32541,6 +32541,13 @@ export type OidcTokenFetchMutationVariables = Exact<{
 
 export type OidcTokenFetchMutation = { __typename?: 'Mutation', externalObtainAccessTokens?: { __typename?: 'ExternalObtainAccessTokens', token?: string | null, csrfToken?: string | null, refreshToken?: string | null, user?: { __typename?: 'User', id: string, account: string, balance: number, email: string, lastLogin?: any | null, firstName: string, continuous: number, avatar?: { __typename?: 'Image', url: string, alt?: string | null } | null } | null, errors: Array<{ __typename?: 'AccountError', message?: string | null, field?: string | null, code: AccountErrorCode, addressType?: AddressTypeEnum | null }>, accountErrors: Array<{ __typename?: 'AccountError', addressType?: AddressTypeEnum | null, code: AccountErrorCode, field?: string | null, message?: string | null }> } | null };
 
+export type OidcTokenRefreshMutationVariables = Exact<{
+  refreshToken: Scalars['String']['input'];
+}>;
+
+
+export type OidcTokenRefreshMutation = { __typename?: 'Mutation', tokenRefresh?: { __typename?: 'RefreshToken', token?: string | null, errors: Array<{ __typename?: 'AccountError', code: AccountErrorCode, message?: string | null, field?: string | null }> } | null };
+
 export type ArticleByIdQueryVariables = Exact<{
   id?: InputMaybe<Array<Scalars['ID']['input']> | Scalars['ID']['input']>;
 }>;
@@ -32830,6 +32837,44 @@ export function useOidcTokenFetchMutation(baseOptions?: Apollo.MutationHookOptio
 export type OidcTokenFetchMutationHookResult = ReturnType<typeof useOidcTokenFetchMutation>;
 export type OidcTokenFetchMutationResult = Apollo.MutationResult<OidcTokenFetchMutation>;
 export type OidcTokenFetchMutationOptions = Apollo.BaseMutationOptions<OidcTokenFetchMutation, OidcTokenFetchMutationVariables>;
+export const OidcTokenRefreshDocument = gql`
+    mutation OIDCTokenRefresh($refreshToken: String!) {
+  tokenRefresh(refreshToken: $refreshToken) {
+    token
+    errors {
+      code
+      message
+      field
+    }
+  }
+}
+    `;
+export type OidcTokenRefreshMutationFn = Apollo.MutationFunction<OidcTokenRefreshMutation, OidcTokenRefreshMutationVariables>;
+
+/**
+ * __useOidcTokenRefreshMutation__
+ *
+ * To run a mutation, you first call `useOidcTokenRefreshMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOidcTokenRefreshMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [oidcTokenRefreshMutation, { data, loading, error }] = useOidcTokenRefreshMutation({
+ *   variables: {
+ *      refreshToken: // value for 'refreshToken'
+ *   },
+ * });
+ */
+export function useOidcTokenRefreshMutation(baseOptions?: Apollo.MutationHookOptions<OidcTokenRefreshMutation, OidcTokenRefreshMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<OidcTokenRefreshMutation, OidcTokenRefreshMutationVariables>(OidcTokenRefreshDocument, options);
+      }
+export type OidcTokenRefreshMutationHookResult = ReturnType<typeof useOidcTokenRefreshMutation>;
+export type OidcTokenRefreshMutationResult = Apollo.MutationResult<OidcTokenRefreshMutation>;
+export type OidcTokenRefreshMutationOptions = Apollo.BaseMutationOptions<OidcTokenRefreshMutation, OidcTokenRefreshMutationVariables>;
 export const ArticleByIdDocument = gql`
     query ArticleById($id: [ID!]) {
   pages(filter: {ids: $id}, first: 1) {
