@@ -1,4 +1,4 @@
-import { Address, UserAddressesDocument, UserAddressesQuery, UserBasicInfoDocument } from "@/graphql/hooks";
+import { Address, AddressInput, UserAddressesDocument, UserAddressesQuery, UserBasicInfoDocument, UserAddressAddMutation, UserAddressAddDocument } from "@/graphql/hooks";
 import { AddressInfo } from "@/models/address";
 import { UserBasicInfo } from "@/models/user";
 import { ApolloClient } from "@apollo/client";
@@ -69,3 +69,35 @@ export async function fetchUserAddresses(client: ApolloClient<object>) {
         throw errmessage;
     }
 };
+
+//新增用户收货地址
+export async function addUserAddress(client: ApolloClient<object>, newAddress: any) {
+    try {
+        const resp = await client.mutate<UserAddressAddMutation>({
+            mutation: UserAddressAddDocument,
+            variables: {
+              input: newAddress, // 需要符合AddressInput格式
+            }
+        }); 
+
+        if (!resp.data || 
+            !resp.data.accountAddressCreate) {
+          throw "数据为空";
+        }
+        
+        if (resp.data.accountAddressCreate.errors.length != 0)
+        {
+          throw resp.data.accountAddressCreate.errors[0].message;
+        }
+        var data = resp.data.accountAddressCreate;
+        if (!data.address) {
+            throw "更新用户地址返回值为空"
+        }
+        return mapAddressInfo(data.address as Address);
+        
+    } catch (error) {
+        var errmessage = `新增用户收货地址失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+}
