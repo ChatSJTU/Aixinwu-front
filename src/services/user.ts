@@ -1,4 +1,16 @@
-import { Address, AddressInput, UserAddressesDocument, UserAddressesQuery, UserBasicInfoDocument, UserAddressAddMutation, UserAddressAddDocument } from "@/graphql/hooks";
+import { 
+    Address, 
+    UserAddressesDocument, 
+    UserAddressesQuery, 
+    UserBasicInfoDocument, 
+    UserAddressAddMutation, 
+    UserAddressAddDocument, 
+    UserAddressDeleteDocument, 
+    UserAddressDeleteMutation,
+    UserAddressUpdateDocument,
+    UserAddressUpdateMutation
+} from "@/graphql/hooks";
+
 import { AddressInfo } from "@/models/address";
 import { UserBasicInfo } from "@/models/user";
 import { ApolloClient } from "@apollo/client";
@@ -82,7 +94,7 @@ export async function addUserAddress(client: ApolloClient<object>, newAddress: a
 
         if (!resp.data || 
             !resp.data.accountAddressCreate) {
-          throw "数据为空";
+          throw "新增用户地址：数据为空";
         }
         
         if (resp.data.accountAddressCreate.errors.length != 0)
@@ -97,6 +109,55 @@ export async function addUserAddress(client: ApolloClient<object>, newAddress: a
         
     } catch (error) {
         var errmessage = `新增用户收货地址失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+}
+
+// 删除用户收货地址
+export async function deleteUserAddress(client: ApolloClient<object>, id: string) {
+    try {
+        const resp = await client.mutate<UserAddressDeleteMutation>({
+            mutation: UserAddressDeleteDocument,
+            variables: {
+              ID: id,
+            }
+        }); 
+        if (!resp.data || !resp.data.accountAddressDelete){
+            throw "数据为空"
+        }
+        if (resp.data.accountAddressDelete.errors.length != 0)
+        {
+          throw resp.data.accountAddressDelete.errors[0].message;
+        }
+        
+    } catch (error) {
+        var errmessage = `删除用户收货地址失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+}
+
+// 更新用户收货地址
+export async function updateUserAddress(client: ApolloClient<object>, id: string, newAddr: any) {
+    try {
+        const resp = await client.mutate<UserAddressUpdateMutation>({
+            mutation: UserAddressDeleteDocument,
+            variables: {
+              ID: id,
+              NewAddr: newAddr // 需要符合AddressInput格式
+            }
+        }); 
+        if (!resp.data || !resp.data.accountAddressUpdate){
+            throw "数据为空"
+        }
+        if (resp.data.accountAddressUpdate.errors.length != 0)
+        {
+          throw resp.data.accountAddressUpdate.errors[0].message;
+        }
+        
+    } catch (error) {
+        var errmessage = `更新用户收货地址失败：${error}`
         console.error(errmessage);
         throw errmessage;
     }
