@@ -88,13 +88,15 @@ const UserConsigneePage = () => {
                 <title>收货信息管理- 上海交通大学绿色爱心屋</title>
             </Head>
             <UserLayout>
-                <PageHeader title={"收货信息管理"} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                    <PageHeader title={"收货信息管理"} />
+                    <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal()}>新增收货地址</Button>
+                </div>
                 <center>
-                    <div className="address-list-container" style={{ maxHeight: '400px' }}>
-                        <Space direction="vertical" size="small" style={{ maxWidth: '600px' }}>
-                            <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal()} block>新增收货地址</Button>
+                    <div className="address-list-container" style={{ maxHeight: '400px', marginTop: '30px'}}>
+                        <Space direction="vertical" size="small" style={{ maxWidth: '900px' }}>
                             <List
-                                grid={{ gutter: 8, column: 2 }}
+                                grid={{ gutter: 8, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 6 }}
                                 dataSource={addrList}
                                 renderItem={(item) => (
                                     <List.Item>
