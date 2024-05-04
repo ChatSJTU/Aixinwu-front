@@ -283,6 +283,49 @@ code {
     }
 }
 
+/* Address*/
+.address-list-container {
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &:hover {
+        &::-webkit-scrollbar-thumb {
+            @include themify {
+                background-color: themed('scrollbar-bg-color');
+            }
+        }
+        &::-webkit-scrollbar-thumb:hover {
+            @include themify {
+                background-color: themed('scrollbar-color');
+            }
+        }
+    }
+}
+
+.address-card{
+    border-width: 1px;
+    @include themify {
+        border-color: themed('primary-border-color') !important;
+    }
+}
+
+.address-card-container {
+    border-radius: 8px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    &:hover {
+        border-color: #5373ae;
+        box-shadow: 0 4px 8px rgba(141, 152, 213, 0.3);
+    }
+}
+
 /* others */
 .primary-text {
     @include themify {
