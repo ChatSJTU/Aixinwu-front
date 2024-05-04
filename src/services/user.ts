@@ -142,7 +142,7 @@ export async function deleteUserAddress(client: ApolloClient<object>, id: string
 export async function updateUserAddress(client: ApolloClient<object>, id: string, newAddr: any) {
     try {
         const resp = await client.mutate<UserAddressUpdateMutation>({
-            mutation: UserAddressDeleteDocument,
+            mutation: UserAddressUpdateDocument,
             variables: {
               ID: id,
               NewAddr: newAddr // 需要符合AddressInput格式
