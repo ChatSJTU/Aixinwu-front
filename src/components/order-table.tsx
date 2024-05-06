@@ -36,7 +36,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
             align: 'center',
             dataIndex: 'orderId',
             key: 'orderId',
-            width: '8%',
+            width: '12%',
             render: (ID) => <Text strong style={{ fontSize: '18px' }}>{ID}</Text>
         },
         {
@@ -70,31 +70,40 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
         {
             title: '状态',
             align: 'center',
-            dataIndex: 'orderStatus',
-            key: 'orderStatus',
-            render: (stat) => stat ? <Tag color='#5BD8A6'>已支付</Tag> : <Tag color='blue'>未支付</Tag>
+            dataIndex: 'paymentStatus',
+            key: 'paymentStatus',
+            render: (stat: string) => (
+                stat[0] === "FULLY_CHARGED" ? <Tag style={{ marginInlineEnd: '0px' }} color='green'>已支付</Tag>
+                    :
+                    stat[0] === "NOT_CHARGED" ? <Tag style={{ marginInlineEnd: '0px' }} color='blue'>未支付</Tag>
+                        :
+                        stat[0] === "FULLY_REFUNDED" ? <Tag style={{ marginInlineEnd: '0px' }} color='purple'>已退款</Tag>
+                            :
+                            <Tag style={{ marginInlineEnd: '0px' }}>已取消</Tag>
+            )
         },
         {
             title: '操作',
-            width: '15%',
+            width: '12%',
             align: 'center',
-            key: 'paymentStatus',
+            key: 'operation',
             dataIndex: 'paymentStatus',
             render: (record) => {
-                if (record[0] === "FULLY CHARGED") {
-                    return (
-                        <Button type='link' icon={<ExportOutlined />} onClick={() => toOrderDetail(record[1])}>详情</Button>
-                    )
-                }
-                else if (record[0] === "NOT_CHARGED") {
+
+                if (record[0] === "NOT_CHARGED") {
                     return (
                         <Flex vertical justify='center' align='center' >
-                            <Button type='primary' icon={<PayCircleOutlined />} size='small' style={{ marginBottom: '10px' }}>支付</Button>
-                            <Button type='default' icon={<CloseCircleOutlined />} size='small'>取消</Button>
+                            <Button type='primary' size='small' icon={<PayCircleOutlined />} style={{ marginBottom: '10px' }}>支付</Button>
+                            <Button type='default' size='small' icon={<CloseCircleOutlined />} >取消</Button>
                         </Flex>
                     )
                 }
-                return <span>{record[0]}</span>
+                else {
+                    return (
+                        <Button type='default' size='small' icon={<ExportOutlined />} onClick={() => toOrderDetail(record[1])}>详情</Button>
+                    )
+                }
+
             },
         },
     ];
