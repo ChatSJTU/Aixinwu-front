@@ -1,0 +1,42 @@
+query UserOrders($maxFetch: Int = 50) {
+  me{
+  orders(first: $maxFetch) {
+    edges {
+      node {
+        created
+        id
+        isPaid
+        number
+        paymentStatus
+        checkoutId
+        total {
+          gross {
+            amount
+          }
+        }
+        lines {
+          productName
+          variant {
+            media {
+              url(format: WEBP, size: 128)
+            }
+            id
+            pricing {
+              price {
+                gross {
+                  amount
+                }
+              }
+            }
+          }
+          quantity
+        }
+        shippingAddress {
+          ...UserAddressFragment
+        }
+      }
+    }
+    totalCount
+  }
+}
+}

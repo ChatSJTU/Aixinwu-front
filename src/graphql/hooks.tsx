@@ -32673,6 +32673,13 @@ export type UserBasicInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type UserBasicInfoQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string, balance: number, userType: string, continuous: number, avatar?: { __typename?: 'Image', url: string } | null } | null };
 
+export type UserOrdersQueryVariables = Exact<{
+  maxFetch?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type UserOrdersQuery = { __typename?: 'Query', me?: { __typename?: 'User', orders?: { __typename?: 'OrderCountableConnection', totalCount?: number | null, edges: Array<{ __typename?: 'OrderCountableEdge', node: { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } }> } | null } | null };
+
 export const UserAddressFragmentFragmentDoc = gql`
     fragment UserAddressFragment on Address {
   id
@@ -33678,3 +33685,80 @@ export type UserBasicInfoQueryHookResult = ReturnType<typeof useUserBasicInfoQue
 export type UserBasicInfoLazyQueryHookResult = ReturnType<typeof useUserBasicInfoLazyQuery>;
 export type UserBasicInfoSuspenseQueryHookResult = ReturnType<typeof useUserBasicInfoSuspenseQuery>;
 export type UserBasicInfoQueryResult = Apollo.QueryResult<UserBasicInfoQuery, UserBasicInfoQueryVariables>;
+export const UserOrdersDocument = gql`
+    query UserOrders($maxFetch: Int = 50) {
+  me {
+    orders(first: $maxFetch) {
+      edges {
+        node {
+          created
+          id
+          isPaid
+          number
+          paymentStatus
+          checkoutId
+          total {
+            gross {
+              amount
+            }
+          }
+          lines {
+            productName
+            variant {
+              media {
+                url(format: WEBP, size: 128)
+              }
+              id
+              pricing {
+                price {
+                  gross {
+                    amount
+                  }
+                }
+              }
+            }
+            quantity
+          }
+          shippingAddress {
+            ...UserAddressFragment
+          }
+        }
+      }
+      totalCount
+    }
+  }
+}
+    ${UserAddressFragmentFragmentDoc}`;
+
+/**
+ * __useUserOrdersQuery__
+ *
+ * To run a query within a React component, call `useUserOrdersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserOrdersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserOrdersQuery({
+ *   variables: {
+ *      maxFetch: // value for 'maxFetch'
+ *   },
+ * });
+ */
+export function useUserOrdersQuery(baseOptions?: Apollo.QueryHookOptions<UserOrdersQuery, UserOrdersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserOrdersQuery, UserOrdersQueryVariables>(UserOrdersDocument, options);
+      }
+export function useUserOrdersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserOrdersQuery, UserOrdersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserOrdersQuery, UserOrdersQueryVariables>(UserOrdersDocument, options);
+        }
+export function useUserOrdersSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserOrdersQuery, UserOrdersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<UserOrdersQuery, UserOrdersQueryVariables>(UserOrdersDocument, options);
+        }
+export type UserOrdersQueryHookResult = ReturnType<typeof useUserOrdersQuery>;
+export type UserOrdersLazyQueryHookResult = ReturnType<typeof useUserOrdersLazyQuery>;
+export type UserOrdersSuspenseQueryHookResult = ReturnType<typeof useUserOrdersSuspenseQuery>;
+export type UserOrdersQueryResult = Apollo.QueryResult<UserOrdersQuery, UserOrdersQueryVariables>;

@@ -1,5 +1,6 @@
 import { TableRowSelection } from "antd/es/table/interface";
 import exp from "node:constants";
+import { AddressInfo } from "./address";
 
 export interface OrderProductName {
     product_name: string,
@@ -33,4 +34,36 @@ export interface OrderListProductsProps {
     onItemNumberMinus: Function;
     onItemNumberPlus: Function;
     rowSelection?: TableRowSelection<OrderProduct>;
+}
+
+interface LineItem {
+    productName: string;
+    variant: {
+        media: {url: string;}[];
+        id: string;
+        pricing: {
+            price: {
+                gross: {
+                    amount: number;
+                };
+            };
+        };
+    };
+    quantity: number;
+}
+
+export interface OrderInfo {
+    created: string,
+    id: string,
+    isPaid: boolean,
+    number: string,
+    paymentStatus: string,
+    checkoutId: string,
+    total:{
+        gross:{
+            amount: number,
+        }
+    }
+    lines: LineItem[];
+    shippingAddress: AddressInfo;
 }

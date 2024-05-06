@@ -8,7 +8,9 @@ import {
     UserAddressDeleteDocument, 
     UserAddressDeleteMutation,
     UserAddressUpdateDocument,
-    UserAddressUpdateMutation
+    UserAddressUpdateMutation,
+    UserOrdersDocument,
+    UserOrdersQuery
 } from "@/graphql/hooks";
 
 import { AddressInfo } from "@/models/address";
@@ -158,6 +160,25 @@ export async function updateUserAddress(client: ApolloClient<object>, id: string
         
     } catch (error) {
         var errmessage = `更新用户收货地址失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+}
+
+export async function fetchUserOrders(client: ApolloClient<object>, maxFetch: number = 50) {
+    try {
+        const resp = await client.query<UserOrdersQuery>({
+            query: UserOrdersDocument,
+            variables: {
+                maxFetch: maxFetch,
+            }
+        });
+        if (!resp.data || !resp.data.me){
+            throw "数据为空"
+        }
+        return resp.data.me
+    } catch (error) {
+        var errmessage = `获取用户订单列表失败：${error}`
         console.error(errmessage);
         throw errmessage;
     }
