@@ -36,7 +36,6 @@ query UserOrders($maxFetch: Int = 50) {
         }
       }
     }
-    totalCount
   }
 }
 }

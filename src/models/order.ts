@@ -66,4 +66,5 @@ export interface OrderInfo {
     }
     lines: LineItem[];
     shippingAddress: AddressInfo;
+    totoalCOunt: number;
 }

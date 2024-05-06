@@ -16,6 +16,7 @@ import {
 import { AddressInfo } from "@/models/address";
 import { UserBasicInfo } from "@/models/user";
 import { ApolloClient } from "@apollo/client";
+import { OrderInfo } from "../models/order";
 
 export function mapAddressInfo(data: Address) : AddressInfo {
     return {
@@ -173,10 +174,13 @@ export async function fetchUserOrders(client: ApolloClient<object>, maxFetch: nu
                 maxFetch: maxFetch,
             }
         });
-        if (!resp.data || !resp.data.me){
+        if (!resp.data || !resp.data.me || !resp.data.me.orders){
             throw "数据为空"
         }
-        return resp.data.me
+        const edges = resp.data.me.orders.edges;
+        const res = edges.map(edge => edge.node)
+        return res as OrderInfo[]
+
     } catch (error) {
         var errmessage = `获取用户订单列表失败：${error}`
         console.error(errmessage);
