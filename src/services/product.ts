@@ -3,7 +3,7 @@ import {
     ProductDetailDocument,
     ProductDetailQuery
 } from "@/graphql/hooks";
-import { Category, ProductDetails, VarientDetail } from "@/models/products";
+import { Category, ProductDetail, VarientDetail } from "@/models/products";
 import { ApolloClient } from "@apollo/client";
 
 //获取商品分类树列表
@@ -80,7 +80,7 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
                 update_time: x.updatedAt,
                 price: x.pricing?.priceUndiscounted?.gross.amount
             } as VarientDetail))
-        } as ProductDetails;
+        } as ProductDetail;
         return res;
     } catch (error) {
         var errmessage = `请求失败：${error}`
