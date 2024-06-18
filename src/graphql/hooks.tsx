@@ -3054,6 +3054,18 @@ export type CardInput = {
   money: MoneyInput;
 };
 
+/** Shop Carousel. */
+export type Carousel = {
+  __typename?: 'Carousel';
+  /** Carousel Images */
+  urls?: Maybe<Array<Scalars['String']['output']>>;
+};
+
+export type CarouselInput = {
+  /** Url list of new carousel. */
+  urls: Array<Scalars['String']['input']>;
+};
+
 export type CatalogueInput = {
   /** Categories related to the discount. */
   categories?: InputMaybe<Array<Scalars['ID']['input']>>;
@@ -6879,6 +6891,154 @@ export type Domain = {
   url: Scalars['String']['output'];
 };
 
+/** Represents donation. */
+export type Donation = Node & {
+  __typename?: 'Donation';
+  /** Whether this donation is completed or not. */
+  completed?: Maybe<Scalars['Boolean']['output']>;
+  /** The date and time when the donation was created. */
+  createdAt: Scalars['DateTime']['output'];
+  /** The description of the donation. */
+  description: Scalars['String']['output'];
+  /** The user who made the donation. Requires one of permissions: MANAGE_USERS, MANAGE_DONATIONS, fOWNER */
+  donator?: Maybe<User>;
+  /** The ID of the donation. */
+  id: Scalars['ID']['output'];
+  /** The price of the donation. */
+  price: Money;
+  /** The quantity of the donation. */
+  quantity: Scalars['Int']['output'];
+  /** The title of the donation. */
+  title: Scalars['String']['output'];
+  /** The date and time when the donation was last updated. */
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+/**
+ * Complete a new donation.
+ *
+ * Triggers the following webhook events:
+ * - DONATION_COMPLETED (sync): A donation has been created.
+ */
+export type DonationComplete = {
+  __typename?: 'DonationComplete';
+  donation?: Maybe<Donation>;
+  errors: Array<DonationError>;
+};
+
+export type DonationCountableConnection = {
+  __typename?: 'DonationCountableConnection';
+  edges: Array<DonationCountableEdge>;
+  /** Pagination data for this connection. */
+  pageInfo: PageInfo;
+  /** A total count of items in the collection. */
+  totalCount?: Maybe<Scalars['Int']['output']>;
+};
+
+export type DonationCountableEdge = {
+  __typename?: 'DonationCountableEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: Donation;
+};
+
+/**
+ * Create a new donation.
+ *
+ * Triggers the following webhook events:
+ * - DONATION_CREATED (sync): A donation has been created.
+ */
+export type DonationCreate = {
+  __typename?: 'DonationCreate';
+  donation?: Maybe<Donation>;
+  errors: Array<DonationError>;
+};
+
+export type DonationCreateInput = {
+  /** The description of the donation. */
+  description: Scalars['String']['input'];
+  /** The price of the donation. */
+  price: MoneyInput;
+  /** The quantity of the donation. */
+  quantity: Scalars['Int']['input'];
+  /** The title of the donation. */
+  title: Scalars['String']['input'];
+};
+
+/**
+ * Delete an old donation.
+ *
+ * Triggers the following webhook events:
+ * - DONATION_DELETED (sync): A donation has been deleted.
+ */
+export type DonationDelete = {
+  __typename?: 'DonationDelete';
+  errors: Array<DonationError>;
+  success?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type DonationError = {
+  __typename?: 'DonationError';
+  /** The error code. */
+  code: DonationErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/** An enumeration. */
+export enum DonationErrorCode {
+  CannotAssignNode = 'CANNOT_ASSIGN_NODE',
+  GraphqlError = 'GRAPHQL_ERROR',
+  Invalid = 'INVALID',
+  NotFound = 'NOT_FOUND',
+  PermissionDenied = 'PERMISSION_DENIED',
+  Required = 'REQUIRED'
+}
+
+export type DonationFilterInput = {
+  channels?: InputMaybe<Array<Scalars['ID']['input']>>;
+  created?: InputMaybe<DateRangeInput>;
+  donator?: InputMaybe<Scalars['String']['input']>;
+  metadata?: InputMaybe<Array<MetadataFilter>>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  updated?: InputMaybe<DateRangeInput>;
+};
+
+export type DonationSortingInput = {
+  /** Specifies the direction in which to sort donations. */
+  direction: OrderDirection;
+  /** Sort donations by the selected field. */
+  field: CheckoutSortField;
+};
+
+/**
+ * Update a new donation.
+ *
+ * Triggers the following webhook events:
+ * - DONATION_UPDATED (sync): A donation has been updated.
+ */
+export type DonationUpdate = {
+  __typename?: 'DonationUpdate';
+  donation?: Maybe<Donation>;
+  errors: Array<DonationError>;
+};
+
+export type DonationUpdateInput = {
+  /** The description of the donation. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** ID of the donation. */
+  id: Scalars['ID']['input'];
+  /** The price of the donation. */
+  price?: InputMaybe<MoneyInput>;
+  /** The quantity of the donation. */
+  quantity?: InputMaybe<Scalars['Int']['input']>;
+  /** The title of the donation. */
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
 /**
  * Deletes draft orders.
  *
@@ -9964,12 +10124,56 @@ export type LanguageDisplay = {
 };
 
 /** Store the current and allowed usage. */
-export type LimitInfo = {
+export type LimitInfo = ObjectWithMetadata & {
   __typename?: 'LimitInfo';
   /** Defines the allowed maximum resource usage, null means unlimited. */
   allowedUsage: Limits;
   /** Defines the current resource usage. */
   currentUsage: Limits;
+  /** List of public metadata items. Can be accessed without permissions. */
+  metadata: Array<MetadataItem>;
+  /**
+   * A single key from public metadata.
+   *
+   * Tip: Use GraphQL aliases to fetch multiple keys.
+   */
+  metafield?: Maybe<Scalars['String']['output']>;
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
+  metafields?: Maybe<Scalars['Metadata']['output']>;
+  /** List of private metadata items. Requires staff permissions to access. */
+  privateMetadata: Array<MetadataItem>;
+  /**
+   * A single key from private metadata. Requires staff permissions to access.
+   *
+   * Tip: Use GraphQL aliases to fetch multiple keys.
+   */
+  privateMetafield?: Maybe<Scalars['String']['output']>;
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
+  privateMetafields?: Maybe<Scalars['Metadata']['output']>;
+};
+
+
+/** Store the current and allowed usage. */
+export type LimitInfoMetafieldArgs = {
+  key: Scalars['String']['input'];
+};
+
+
+/** Store the current and allowed usage. */
+export type LimitInfoMetafieldsArgs = {
+  keys?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+/** Store the current and allowed usage. */
+export type LimitInfoPrivateMetafieldArgs = {
+  key: Scalars['String']['input'];
+};
+
+
+/** Store the current and allowed usage. */
+export type LimitInfoPrivateMetafieldsArgs = {
+  keys?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type Limits = {
@@ -11261,6 +11465,14 @@ export type Mutation = {
    */
   attributeValueUpdate?: Maybe<AttributeValueUpdate>;
   /**
+   * Updates site domain of the shop.
+   *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `PUBLIC_URL` environment variable instead.
+   *
+   * Requires one of the following permissions: MANAGE_SETTINGS.
+   */
+  carouselSettingsUpdate?: Maybe<ShopCarouselUpdate>;
+  /**
    * Deletes categories.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
@@ -11655,6 +11867,34 @@ export type Mutation = {
    */
   digitalContentUrlCreate?: Maybe<DigitalContentUrlCreate>;
   /**
+   * Complete a new donation.
+   *
+   * Triggers the following webhook events:
+   * - DONATION_COMPLETED (sync): A donation has been created.
+   */
+  donationComplete?: Maybe<DonationComplete>;
+  /**
+   * Create a new donation.
+   *
+   * Triggers the following webhook events:
+   * - DONATION_CREATED (sync): A donation has been created.
+   */
+  donationCreate?: Maybe<DonationCreate>;
+  /**
+   * Delete an old donation.
+   *
+   * Triggers the following webhook events:
+   * - DONATION_DELETED (sync): A donation has been deleted.
+   */
+  donationDelete?: Maybe<DonationDelete>;
+  /**
+   * Update a new donation.
+   *
+   * Triggers the following webhook events:
+   * - DONATION_UPDATED (sync): A donation has been updated.
+   */
+  donationUpdate?: Maybe<DonationUpdate>;
+  /**
    * Deletes draft orders.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
@@ -12034,11 +12274,7 @@ export type Mutation = {
    * Requires one of the following permissions: MANAGE_ORDERS_IMPORT.
    */
   orderBulkCreate?: Maybe<OrderBulkCreate>;
-  /**
-   * Cancel an order.
-   *
-   * Requires one of the following permissions: MANAGE_ORDERS.
-   */
+  /** Cancel an order. */
   orderCancel?: Maybe<OrderCancel>;
   /**
    * Capture an order.
@@ -12046,11 +12282,7 @@ export type Mutation = {
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
   orderCapture?: Maybe<OrderCapture>;
-  /**
-   * Confirms an unconfirmed order by changing status to unfulfilled.
-   *
-   * Requires one of the following permissions: MANAGE_ORDERS.
-   */
+  /** Confirms an unconfirmed order by changing status to unfulfilled. */
   orderConfirm?: Maybe<OrderConfirm>;
   /**
    * Create new order from existing checkout. Requires the following permissions: AUTHENTICATED_APP and HANDLE_CHECKOUTS.
@@ -13644,6 +13876,11 @@ export type MutationAttributeValueUpdateArgs = {
 };
 
 
+export type MutationCarouselSettingsUpdateArgs = {
+  input: CarouselInput;
+};
+
+
 export type MutationCategoryBulkDeleteArgs = {
   ids: Array<Scalars['ID']['input']>;
 };
@@ -13981,6 +14218,26 @@ export type MutationDigitalContentUpdateArgs = {
 
 export type MutationDigitalContentUrlCreateArgs = {
   input: DigitalContentUrlCreateInput;
+};
+
+
+export type MutationDonationCompleteArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDonationCreateArgs = {
+  input: DonationCreateInput;
+};
+
+
+export type MutationDonationDeleteArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDonationUpdateArgs = {
+  input: DonationUpdateInput;
 };
 
 
@@ -16068,11 +16325,7 @@ export type OrderBulkCreated = Event & {
   version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Cancel an order.
- *
- * Requires one of the following permissions: MANAGE_ORDERS.
- */
+/** Cancel an order. */
 export type OrderCancel = {
   __typename?: 'OrderCancel';
   errors: Array<OrderError>;
@@ -16142,11 +16395,7 @@ export enum OrderChargeStatusEnum {
   Partial = 'PARTIAL'
 }
 
-/**
- * Confirms an unconfirmed order by changing status to unfulfilled.
- *
- * Requires one of the following permissions: MANAGE_ORDERS.
- */
+/** Confirms an unconfirmed order by changing status to unfulfilled. */
 export type OrderConfirm = {
   __typename?: 'OrderConfirm';
   errors: Array<OrderError>;
@@ -21802,11 +22051,7 @@ export type ProductVariant = Node & ObjectWithMetadata & {
   revenue?: Maybe<TaxedMoney>;
   /** The SKU (stock keeping unit) of the product variant. */
   sku?: Maybe<Scalars['String']['output']>;
-  /**
-   * Stocks for the product variant.
-   *
-   * Requires one of the following permissions: MANAGE_PRODUCTS, MANAGE_ORDERS.
-   */
+  /** Stocks for the product variant. */
   stocks?: Maybe<Array<Stock>>;
   /** Determines if the inventory of this variant should be tracked. If false, the quantity won't change when customers buy this item. If the field is not provided, `Shop.trackInventoryByDefault` will be used. */
   trackInventory: Scalars['Boolean']['output'];
@@ -23939,6 +24184,8 @@ export type Query = {
   attribute?: Maybe<Attribute>;
   /** List of the shop's attributes. */
   attributes?: Maybe<AttributeCountableConnection>;
+  /** Return the carousel of the current site. */
+  carousel?: Maybe<Carousel>;
   /** List of the shop's categories. */
   categories?: Maybe<CategoryCountableConnection>;
   /** Look up a category by ID or slug. */
@@ -23991,6 +24238,8 @@ export type Query = {
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
   digitalContents?: Maybe<DigitalContentCountableConnection>;
+  /** Donations made by the user or collected by users if requested by staff. */
+  donations?: Maybe<DonationCountableConnection>;
   /**
    * List of draft orders.
    *
@@ -24194,13 +24443,15 @@ export type Query = {
    */
   shippingZones?: Maybe<ShippingZoneCountableConnection>;
   /** Return information about the shop. */
-  shop: Shop;
+  shop?: Maybe<Shop>;
   /**
    * List of the shop's staff users.
    *
    * Requires one of the following permissions: MANAGE_STAFF.
    */
   staffUsers?: Maybe<UserCountableConnection>;
+  /** Return the current statistics of the shop */
+  statistics?: Maybe<Statistics>;
   /**
    * Look up a stock by ID
    *
@@ -24476,6 +24727,17 @@ export type QueryDigitalContentsArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryDonationsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  channel?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<DonationFilterInput>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<DonationSortingInput>;
 };
 
 
@@ -26926,6 +27188,22 @@ export type ShopAddressUpdate = {
  *
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
+export type ShopCarouselUpdate = {
+  __typename?: 'ShopCarouselUpdate';
+  /** Updated carousel. */
+  carousel?: Maybe<Carousel>;
+  errors: Array<ShopError>;
+  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  shopErrors: Array<ShopError>;
+};
+
+/**
+ * Updates site domain of the shop.
+ *
+ * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `PUBLIC_URL` environment variable instead.
+ *
+ * Requires one of the following permissions: MANAGE_SETTINGS.
+ */
 export type ShopDomainUpdate = {
   __typename?: 'ShopDomainUpdate';
   errors: Array<ShopError>;
@@ -27444,6 +27722,63 @@ export type StaffUserInput = {
   status?: InputMaybe<StaffMemberStatus>;
 };
 
+/** Shop Statistics. */
+export type Statistics = ObjectWithMetadata & {
+  __typename?: 'Statistics';
+  /** Site circulated currency */
+  circulatedCurrency?: Maybe<Scalars['Int']['output']>;
+  /** Site circulated items */
+  circulatedItems?: Maybe<Scalars['Int']['output']>;
+  /** List of public metadata items. Can be accessed without permissions. */
+  metadata: Array<MetadataItem>;
+  /**
+   * A single key from public metadata.
+   *
+   * Tip: Use GraphQL aliases to fetch multiple keys.
+   */
+  metafield?: Maybe<Scalars['String']['output']>;
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
+  metafields?: Maybe<Scalars['Metadata']['output']>;
+  /** List of private metadata items. Requires staff permissions to access. */
+  privateMetadata: Array<MetadataItem>;
+  /**
+   * A single key from private metadata. Requires staff permissions to access.
+   *
+   * Tip: Use GraphQL aliases to fetch multiple keys.
+   */
+  privateMetafield?: Maybe<Scalars['String']['output']>;
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
+  privateMetafields?: Maybe<Scalars['Metadata']['output']>;
+  /** Site Registered Users */
+  users?: Maybe<Scalars['Int']['output']>;
+  /** Site views */
+  views?: Maybe<Scalars['Int']['output']>;
+};
+
+
+/** Shop Statistics. */
+export type StatisticsMetafieldArgs = {
+  key: Scalars['String']['input'];
+};
+
+
+/** Shop Statistics. */
+export type StatisticsMetafieldsArgs = {
+  keys?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+/** Shop Statistics. */
+export type StatisticsPrivateMetafieldArgs = {
+  key: Scalars['String']['input'];
+};
+
+
+/** Shop Statistics. */
+export type StatisticsPrivateMetafieldsArgs = {
+  keys?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 /** Represents stock. */
 export type Stock = Node & {
   __typename?: 'Stock';
@@ -27451,23 +27786,11 @@ export type Stock = Node & {
   id: Scalars['ID']['output'];
   /** Information about the product variant. */
   productVariant: ProductVariant;
-  /**
-   * Quantity of a product in the warehouse's possession, including the allocated stock that is waiting for shipment.
-   *
-   * Requires one of the following permissions: MANAGE_PRODUCTS, MANAGE_ORDERS.
-   */
+  /** Quantity of a product in the warehouse's possession, including the allocated stock that is waiting for shipment. */
   quantity: Scalars['Int']['output'];
-  /**
-   * Quantity allocated for orders.
-   *
-   * Requires one of the following permissions: MANAGE_PRODUCTS, MANAGE_ORDERS.
-   */
+  /** Quantity allocated for orders. */
   quantityAllocated: Scalars['Int']['output'];
-  /**
-   * Quantity reserved for checkouts.
-   *
-   * Requires one of the following permissions: MANAGE_PRODUCTS, MANAGE_ORDERS.
-   */
+  /** Quantity reserved for checkouts. */
   quantityReserved: Scalars['Int']['output'];
   /** The warehouse associated with the stock. */
   warehouse: Warehouse;
@@ -32626,6 +32949,16 @@ export type CheckoutShippingAddressUpdateMutationVariables = Exact<{
 
 export type CheckoutShippingAddressUpdateMutation = { __typename?: 'Mutation', checkoutShippingAddressUpdate?: { __typename?: 'CheckoutShippingAddressUpdate', errors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null }> } | null };
 
+export type CarouselUrlsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CarouselUrlsQuery = { __typename?: 'Query', carousel?: { __typename?: 'Carousel', urls?: Array<string> | null } | null };
+
+export type StatisticsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StatisticsQuery = { __typename?: 'Query', statistics?: { __typename?: 'Statistics', circulatedCurrency?: number | null, circulatedItems?: number | null, users?: number | null, views?: number | null } | null };
+
 export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -32678,7 +33011,7 @@ export type UserOrdersQueryVariables = Exact<{
 }>;
 
 
-export type UserOrdersQuery = { __typename?: 'Query', me?: { __typename?: 'User', orders?: { __typename?: 'OrderCountableConnection', totalCount?: number | null, edges: Array<{ __typename?: 'OrderCountableEdge', node: { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } }> } | null } | null };
+export type UserOrdersQuery = { __typename?: 'Query', me?: { __typename?: 'User', orders?: { __typename?: 'OrderCountableConnection', edges: Array<{ __typename?: 'OrderCountableEdge', node: { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } }> } | null } | null };
 
 export const UserAddressFragmentFragmentDoc = gql`
     fragment UserAddressFragment on Address {
@@ -33352,6 +33685,87 @@ export function useCheckoutShippingAddressUpdateMutation(baseOptions?: Apollo.Mu
 export type CheckoutShippingAddressUpdateMutationHookResult = ReturnType<typeof useCheckoutShippingAddressUpdateMutation>;
 export type CheckoutShippingAddressUpdateMutationResult = Apollo.MutationResult<CheckoutShippingAddressUpdateMutation>;
 export type CheckoutShippingAddressUpdateMutationOptions = Apollo.BaseMutationOptions<CheckoutShippingAddressUpdateMutation, CheckoutShippingAddressUpdateMutationVariables>;
+export const CarouselUrlsDocument = gql`
+    query CarouselUrls {
+  carousel {
+    urls
+  }
+}
+    `;
+
+/**
+ * __useCarouselUrlsQuery__
+ *
+ * To run a query within a React component, call `useCarouselUrlsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCarouselUrlsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCarouselUrlsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCarouselUrlsQuery(baseOptions?: Apollo.QueryHookOptions<CarouselUrlsQuery, CarouselUrlsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CarouselUrlsQuery, CarouselUrlsQueryVariables>(CarouselUrlsDocument, options);
+      }
+export function useCarouselUrlsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CarouselUrlsQuery, CarouselUrlsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CarouselUrlsQuery, CarouselUrlsQueryVariables>(CarouselUrlsDocument, options);
+        }
+export function useCarouselUrlsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CarouselUrlsQuery, CarouselUrlsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CarouselUrlsQuery, CarouselUrlsQueryVariables>(CarouselUrlsDocument, options);
+        }
+export type CarouselUrlsQueryHookResult = ReturnType<typeof useCarouselUrlsQuery>;
+export type CarouselUrlsLazyQueryHookResult = ReturnType<typeof useCarouselUrlsLazyQuery>;
+export type CarouselUrlsSuspenseQueryHookResult = ReturnType<typeof useCarouselUrlsSuspenseQuery>;
+export type CarouselUrlsQueryResult = Apollo.QueryResult<CarouselUrlsQuery, CarouselUrlsQueryVariables>;
+export const StatisticsDocument = gql`
+    query Statistics {
+  statistics {
+    circulatedCurrency
+    circulatedItems
+    users
+    views
+  }
+}
+    `;
+
+/**
+ * __useStatisticsQuery__
+ *
+ * To run a query within a React component, call `useStatisticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStatisticsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStatisticsQuery(baseOptions?: Apollo.QueryHookOptions<StatisticsQuery, StatisticsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<StatisticsQuery, StatisticsQueryVariables>(StatisticsDocument, options);
+      }
+export function useStatisticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StatisticsQuery, StatisticsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<StatisticsQuery, StatisticsQueryVariables>(StatisticsDocument, options);
+        }
+export function useStatisticsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<StatisticsQuery, StatisticsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<StatisticsQuery, StatisticsQueryVariables>(StatisticsDocument, options);
+        }
+export type StatisticsQueryHookResult = ReturnType<typeof useStatisticsQuery>;
+export type StatisticsLazyQueryHookResult = ReturnType<typeof useStatisticsLazyQuery>;
+export type StatisticsSuspenseQueryHookResult = ReturnType<typeof useStatisticsSuspenseQuery>;
+export type StatisticsQueryResult = Apollo.QueryResult<StatisticsQuery, StatisticsQueryVariables>;
 export const CategoriesDocument = gql`
     query Categories {
   categories(first: 100) {
@@ -33724,7 +34138,6 @@ export const UserOrdersDocument = gql`
           }
         }
       }
-      totalCount
     }
   }
 }

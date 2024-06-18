@@ -1,0 +1,8 @@
+query Statistics {
+  statistics {
+    circulatedCurrency
+    circulatedItems
+    users
+    views
+  }
+}
