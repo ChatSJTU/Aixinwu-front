@@ -51,8 +51,14 @@ export const UserBasicInfoCard: React.FC<{ userInfo: UserBasicInfo }> = ({ userI
                         </Space>
                         <span>{email}</span>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <span>账户余额：{balance}</span>
-                            <AxCoin size={13} style={{ marginLeft: '2px' }}/>
+                            <span>账户余额：</span>
+                            <AxCoin size={14} 
+                                value={balance}
+                                valueStyle={{
+                                    margin: '0px 0px 0px -4px',
+                                    fontWeight: 'normal',
+                                    fontSize: '14px',
+                                }}/>
                         </div>
                     </Space>
                 </Space>

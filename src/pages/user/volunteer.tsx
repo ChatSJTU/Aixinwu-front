@@ -1,6 +1,6 @@
 import Head from "next/head";
 import UserLayout from "@/components/user-center-layout"
-
+import { PageHeader } from "@/components/page-header";
 
 const UserVolunteerPage = () => {
 
@@ -10,7 +10,7 @@ const UserVolunteerPage = () => {
                 <title>义工记录 - 上海交通大学绿色爱心屋</title>
             </Head>
             <UserLayout>
-                <>义工记录</>
+                <PageHeader title={"义工记录"} />
             </UserLayout>
         </>
     );

@@ -1,6 +1,6 @@
 import Head from "next/head";
 import UserLayout from "@/components/user-center-layout"
-
+import { PageHeader } from "@/components/page-header";
 
 const UserSettingsPage = () => {
 
@@ -10,7 +10,7 @@ const UserSettingsPage = () => {
                 <title>偏好设置 - 上海交通大学绿色爱心屋</title>
             </Head>
             <UserLayout>
-                <>偏好设置</>
+                <PageHeader title={"偏好设置"} />
             </UserLayout>
         </>
     );
