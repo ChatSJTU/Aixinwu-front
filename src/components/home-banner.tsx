@@ -68,15 +68,17 @@ const HomeBanner = () => {
                     >
                         {carouselUrls.length != 0 &&
                             carouselUrls.map((url, index) => (
-                                <div key={index} style={contentStyle}>
-                                    <div style={{ ...blurBackgroundStyle, backgroundImage: `url(${url})` }} />
-                                    <Image
-                                        src={url}
-                                        style={foregroundImageStyle}
-                                        preview={false}
-                                        alt={`carousel-${index}`}
-                                    />
-                                </div>
+                                <>
+                                    <div key={index} style={contentStyle}>
+                                        <div style={{ ...blurBackgroundStyle, backgroundImage: `url(${url})` }} />
+                                        <Image
+                                            src={url}
+                                            style={foregroundImageStyle}
+                                            preview={false}
+                                            alt={`carousel-${index}`}
+                                        />
+                                    </div>
+                                </>
                             ))
                         }
                         {carouselUrls.length == 0 &&
