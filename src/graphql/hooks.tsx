@@ -32981,6 +32981,14 @@ export type ProductsByCategoryIdQueryVariables = Exact<{
 
 export type ProductsByCategoryIdQuery = { __typename?: 'Query', products?: { __typename?: 'ProductCountableConnection', totalCount?: number | null, edges: Array<{ __typename?: 'ProductCountableEdge', node: { __typename?: 'Product', id: string, name: string, rating?: number | null, slug: string, updatedAt: any, isAvailable?: boolean | null, availableForPurchase?: any | null, availableForPurchaseAt?: any | null, images?: Array<{ __typename?: 'ProductImage', id: string, url: string, alt?: string | null, sortOrder?: number | null }> | null, pricing?: { __typename?: 'ProductPricingInfo', displayGrossPrices: boolean, onSale?: boolean | null, priceRange?: { __typename?: 'TaxedMoneyRange', start?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null, stop?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null, discount?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } }> } | null };
 
+export type ProductsByCollectionQueryVariables = Exact<{
+  first: Scalars['Int']['input'];
+  slugs?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+}>;
+
+
+export type ProductsByCollectionQuery = { __typename?: 'Query', collections?: { __typename?: 'CollectionCountableConnection', edges: Array<{ __typename?: 'CollectionCountableEdge', node: { __typename?: 'Collection', id: string, name: string, slug: string, seoTitle?: string | null, seoDescription?: string | null, description?: any | null, products?: { __typename?: 'ProductCountableConnection', totalCount?: number | null, edges: Array<{ __typename?: 'ProductCountableEdge', node: { __typename?: 'Product', id: string, name: string, seoTitle?: string | null, seoDescription?: string | null, rating?: number | null, slug: string, updatedAt: any, isAvailable?: boolean | null, availableForPurchase?: any | null, availableForPurchaseAt?: any | null, description?: any | null, images?: Array<{ __typename?: 'ProductImage', id: string, url: string, alt?: string | null, sortOrder?: number | null }> | null, pricing?: { __typename?: 'ProductPricingInfo', displayGrossPrices: boolean, onSale?: boolean | null, priceRange?: { __typename?: 'TaxedMoneyRange', start?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null, stop?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null, discount?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } }> } | null } }> } | null };
+
 export type UserAddressAddMutationVariables = Exact<{
   input: AddressInput;
 }>;
@@ -33994,6 +34002,101 @@ export type ProductsByCategoryIdQueryHookResult = ReturnType<typeof useProductsB
 export type ProductsByCategoryIdLazyQueryHookResult = ReturnType<typeof useProductsByCategoryIdLazyQuery>;
 export type ProductsByCategoryIdSuspenseQueryHookResult = ReturnType<typeof useProductsByCategoryIdSuspenseQuery>;
 export type ProductsByCategoryIdQueryResult = Apollo.QueryResult<ProductsByCategoryIdQuery, ProductsByCategoryIdQueryVariables>;
+export const ProductsByCollectionDocument = gql`
+    query ProductsByCollection($first: Int!, $slugs: [String!]) {
+  collections(first: 1, channel: "axw-store", filter: {slugs: $slugs}) {
+    edges {
+      node {
+        id
+        name
+        slug
+        seoTitle
+        seoDescription
+        description
+        products(first: $first, sortBy: {direction: DESC, field: LAST_MODIFIED_AT}) {
+          edges {
+            node {
+              id
+              name
+              seoTitle
+              seoDescription
+              rating
+              slug
+              updatedAt
+              isAvailable
+              availableForPurchase
+              availableForPurchaseAt
+              description
+              images {
+                id
+                url(format: WEBP, size: 256)
+                alt
+                sortOrder
+              }
+              pricing {
+                displayGrossPrices
+                onSale
+                priceRange {
+                  start {
+                    gross {
+                      amount
+                    }
+                  }
+                  stop {
+                    gross {
+                      amount
+                    }
+                  }
+                }
+                discount {
+                  gross {
+                    amount
+                  }
+                }
+              }
+            }
+          }
+          totalCount
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useProductsByCollectionQuery__
+ *
+ * To run a query within a React component, call `useProductsByCollectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProductsByCollectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProductsByCollectionQuery({
+ *   variables: {
+ *      first: // value for 'first'
+ *      slugs: // value for 'slugs'
+ *   },
+ * });
+ */
+export function useProductsByCollectionQuery(baseOptions: Apollo.QueryHookOptions<ProductsByCollectionQuery, ProductsByCollectionQueryVariables> & ({ variables: ProductsByCollectionQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProductsByCollectionQuery, ProductsByCollectionQueryVariables>(ProductsByCollectionDocument, options);
+      }
+export function useProductsByCollectionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProductsByCollectionQuery, ProductsByCollectionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProductsByCollectionQuery, ProductsByCollectionQueryVariables>(ProductsByCollectionDocument, options);
+        }
+export function useProductsByCollectionSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ProductsByCollectionQuery, ProductsByCollectionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ProductsByCollectionQuery, ProductsByCollectionQueryVariables>(ProductsByCollectionDocument, options);
+        }
+export type ProductsByCollectionQueryHookResult = ReturnType<typeof useProductsByCollectionQuery>;
+export type ProductsByCollectionLazyQueryHookResult = ReturnType<typeof useProductsByCollectionLazyQuery>;
+export type ProductsByCollectionSuspenseQueryHookResult = ReturnType<typeof useProductsByCollectionSuspenseQuery>;
+export type ProductsByCollectionQueryResult = Apollo.QueryResult<ProductsByCollectionQuery, ProductsByCollectionQueryVariables>;
 export const UserAddressAddDocument = gql`
     mutation UserAddressAdd($input: AddressInput!) {
   accountAddressCreate(type: SHIPPING, input: $input) {

@@ -1,0 +1,63 @@
+query ProductsByCollection($first: Int!, $slugs: [String!]) {
+  collections(
+    first: 1
+    channel: "axw-store"
+    filter: {slugs: $slugs}
+  ) {
+    edges {
+      node {
+        id
+        name
+        slug
+        seoTitle
+        seoDescription
+        description
+        products(first: $first, sortBy: {direction: DESC, field: LAST_MODIFIED_AT}) {
+          edges {
+            node {
+              id
+              name
+              seoTitle
+              seoDescription
+              rating
+              slug
+              updatedAt
+              isAvailable
+              availableForPurchase
+              availableForPurchaseAt
+              description
+              images {
+                id
+                url(format: WEBP, size: 256)
+                alt
+                sortOrder
+              }
+              pricing {
+                displayGrossPrices
+                onSale
+                priceRange {
+                  start {
+                    gross {
+                      amount
+                    }
+                  }
+                  stop {
+                    gross {
+                      amount
+                    }
+                  }
+                }
+                discount {
+                  gross {
+                    amount
+                  }
+                }
+              }
+            }
+          }
+          totalCount
+        }
+      }
+    }
+  }
+}

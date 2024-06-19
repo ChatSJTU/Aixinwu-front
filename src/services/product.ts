@@ -4,7 +4,9 @@ import {
     ProductDetailQuery,
     ProductsByCategoryIdDocument,
     ProductsByCategoryIdQuery,
-    ProductOrderField
+    ProductOrderField,
+    ProductsByCollectionDocument,
+    ProductsByCollectionQuery
 } from "@/graphql/hooks";
 import { Category, ProductDetail, VarientDetail, ProductSummary } from "@/models/products";
 import { ApolloClient } from "@apollo/client";
@@ -127,6 +129,41 @@ export async function fetchProductsByCategoryID(client: ApolloClient<object>, fi
 
     } catch (error) {
         const errmessage = `获取商品列表失败：${error}`;
+        console.error(errmessage);
+        throw errmessage;
+    }
+};
+
+// 按collection slugs获取商品列表
+export async function fetchProductsByCollection(client: ApolloClient<object>, first:number, slug:String) {
+    try {
+        
+        const resp = await client.query<ProductsByCollectionQuery>({
+            query: ProductsByCollectionDocument,
+            variables: {
+                first: first,
+                slugs: [slug]
+            }
+        }); 
+        if (!resp.data || !resp.data.collections) {
+            throw "获取商品集合失败";
+        }
+
+        const productSummaries: ProductSummary[] = resp.data.collections.edges.flatMap((collection: { node: any }) =>
+            collection.node.products.edges.map((edge: { node: any }) => ({
+                image_url: edge.node.images.map((image: { url: string }) => image.url),
+                product_name: edge.node.name,
+                product_id: edge.node.id,
+                detailed_product_name: edge.node.slug,
+                cost: edge.node.pricing?.priceRange?.start?.gross?.amount || 0,
+                stock: edge.node.isAvailable ? 1 : 0,
+            }))
+        );
+
+        return productSummaries;
+
+    } catch (error) {
+        const errmessage = `获取商品集合失败：${error}`;
         console.error(errmessage);
         throw errmessage;
     }

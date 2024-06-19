@@ -11,9 +11,9 @@ const GlobalFooter = () => {
                     <Space direction="vertical">
                         <div className="footer-map-title">服务</div>
                         {/* TODO: change route */}
-                        <Link href="/" className="footer-map-item">置换</Link>
-                        <Link href="/" className="footer-map-item">租赁</Link>
-                        <Link href="/" className="footer-map-item">失物招领</Link>
+                        <Link href="/products" className="footer-map-item">置换</Link>
+                        {/* <Link href="/" className="footer-map-item">租赁</Link> */}
+                        {/* <Link href="/" className="footer-map-item">失物招领</Link> */}
                         <Link href="/pre-donate" className="footer-map-item">预捐赠</Link>
                     </Space>
                 </Col>
