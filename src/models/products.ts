@@ -8,6 +8,7 @@ export interface Category {
     slug: string;
     parent: {id: string} | null;
     children: Category[] | null;
+    products: {totalCount: number} | null;
 }
   
 export interface ProductDetail {

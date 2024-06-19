@@ -1,5 +1,5 @@
 query Categories {
-  categories(first: 100) {
+  categories(first: 300) {
     edges {
       node {
         id
@@ -11,6 +11,9 @@ query Categories {
         slug
         parent {
           id
+        }
+        products(channel: "axw-store") {
+          totalCount
         }
       }
     }

@@ -1,23 +1,22 @@
 import { 
     CategoriesDocument,
     ProductDetailDocument,
-    ProductDetailQuery
+    ProductDetailQuery,
+    ProductsByCategoryIdDocument,
+    ProductsByCategoryIdQuery
 } from "@/graphql/hooks";
-import { Category, ProductDetail, VarientDetail } from "@/models/products";
+import { Category, ProductDetail, VarientDetail, ProductSummary } from "@/models/products";
 import { ApolloClient } from "@apollo/client";
 
-//获取商品分类树列表
+//获取商品分类列表（扁平和树）
 export async function fetchCategories(client: ApolloClient<object>) {
     try {
-        const resp = await client.query({query: CategoriesDocument}); 
-        if (!resp.data || 
-            !resp.data.categories) {
-          throw "数据为空";
+        const resp = await client.query({ query: CategoriesDocument }); 
+        if (!resp.data || !resp.data.categories) {
+            throw "数据为空";
         }
         const { edges } = resp.data.categories;
-        const flatList: Category[] = edges.map((
-            edge: { node: Category }
-        ) => ({ ...edge.node, children: [] }));
+        const flatList: Category[] = edges.map((edge: { node: Category }) => ({ ...edge.node, children: [] }));
 
         // 映射
         const idToCategoryMap: { [key: string]: Category } = {};
@@ -26,10 +25,10 @@ export async function fetchCategories(client: ApolloClient<object>) {
         });
 
         // 树
-        const rootCategories: Category[] = [];
+        const treeCategories: Category[] = [];
         flatList.forEach(category => {
             if (category.level === 0) {
-                rootCategories.push(category);
+                treeCategories.push(category);
             } else if (category.parent) {
                 const parentCategory = idToCategoryMap[category.parent.id];
                 if (parentCategory) {
@@ -41,10 +40,10 @@ export async function fetchCategories(client: ApolloClient<object>) {
             }
         });
 
-        return rootCategories; 
+        return { flatList, treeCategories };
 
     } catch (error) {
-        var errmessage = `获取商品分类失败：${error}`
+        const errmessage = `获取商品分类失败：${error}`;
         console.error(errmessage);
         throw errmessage;
     }
@@ -84,6 +83,39 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
         return res;
     } catch (error) {
         var errmessage = `请求失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+};
+
+// 按分类 ID 获取商品列表
+export async function fetchProductsByCategoryID(client: ApolloClient<object>, first:number, categoryID: string) {
+    try {
+        const resp = await client.query<ProductsByCategoryIdQuery>({
+            query: ProductsByCategoryIdDocument,
+            variables: {
+                first: first,
+                categories: [categoryID]
+            }
+        }); 
+        if (!resp.data || 
+            !resp.data.products) {
+          throw "获取商品列表失败";
+        }
+
+        const productSummaries: ProductSummary[] = resp.data.products.edges.map((edge: { node: any }) => ({
+            image_url: edge.node.images.map((image: { url: string }) => image.url),
+            product_name: edge.node.name,
+            product_id: edge.node.id,
+            detailed_product_name: edge.node.slug,
+            cost: edge.node.pricing?.priceRange?.start?.gross?.amount || 0,
+            stock: edge.node.isAvailable ? 1 : 0,
+        }));
+
+        return productSummaries;
+
+    } catch (error) {
+        const errmessage = `获取商品列表失败：${error}`;
         console.error(errmessage);
         throw errmessage;
     }
