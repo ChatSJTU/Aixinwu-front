@@ -67,13 +67,16 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
           throw "获取商品详情失败";
         }
         var data = resp.data?.product;
+        const textBlocks = JSON.parse(data.description).blocks.map((block: any) => (block.data.text));
+        console.log(textBlocks)
+        const textJoined = textBlocks.join('<br />')
         var res = {
             id: data.id,
             slug: data.slug,
             name: data.name,
             images: data.media?.map(x=>x.url),
             detailed_product_name: "",
-            desc: data.description,
+            desc: textJoined,
             varients: data.variants?.map(x=>({
                 name: x.name,
                 id: x.id,

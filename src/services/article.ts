@@ -82,7 +82,7 @@ export async function fetchArticlesById(client: ApolloClient<object>, articleID:
 
         const { node, cursor } = resp.data.pages.edges[0];
         const textBlocks = JSON.parse(node.content).blocks.map((block: any) => (block.data.text));
-        const textJoined = textBlocks.join('\n')
+        const textJoined = textBlocks.join('<br />')
 
         const res: ArticleDetails = {
             id: node.id,
