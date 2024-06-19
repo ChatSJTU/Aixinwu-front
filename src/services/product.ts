@@ -3,7 +3,8 @@ import {
     ProductDetailDocument,
     ProductDetailQuery,
     ProductsByCategoryIdDocument,
-    ProductsByCategoryIdQuery
+    ProductsByCategoryIdQuery,
+    ProductOrderField
 } from "@/graphql/hooks";
 import { Category, ProductDetail, VarientDetail, ProductSummary } from "@/models/products";
 import { ApolloClient } from "@apollo/client";
@@ -89,13 +90,23 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
 };
 
 // 按分类 ID 获取商品列表
-export async function fetchProductsByCategoryID(client: ApolloClient<object>, first:number, categoryID: string) {
+export async function fetchProductsByCategoryID(client: ApolloClient<object>, first:number, categoryID: string, sort: string) {
     try {
+        const sortOptions: { [key: string]: ProductOrderField } = {
+            'time': ProductOrderField.LastModifiedAt,
+            'price-up': ProductOrderField.Price,
+            'price-down': ProductOrderField.MinimalPrice,
+            'default': ProductOrderField.Name
+        };
+        
+        let sortField = sortOptions[sort as keyof typeof sortOptions] || ProductOrderField.Name;
+        // console.log(sortField);
         const resp = await client.query<ProductsByCategoryIdQuery>({
             query: ProductsByCategoryIdDocument,
             variables: {
                 first: first,
-                categories: [categoryID]
+                categories: [categoryID],
+                field: sortField
             }
         }); 
         if (!resp.data || 

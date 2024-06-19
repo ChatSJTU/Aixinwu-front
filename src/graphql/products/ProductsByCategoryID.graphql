@@ -1,9 +1,10 @@
-query ProductsByCategoryID($first: Int!, $categories: [ID!]) {
+query ProductsByCategoryID($first: Int!, $categories: [ID!], $field: ProductOrderField!) {
   products(
     first: $first
     filter: {categories: $categories}
     channel: "axw-store"
     last: 24
+    sortBy: {direction: ASC, field: $field}
   ) {
     edges {
       node {

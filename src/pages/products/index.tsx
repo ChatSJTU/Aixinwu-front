@@ -53,12 +53,19 @@ const ProductsPage = () => {
                 setCategories(treeCategories);
                 setCurrentCategoryID(treeCategories[0].id);
                 setFlatCategories(flatList);
-                fetchProductsByCategoryID(client!, 24, treeCategories[0].id)
-                    .then(products => setShownProducts(products))
-                    .catch(err => message.error(err));
+                // fetchProductsByCategoryID(client!, 24, treeCategories[0].id, selectedSortOption)
+                //     .then(products => setShownProducts(products))
+                //     .catch(err => message.error(err));
                 })
             .catch(err => message.error(err));
     }, []);
+
+    useEffect(() => {
+        if (!currentCategoryID) return;
+        fetchProductsByCategoryID(client!, 24, currentCategoryID!, selectedSortOption)
+            .then(products => setShownProducts(products))
+            .catch(err => message.error(err));
+    }, [currentCategoryID, selectedSortOption]);
 
     // 构建分类菜单项（0/1级）
     const buildMenuItems = (categories: Category[], levelLimit: number = 2): MenuItem[] =>
@@ -75,14 +82,14 @@ const ProductsPage = () => {
         if ((e.key as string) === currentCategoryID) return;
         setCurrentCategoryID(e.key);
         setShownProductsPage(1);
-        fetchProductsByCategoryID(client!, 24, e.key)
-            .then(products => setShownProducts(products))
-            .catch(err => message.error(err));
+        // fetchProductsByCategoryID(client!, 24, e.key, selectedSortOption)
+        //     .then(products => setShownProducts(products))
+        //     .catch(err => message.error(err));
     };
 
     const handlePageinationChange: PaginationProps['onChange'] = (page) => {
         setShownProductsPage(page);
-        fetchProductsByCategoryID(client!, page * 24, currentCategoryID!)
+        fetchProductsByCategoryID(client!, page * 24, currentCategoryID!, selectedSortOption)
             .then(products => setShownProducts(products))
             .catch(err => message.error(err));
     };
