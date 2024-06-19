@@ -18,6 +18,24 @@ export const HomeLeftContent = () => {
     const [noticeSummaries, setNoticeSummaries] = useState<ArticleSummaries[] | null>(null);
     const [newsSummaries, setNewsSummaries] = useState<ArticleSummaries[] | null>(null);
 
+    function formatPublishTime(publishTime: string | Date): string {
+        const publishDate = new Date(publishTime).getTime();
+        const currentDate = new Date().getTime();
+        const timeDifference = currentDate - publishDate;
+        const daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24));
+
+        if (daysDifference === 0) return '今天';
+        else if (daysDifference === 1) return '昨天';
+
+        if (daysDifference <= 31) {
+            return `${daysDifference}天前`;
+        } else if (daysDifference <= 365) {
+            return `${Math.floor(daysDifference / 30)}个月前`;
+        } else {
+            return `${Math.floor(daysDifference / 365)}年前`;
+        }
+    }
+
     useEffect(() => {
         // 暂时硬编码了通知和公告两个PageType的ID
         fetchArticlesByType(client!, "UGFnZVR5cGU6NQ==", 6)
@@ -45,7 +63,7 @@ export const HomeLeftContent = () => {
                                     <div>
                                         <CalendarOutlined className="secondary-text" />
                                         <Text type="secondary" style={{ fontWeight: 'normal', marginLeft: '4px' }}>
-                                            {new Date(item.publish_time).toISOString().split('T')[0]}
+                                            {formatPublishTime(item.publish_time)}
                                         </Text>
                                     </div>
                                 }
@@ -69,7 +87,7 @@ export const HomeLeftContent = () => {
                 titleExtra={
                     <Link href="/articles" target="_blank">{'更多>>'}</Link>
                 }
-                >
+            >
                 {newsSummaries &&
                     <List
                         itemLayout="horizontal"
@@ -80,7 +98,7 @@ export const HomeLeftContent = () => {
                                     <div>
                                         <CalendarOutlined className="secondary-text" />
                                         <Text type="secondary" style={{ fontWeight: 'normal', marginLeft: '4px' }}>
-                                            {new Date(item.publish_time).toISOString().split('T')[0]}
+                                            {formatPublishTime(item.publish_time)}
                                         </Text>
                                     </div>
                                 }
