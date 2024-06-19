@@ -1,31 +1,94 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { useRouter } from 'next/router';
 import Head from "next/head";
 import { Typography, Flex, Divider, Segmented, Pagination, Input, List, Select} from "antd";
+import type { PaginationProps } from 'antd';
+import { ArrowUpOutlined, ArrowDownOutlined, ShoppingOutlined, FileTextOutlined, CalendarOutlined } from "@ant-design/icons";
+
+import AuthContext from '@/contexts/auth';
+import { MessageContext } from '@/contexts/message';
 import { PageHeader } from "@/components/page-header";
 import ProductGrid from "@/components/product-grid";
-import { ArrowUpOutlined, ArrowDownOutlined, ShoppingOutlined, FileTextOutlined, CalendarOutlined } from "@ant-design/icons";
+import { ProductSummary } from "@/models/products";
+import { ArticleSummaries } from "@/models/article";
+import { searchProducts } from "@/services/product";
 
 const { Search } = Input;
 const { Text, Link } = Typography;
 
 const SearchResultPage = () => {
-    const [coinDirection, setCoinDirection] = useState<string>('up');
-    const [selectedSortOption, setSelectedSortOption] = useState<string>('default');
-    const [searchDomain, setSearchDomain] = useState<string>('products');
+    const authCtx = useContext(AuthContext);
+    const client = authCtx.client;
+    const router = useRouter();
+    const { query } = router;
+    const message = useContext(MessageContext);
 
+    const [coinDirection, setCoinDirection] = useState<string>('up');
+    const [selectedSortOption, setSelectedSortOption] = useState<string>('default');    // 商品结果的排序方式
+    const [searchDomain, setSearchDomain] = useState<string>('products');   // 搜索域：商品或文章
+    const [shownPage, setShownPage] = useState<number>(1);  // 分页器当前页
+    const [totalResultsCount, setTotalResultsCount] = useState<number>(0);  // 总搜索结果数
+    const [resultList, setResultList] = useState<ProductSummary[] | ArticleSummaries>([]);  // 搜索结果列表
+
+    useEffect(() => {
+        console.log(query);
+        if (query.keyword && query.domain && query.sort && query.page) {
+            const keyword = query.keyword as string;
+            const domain = query.domain as string;
+            const sort = query.sort as string;
+            const page = parseInt(query.page as string, 10);
+            setSearchDomain(domain);
+            setSelectedSortOption(sort);
+            if (sort.startsWith('price-')) {
+                setCoinDirection(sort.split('-')[1]);
+            }
+            setShownPage(page);
+            handleSearch(page * 24, keyword, domain, sort);
+        }
+    }, [query]);
+
+    // 搜索
+    const handleSearch = (first: number = 24, keyword: string, domain: string = "products", sort: string = "default") => {
+        if (keyword === "") {
+            message.error('搜索结果不能为空');
+            return;
+        }
+        // console.log(first, keyword, domain, sort)
+        if (domain === 'products') {
+            if (first < 0) { first = 24; }
+            searchProducts(client!, first, keyword.trim(), sort)
+                .then(({totalCount, productSummaries}) => {
+                    setTotalResultsCount(totalCount || 0);
+                    setResultList(productSummaries);
+                })
+                .catch(err => console.error(err));
+        }
+        // TODO: 文章搜索
+    }
+    
     // 排序方式更改辅助函数
     const handleSortChange = (value: string) => {
+        let sortKey = ""
         if (value.startsWith('price')) {
             if (selectedSortOption === value) {
                 let newDirection = coinDirection === 'up' ? 'down' : 'up';
                 setCoinDirection(newDirection);
-                setSelectedSortOption(`price-${newDirection}`);
+                sortKey = `price-${newDirection}`
             } else {
-                setSelectedSortOption(value);
+                sortKey = value;
             }
         } else {
-            setSelectedSortOption(value);
+            sortKey = value;
         }
+        setSelectedSortOption(sortKey);
+        router.push({
+            pathname: router.pathname,
+            query: {
+                ...query,
+                sort: sortKey,
+                page: 1,
+            }
+        });
     };
 
     const sortOptions: { label: React.ReactNode; value: string }[] = [
@@ -43,12 +106,58 @@ const SearchResultPage = () => {
         },
     ];
 
+    const handlePageinationChange: PaginationProps['onChange'] = (page) => {
+        setShownPage(page);
+        router.push({
+            pathname: router.pathname,
+            query: {
+                ...query,
+                page,
+            }
+        });
+    };
+
+    const handleDomainChange = (value: string) => {
+        setSearchDomain(value);
+        router.push({
+            pathname: router.pathname,
+            query: {
+                ...query,
+                domain: value,
+                page: 1,
+            }
+        });
+    };
+
+    const handleSearchInput = (value: string) => {
+        if (value === undefined || value.trim() === ""){
+            message.error('搜索结果不能为空');
+            return;
+        }
+        router.push({
+            pathname: router.pathname,
+            query: {
+                keyword: value.trim(),
+                domain: searchDomain,
+                sort: selectedSortOption,
+                page: 1,
+            }
+        });
+    };
+
     return (
         <>
             <Head>
-                <title> 搜索结果 - 上海交通大学绿色爱心屋</title>
+                {(query.keyword === undefined || query.keyword === "") 
+                    ? <title>搜索 - 上海交通大学绿色爱心屋</title>
+                    : <title>"{query.keyword}"的搜索结果 - 上海交通大学绿色爱心屋</title>
+                }
             </Head>
-            <PageHeader title="搜索结果"/>
+            {(query.keyword === undefined || query.keyword === "") 
+                ? <PageHeader title="搜索"/>
+                : <PageHeader title={`${totalResultsCount} 条与“${query.keyword}”有关的结果`}/>
+            }
+            {}
             <div className="container basic-card">
                 <Flex>
                     <Select 
@@ -59,13 +168,14 @@ const SearchResultPage = () => {
                             { label: <><ShoppingOutlined /> 商品</>, value: 'products' },
                             { label: <><FileTextOutlined /> 文章</>, value: 'articles' }
                         ]}
-                        onChange={(value) => setSearchDomain(value)}
+                        onChange={handleDomainChange}
                     />
                     <Search 
-                        placeholder="input search text" 
+                        placeholder={(query.keyword === undefined || query.keyword === "") ? "请输入关键词" : query.keyword}
                         enterButton 
                         size="large" 
                         style={{ marginLeft: '18px'}}
+                        onSearch={handleSearchInput}
                     />
                 </Flex>
             </div>
@@ -77,25 +187,19 @@ const SearchResultPage = () => {
                                 options={sortOptions}
                                 value={selectedSortOption}
                                 onChange={handleSortChange}
+                                defaultValue={selectedSortOption}
                             />
                         </Flex>
                         <Divider style={{ marginTop: '16px', marginBottom: '18px' }} />
-                        <ProductGrid products={[]} rowNum={100}/>
+                        <ProductGrid products={resultList as ProductSummary[]} rowNum={100}/>
                         <Flex align="flex-start" justify="flex-end" style={{ marginTop: '24px'}}>
-                            {/* <Pagination 
-                                current={shownProductsPage} 
+                            <Pagination 
+                                current={shownPage} 
                                 onChange={handlePageinationChange}
-                                total={currentCategoryID ?
-                                    flatCategories.reduce((sum, category) => {
-                                        if (!category.children?.length && currentCategoryID.includes(category.id)) {
-                                            return sum + (category.products?.totalCount || 0);
-                                        }
-                                        return sum;
-                                    }, 0)
-                                : 0}
+                                total={totalResultsCount}
                                 pageSize={24}
-                                showTotal={(total) => `共 ${total} 件商品`}
-                                /> */}<></>
+                                showTotal={(total) => `共 ${total} 个结果`}
+                                />
                         </Flex>
                     </>
                 }

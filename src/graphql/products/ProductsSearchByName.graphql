@@ -1,0 +1,50 @@
+query ProductsSearchByName($first: Int!, $search: String!, $field: ProductOrderField!) {
+  products(
+    first: $first
+    channel: "axw-store"
+    last: 24
+    sortBy: {direction: ASC, field: $field}
+    search: $search
+  ) {
+    edges {
+      node {
+        id
+        name
+        rating
+        slug
+        updatedAt
+        isAvailable
+        availableForPurchase
+        availableForPurchaseAt
+        images {
+          id
+          url(format: WEBP, size: 256)
+          alt
+          sortOrder
+        }
+        pricing {
+          displayGrossPrices
+          onSale
+          priceRange {
+            start {
+              gross {
+                amount
+              }
+            }
+            stop {
+              gross {
+                amount
+              }
+            }
+          }
+          discount {
+            gross {
+              amount
+            }
+          }
+        }
+      }
+    }
+    totalCount
+  }
+}

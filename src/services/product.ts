@@ -6,7 +6,9 @@ import {
     ProductsByCategoryIdQuery,
     ProductOrderField,
     ProductsByCollectionDocument,
-    ProductsByCollectionQuery
+    ProductsByCollectionQuery,
+    ProductsSearchByNameDocument,
+    ProductsSearchByNameQuery
 } from "@/graphql/hooks";
 import { Category, ProductDetail, VarientDetail, ProductSummary } from "@/models/products";
 import { ApolloClient } from "@apollo/client";
@@ -167,6 +169,49 @@ export async function fetchProductsByCollection(client: ApolloClient<object>, fi
 
     } catch (error) {
         const errmessage = `获取商品集合失败：${error}`;
+        console.error(errmessage);
+        throw errmessage;
+    }
+};
+
+// 按名称搜索商品
+export async function searchProducts(client: ApolloClient<object>, first:number, keyword:string, sort:string) {
+    try {
+        const sortOptions: { [key: string]: ProductOrderField } = {
+            'time': ProductOrderField.LastModifiedAt,
+            'price-up': ProductOrderField.Price,
+            'price-down': ProductOrderField.MinimalPrice,
+            'default': ProductOrderField.Name
+        };
+        
+        let sortField = sortOptions[sort as keyof typeof sortOptions] || ProductOrderField.Name;
+        const resp = await client.query<ProductsSearchByNameQuery>({
+            query: ProductsSearchByNameDocument,
+            variables: {
+                first: first,
+                search: keyword,
+                field: sortField
+            }
+        }); 
+        if (!resp.data || 
+            !resp.data.products) {
+          throw "获取搜索结果失败";
+        }
+
+        const totalCount = resp.data.products.totalCount;
+        const productSummaries: ProductSummary[] = resp.data.products.edges.map((edge: { node: any }) => ({
+            image_url: edge.node.images.map((image: { url: string }) => image.url),
+            product_name: edge.node.name,
+            product_id: edge.node.id,
+            detailed_product_name: edge.node.slug,
+            cost: edge.node.pricing?.priceRange?.start?.gross?.amount || 0,
+            stock: edge.node.isAvailable ? 1 : 0,
+        }));
+
+        return {totalCount, productSummaries};
+
+    } catch (error) {
+        const errmessage = `获取搜索结果失败：${error}`;
         console.error(errmessage);
         throw errmessage;
     }
