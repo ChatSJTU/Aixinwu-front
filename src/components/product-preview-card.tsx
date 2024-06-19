@@ -15,7 +15,7 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
         <div
             className="preview-card-container"
         >
-            <a target="_blank" href={`/products/single/${product_id}`}>
+            <a target="_blank" href={`/products/single/${detailed_product_name}`}>
                 <Card
                     hoverable
                     className="preview-card"
