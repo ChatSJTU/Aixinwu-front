@@ -92,7 +92,7 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
 };
 
 // 按分类 ID 获取商品列表
-export async function fetchProductsByCategoryID(client: ApolloClient<object>, first:number, categoryID: string, sort: string) {
+export async function fetchProductsByCategoryID(client: ApolloClient<object>, first:number, categoryID: string[], sort: string) {
     try {
         const sortOptions: { [key: string]: ProductOrderField } = {
             'time': ProductOrderField.LastModifiedAt,
@@ -107,7 +107,7 @@ export async function fetchProductsByCategoryID(client: ApolloClient<object>, fi
             query: ProductsByCategoryIdDocument,
             variables: {
                 first: first,
-                categories: [categoryID],
+                categories: categoryID,
                 field: sortField
             }
         }); 

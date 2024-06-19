@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Grid, Typography, Row, Col, Menu, Segmented, Flex, Spin, Empty, Divider, Pagination } from "antd";
 import type { MenuProps } from 'antd';
 import type { PaginationProps } from 'antd';
-import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, ArrowDownOutlined, AppstoreOutlined } from "@ant-design/icons";
 
 // import Link from "next/link";
 import AuthContext from '@/contexts/auth';
@@ -41,7 +41,7 @@ const ProductsPage = () => {
     const [selectedSortOption, setSelectedSortOption] = useState<string>('default');
     const [categories, setCategories] = useState<Category[] | null>(null);
     const [flatCategories, setFlatCategories] = useState<Category[]>([]); // 扁平化的分类列表
-    const [currentCategoryID, setCurrentCategoryID] = useState<string | null>(null);
+    const [currentCategoryID, setCurrentCategoryID] = useState<string[] | null>(null);
     const [shownProducts, setShownProducts] = useState<ProductSummary[] | null>(null);
     const [shownProductsPage, setShownProductsPage] = useState(1);
     
@@ -51,7 +51,7 @@ const ProductsPage = () => {
         fetchCategories(client!)
             .then(({ flatList, treeCategories }) => {
                 setCategories(treeCategories);
-                setCurrentCategoryID(treeCategories[0].id);
+                setCurrentCategoryID(flatList.map(category => category.id));
                 setFlatCategories(flatList);
                 // fetchProductsByCategoryID(client!, 24, treeCategories[0].id, selectedSortOption)
                 //     .then(products => setShownProducts(products))
@@ -79,8 +79,13 @@ const ProductsPage = () => {
     );
 
     const handleMenuClick = (e: any) => {
-        if ((e.key as string) === currentCategoryID) return;
-        setCurrentCategoryID(e.key);
+        if (e.key === 'all') {
+            setCurrentCategoryID(flatCategories.map(category => category.id));
+            setShownProductsPage(1);
+            return;
+        }
+        if (([e.key] as string[]) === currentCategoryID) return;
+        setCurrentCategoryID([e.key]);
         setShownProductsPage(1);
         // fetchProductsByCategoryID(client!, 24, e.key, selectedSortOption)
         //     .then(products => setShownProducts(products))
@@ -141,10 +146,11 @@ const ProductsPage = () => {
                         <Divider style={{ marginTop: '-6px', marginBottom: '12px' }} />
                         <Menu
                             mode={screens.md ? 'inline' : 'horizontal'}
-                            selectedKeys={[`${currentCategoryID}`]}
+                            selectedKeys={currentCategoryID?.length === 1 ? currentCategoryID : ['all']}
                             onClick={handleMenuClick}
                             style={{ border: 'none' }}
-                            items={buildMenuItems(categories)}
+                            items={[ formatMenuItem('所有商品', 'all', <AppstoreOutlined />), 
+                                ...buildMenuItems(categories) ]}
                         >
                         </Menu>
                         {categories.length === 0 &&
@@ -167,7 +173,14 @@ const ProductsPage = () => {
                             <Pagination 
                                 current={shownProductsPage} 
                                 onChange={handlePageinationChange}
-                                total={flatCategories.find(category => category.id === currentCategoryID)?.products?.totalCount}
+                                total={currentCategoryID ?
+                                    flatCategories.reduce((sum, category) => {
+                                        if (!category.children?.length && currentCategoryID.includes(category.id)) {
+                                            return sum + (category.products?.totalCount || 0);
+                                        }
+                                        return sum;
+                                    }, 0)
+                                : 0}
                                 pageSize={24}
                                 showTotal={(total) => `共 ${total} 件商品`}
                                 />
