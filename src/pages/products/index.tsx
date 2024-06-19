@@ -161,6 +161,7 @@ const ProductsPage = () => {
                                 current={shownProductsPage} 
                                 onChange={handlePageinationChange}
                                 total={flatCategories.find(category => category.id === currentCategoryID)?.products?.totalCount}
+                                pageSize={24}
                                 showTotal={(total) => `共 ${total} 件商品`}
                                 />
                         </Flex>
