@@ -1,0 +1,49 @@
+query ProductsByCategoryID($first: Int!, $categories: [ID!]) {
+  products(
+    first: $first
+    filter: {categories: $categories}
+    channel: "axw-store"
+    last: 24
+  ) {
+    edges {
+      node {
+        id
+        name
+        rating
+        slug
+        updatedAt
+        isAvailable
+        availableForPurchase
+        availableForPurchaseAt
+        images {
+          id
+          url(format: WEBP, size: 256)
+          alt
+          sortOrder
+        }
+        pricing {
+          displayGrossPrices
+          onSale
+          priceRange {
+            start {
+              gross {
+                amount
+              }
+            }
+            stop {
+              gross {
+                amount
+              }
+            }
+          }
+          discount {
+            gross {
+              amount
+            }
+          }
+        }
+      }
+    }
+    totalCount
+  }
+}
