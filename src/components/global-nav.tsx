@@ -89,14 +89,14 @@ const NavBar = () => {
       { label: "预捐赠", value: "/pre-donate" },
   ];
 
-  const handleSearch = (value: string) => {
+  const handleSearch = (value: string, domain: string = "products") => {
     // 处理搜索逻辑
-    console.log(value);
     setSearchModalOpen(false);
-  };
-
-  const handleSearchMenuClick = (e: any) => {
-    handleSearch(e.key);
+    setSearchText('');
+    router.push({
+        pathname: '/search',
+        query: { keyword: value, domain: domain, sort: 'default', page: 1},
+    });
   };
 
   return (
@@ -126,22 +126,22 @@ const NavBar = () => {
                     style={{marginTop: '12px'}}
                     enterButton
                     placeholder="请输入关键词"
-                    onSearch={handleSearch}
+                    onSearch={(value)=>handleSearch(value)}
                     value={searchText}
                     onChange={(e)=>{setSearchText(e.target.value);console.log(e.target.value);}}
                   />
                   {searchText.trim() !== '' && 
-                    <Menu mode='vertical' onClick={handleSearchMenuClick} 
+                    <Menu mode='vertical'
                       style={{ minWidth: 0, flex: "auto", border: 'none', marginTop: '8px' }}
                     >
-                      <Menu.Item style={{ marginInline: "unset", marginBlock: "unset", width: "100%" }} key={`关于${searchText}的物品`}>
+                      <Menu.Item style={{ marginInline: "unset", marginBlock: "unset", width: "100%" }} key={`关于${searchText}的物品`} onClick={() => handleSearch(searchText, 'products')}>
                         <Space>
                           <SearchOutlined/>
                           <Text>{`搜索关于 ${searchText} 的物品`}</Text>
                           <Text keyboard>Enter</Text>
                         </Space>
                       </Menu.Item>
-                      <Menu.Item style={{ marginInline: "unset", marginBlock: "unset", width: "100%" }} key={`关于${searchText}的文章`}>
+                      <Menu.Item style={{ marginInline: "unset", marginBlock: "unset", width: "100%" }} key={`关于${searchText}的文章`} onClick={() => handleSearch(searchText, 'articles')}>
                         <Space>
                           <SearchOutlined/>
                           <Text>{`搜索关于 ${searchText} 的文章`}</Text>
