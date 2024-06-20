@@ -7,7 +7,7 @@ import { CalendarOutlined } from "@ant-design/icons"
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
 import { PageHeader } from "@/components/page-header";
-import { ArticleSummaries } from "@/models/article";
+import { ArticleSummary } from "@/models/article";
 import { fetchArticleCategories, fetchArticlesByType } from "@/services/article";
 
 const { Title, Link, Text } = Typography;
@@ -20,7 +20,7 @@ const ArticleList: React.FC = () => {
     const message = useContext(MessageContext);
     const client = authCtx.client;
     const [articleCategories, setArticleCategories] = useState<{ name: string, id: string }[] | null>(null);
-    const [articleSummaries, setArticleSummaries] = useState<ArticleSummaries[] | null>(null);
+    const [ArticleSummary, setArticleSummary] = useState<ArticleSummary[] | null>(null);
     const [currentCategoryID, setcurrentCategoryID] = useState<string | null>(null);
     const [currentCategoryName, setcurrentCategoryName] = useState<string | null>(null);
 
@@ -38,7 +38,7 @@ const ArticleList: React.FC = () => {
     useEffect(() => {
         if (currentCategoryID) {
             fetchArticlesByType(client!, currentCategoryID, 20)
-                .then(res => setArticleSummaries(res))
+                .then(res => setArticleSummary(res))
                 .catch(err => message.error(err))
         }
 
@@ -49,7 +49,7 @@ const ArticleList: React.FC = () => {
         setcurrentCategoryName(e.key.split('---')[1]);
     };
 
-    if (!articleCategories || !articleSummaries) {
+    if (!articleCategories || !ArticleSummary) {
         return <center><Spin size="large" style={{ marginTop: '200px' }} /></center>;
     }
 
@@ -81,11 +81,11 @@ const ArticleList: React.FC = () => {
                 </Col>
                 <Col span={screens.md ? 18 : 24}>
                     <div className="container basic-card">
-                        <Title level={5}>{`共有${articleSummaries.length}篇文章`}</Title>
+                        <Title level={5}>{`共有${ArticleSummary.length}篇文章`}</Title>
                         <Divider style={{ marginTop: '-6px', marginBottom: '4px' }} />
                         <List
                             itemLayout="horizontal"
-                            dataSource={articleSummaries}
+                            dataSource={ArticleSummary}
                             renderItem={item => (
                                 <List.Item
                                     extra={

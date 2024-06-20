@@ -1,5 +1,11 @@
-import { ArticleCategoriesDocument, ArticleByTypeDocument, ArticleByIdDocument } from "@/graphql/hooks";
-import { ArticleDetails, ArticleSummaries } from "@/models/article";
+import { 
+    ArticleCategoriesDocument, 
+    ArticleByTypeDocument, 
+    ArticleByIdDocument,
+    ArticleSearchByNameQuery,
+    ArticleSearchByNameDocument
+} from "@/graphql/hooks";
+import { ArticleDetails, ArticleSummary } from "@/models/article";
 import { ApolloClient } from "@apollo/client";
 import { json } from "stream/consumers";
 
@@ -27,7 +33,7 @@ export async function fetchArticleCategories(client: ApolloClient<object>) {
     }
 };
 
-// 根据分类获取文章内容, 返回articleSummaries[]
+// 根据分类获取文章内容, 返回ArticleSummary[]
 export async function fetchArticlesByType(client: ApolloClient<object>, caregoryID: string, maxFetch: Number = 100) {
     try {
         const resp = await client.query({
@@ -48,7 +54,7 @@ export async function fetchArticlesByType(client: ApolloClient<object>, caregory
 
         const { edges } = resp.data.pages;
 
-        const res: ArticleSummaries[] = edges.map((edge: any) => ({
+        const res: ArticleSummary[] = edges.map((edge: any) => ({
             id: edge.node.id,
             title: edge.node.title,
             description: edge.node.seoDescription,
@@ -102,6 +108,46 @@ export async function fetchArticlesById(client: ApolloClient<object>, articleID:
 
     } catch (error) {
         var errmessage = `获取文章详情失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+};
+
+// 搜索文章，返回 ArticleSummary[]
+export async function searchArticles(client: ApolloClient<object>, first: number, last:number, keyword: string) {
+    try {
+        const resp = await client.query<ArticleSearchByNameQuery>({
+            query: ArticleSearchByNameDocument,
+            variables: {
+                first: first,
+                last: last,
+                search: keyword
+            }
+        });
+        if (!resp.data ||
+            !resp.data.pages) {
+            throw "数据为空";
+        }
+        if (resp.errors) {
+            throw resp.errors[0].message;
+        }
+
+        const { edges } = resp.data.pages;
+
+        console.log(resp);
+
+        const totalCount = resp.data.pages.totalCount;
+        const articleSummaries: ArticleSummary[] = edges.map((edge: any) => ({
+            id: edge.node.id,
+            title: edge.node.title,
+            description: edge.node.seoDescription,
+            publish_time: edge.node.publishedAt,
+        }));
+
+        return {totalCount, articleSummaries}
+
+    } catch (error) {
+        var errmessage = `获取文章列表失败：${error}`
         console.error(errmessage);
         throw errmessage;
     }

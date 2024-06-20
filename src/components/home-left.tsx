@@ -5,7 +5,7 @@ import { useState, useEffect, useContext } from "react";
 import BasicCard from "@/components/basic-card";
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
-import { ArticleSummaries } from "@/models/article";
+import { ArticleSummary } from "@/models/article";
 import { fetchArticlesByType } from "@/services/article";
 
 const { Text, Link } = Typography;
@@ -15,8 +15,8 @@ export const HomeLeftContent = () => {
     const authCtx = useContext(AuthContext);
     const message = useContext(MessageContext);
     const client = authCtx.client;
-    const [noticeSummaries, setNoticeSummaries] = useState<ArticleSummaries[] | null>(null);
-    const [newsSummaries, setNewsSummaries] = useState<ArticleSummaries[] | null>(null);
+    const [noticeSummaries, setNoticeSummaries] = useState<ArticleSummary[] | null>(null);
+    const [newsSummaries, setNewsSummaries] = useState<ArticleSummary[] | null>(null);
 
     function formatPublishTime(publishTime: string | Date): string {
         const publishDate = new Date(publishTime).getTime();

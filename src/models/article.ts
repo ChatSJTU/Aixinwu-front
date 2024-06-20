@@ -12,7 +12,7 @@ export interface ArticleDetails {
     previous: { id: number; title: string; } | null;
 }
 
-export interface ArticleSummaries {
+export interface ArticleSummary {
     id: string;
     title: string;
     description: string | null;

@@ -1,0 +1,20 @@
+query ArticleSearchByName($first: Int!, $last: Int!, $search: String!) {
+  pages(
+    first: $first
+    sortBy: {direction: ASC, field: TITLE}
+    last: $last
+    filter: {search: $search}
+  ) {
+    edges {
+      node {
+        id
+        title
+        slug
+        seoDescription
+        publishedAt
+      }
+      cursor
+    }
+    totalCount
+  }
+}

@@ -32892,6 +32892,15 @@ export type ArticleCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ArticleCategoriesQuery = { __typename?: 'Query', pageTypes?: { __typename?: 'PageTypeCountableConnection', edges: Array<{ __typename?: 'PageTypeCountableEdge', node: { __typename?: 'PageType', id: string, name: string } }> } | null };
 
+export type ArticleSearchByNameQueryVariables = Exact<{
+  first: Scalars['Int']['input'];
+  last: Scalars['Int']['input'];
+  search: Scalars['String']['input'];
+}>;
+
+
+export type ArticleSearchByNameQuery = { __typename?: 'Query', pages?: { __typename?: 'PageCountableConnection', totalCount?: number | null, edges: Array<{ __typename?: 'PageCountableEdge', cursor: string, node: { __typename?: 'Page', id: string, title: string, slug: string, seoDescription?: string | null, publishedAt?: any | null } }> } | null };
+
 export type CheckoutAddLineMutationVariables = Exact<{
   id: Scalars['ID']['input'];
   productVariantId: Scalars['ID']['input'];
@@ -33414,6 +33423,63 @@ export type ArticleCategoriesQueryHookResult = ReturnType<typeof useArticleCateg
 export type ArticleCategoriesLazyQueryHookResult = ReturnType<typeof useArticleCategoriesLazyQuery>;
 export type ArticleCategoriesSuspenseQueryHookResult = ReturnType<typeof useArticleCategoriesSuspenseQuery>;
 export type ArticleCategoriesQueryResult = Apollo.QueryResult<ArticleCategoriesQuery, ArticleCategoriesQueryVariables>;
+export const ArticleSearchByNameDocument = gql`
+    query ArticleSearchByName($first: Int!, $last: Int!, $search: String!) {
+  pages(
+    first: $first
+    sortBy: {direction: ASC, field: TITLE}
+    last: $last
+    filter: {search: $search}
+  ) {
+    edges {
+      node {
+        id
+        title
+        slug
+        seoDescription
+        publishedAt
+      }
+      cursor
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useArticleSearchByNameQuery__
+ *
+ * To run a query within a React component, call `useArticleSearchByNameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useArticleSearchByNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useArticleSearchByNameQuery({
+ *   variables: {
+ *      first: // value for 'first'
+ *      last: // value for 'last'
+ *      search: // value for 'search'
+ *   },
+ * });
+ */
+export function useArticleSearchByNameQuery(baseOptions: Apollo.QueryHookOptions<ArticleSearchByNameQuery, ArticleSearchByNameQueryVariables> & ({ variables: ArticleSearchByNameQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ArticleSearchByNameQuery, ArticleSearchByNameQueryVariables>(ArticleSearchByNameDocument, options);
+      }
+export function useArticleSearchByNameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticleSearchByNameQuery, ArticleSearchByNameQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ArticleSearchByNameQuery, ArticleSearchByNameQueryVariables>(ArticleSearchByNameDocument, options);
+        }
+export function useArticleSearchByNameSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ArticleSearchByNameQuery, ArticleSearchByNameQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ArticleSearchByNameQuery, ArticleSearchByNameQueryVariables>(ArticleSearchByNameDocument, options);
+        }
+export type ArticleSearchByNameQueryHookResult = ReturnType<typeof useArticleSearchByNameQuery>;
+export type ArticleSearchByNameLazyQueryHookResult = ReturnType<typeof useArticleSearchByNameLazyQuery>;
+export type ArticleSearchByNameSuspenseQueryHookResult = ReturnType<typeof useArticleSearchByNameSuspenseQuery>;
+export type ArticleSearchByNameQueryResult = Apollo.QueryResult<ArticleSearchByNameQuery, ArticleSearchByNameQueryVariables>;
 export const CheckoutAddLineDocument = gql`
     mutation CheckoutAddLine($id: ID!, $productVariantId: ID!, $quantity: Int!) {
   checkoutLinesAdd(
