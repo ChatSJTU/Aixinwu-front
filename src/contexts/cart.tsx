@@ -4,38 +4,56 @@ import { LayoutProps } from "@/models/layout"
 import AuthContext from "./auth"
 import { checkoutAddLine, checkoutCreate, checkoutGetQuantity } from "@/services/checkout"
 import { MessageContext } from "./message"
+import { fetchUserCheckouts } from "@/services/user"
 
 interface CartContextType {
     totalQuantity: number,
     addLines: (variantId : string, quantity : number) => {},
     setTotalQuantity: (quantity: number) => void,
-    setCheckoutId: (checkoutId: string) => void,
+    setCheckoutId: (checkoutId: string | undefined) => void,
     checkoutId: string | undefined,
+    incrCartError: () => void,
 }
 
 const CartContext = React.createContext<CartContextType>({
     totalQuantity: 0,
     addLines: (variantId : string, quantity : number) => false,
     setTotalQuantity: (quantity: number) => false,
-    setCheckoutId: (checkoutId: string) => false,
-    checkoutId: undefined
+    setCheckoutId: (checkoutId: string | undefined) => false,
+    checkoutId: undefined,
+    incrCartError: () => false,
 })
 
 export const CartContextProvider = (props : LayoutProps) => {
     const [totalQuantity, setTotalQuantity] = useState<number>(0);
+    const [checkoutErrorCounter, setCheckoutErrorCounter] = useState<number>(0);
     const [checkoutId, setCheckoutId] = useLocalStorage<string | undefined>("checkoutId", undefined);
     const authCtx = useContext(AuthContext);
     const client = authCtx.client;
     const message = useContext(MessageContext);
 
     useEffect(()=>{
-        if (checkoutId === undefined)
+        if (checkoutId === undefined || checkoutId === "" || checkoutErrorCounter >= 3)
         {
-            console.log("购物车 checkoutId 为空，新建 checkout！");
-            checkoutCreate(client!, process.env.NEXT_PUBLIC_CHANNEL!)
+            setCheckoutErrorCounter(0);
+            fetchUserCheckouts(client!, process.env.NEXT_PUBLIC_CHANNEL!)
                 .then(data => {
-                    setCheckoutId(data.id);
-                    setTotalQuantity(data.quantity)
+                    if (!!data && data.length > 0) {
+                        setCheckoutId(data[0]);
+                        checkoutGetQuantity(client!, data[0])
+                            .then(data => {
+                                setTotalQuantity(data);
+                            })
+                            .catch(err => message.error(err));
+                    }
+                    else {
+                        checkoutCreate(client!, process.env.NEXT_PUBLIC_CHANNEL!)
+                            .then(data => {
+                                setCheckoutId(data.id);
+                                setTotalQuantity(data.quantity)
+                            })
+                            .catch(err => message.error(err));
+                    }
                 })
                 .catch(err => message.error(err));
         }
@@ -45,9 +63,16 @@ export const CartContextProvider = (props : LayoutProps) => {
                 .then(data => {
                     setTotalQuantity(data);
                 })
-                .catch(err => message.error(err));
+                .catch(err => {
+                    message.error(err);
+                    incrCartError();
+                });
         }
-    }, [checkoutId]);
+    }, [checkoutId, checkoutErrorCounter]);
+
+    const incrCartError = () => {
+        setCheckoutErrorCounter(checkoutErrorCounter+1);
+    }
   
     const addLines = useCallback((variantId : string, quantity : number) => {
         if (checkoutId === undefined)
@@ -79,6 +104,7 @@ export const CartContextProvider = (props : LayoutProps) => {
         addLines: addLines,
         checkoutId: checkoutId,
         setCheckoutId: setCheckoutIdOut,
+        incrCartError: incrCartError
     }
 
   return (

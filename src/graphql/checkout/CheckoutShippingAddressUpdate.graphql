@@ -1,5 +1,8 @@
 mutation CheckoutShippingAddressUpdate($shippingAddress: AddressInput!, $id: ID!) {
   checkoutShippingAddressUpdate(shippingAddress: $shippingAddress, id: $id) {
+    checkout {
+      ...CheckoutForCartFragment
+    }
     errors {
       code
       field

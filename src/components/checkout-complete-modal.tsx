@@ -74,6 +74,7 @@ export const CheckoutCompleteModal: React.FC<CheckoutCompleteModalProps> = (prop
         try
         {
             var res3 = await checkoutComplete(client!, props.checkout.id);
+            cartCtx.setCheckoutId(undefined);
         }
         catch(err)
         {

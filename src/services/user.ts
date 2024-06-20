@@ -10,7 +10,9 @@ import {
     UserAddressUpdateDocument,
     UserAddressUpdateMutation,
     UserOrdersDocument,
-    UserOrdersQuery
+    UserOrdersQuery,
+    UserCheckoutsQuery,
+    UserCheckoutsDocument
 } from "@/graphql/hooks";
 
 import { AddressInfo } from "@/models/address";
@@ -183,6 +185,26 @@ export async function fetchUserOrders(client: ApolloClient<object>, maxFetch: nu
 
     } catch (error) {
         var errmessage = `获取用户订单列表失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+}
+
+export async function fetchUserCheckouts(client: ApolloClient<object>, channel: string) {
+    try {
+        const resp = await client.query<UserCheckoutsQuery>({
+            query: UserCheckoutsDocument,
+            variables: {
+                channel: channel,
+            }
+        });
+        if (!resp.data || !resp.data.me){
+            throw "数据为空"
+        }
+        const edges = resp.data.me.checkoutIds;
+        return edges as (string[] | null);
+    } catch (error) {
+        var errmessage = `获取用户购物车失败：${error}`
         console.error(errmessage);
         throw errmessage;
     }

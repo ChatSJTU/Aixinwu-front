@@ -248,7 +248,7 @@ export async function checkoutAddressUpdate(client: ApolloClient<object>, checko
         {
           throw resp.data.checkoutShippingAddressUpdate.errors[0].message;
         }
-        return true;
+        return mapCheckoutForCart(resp.data.checkoutShippingAddressUpdate.checkout! as Checkout);
     } catch (error) {
         var errmessage = `请求失败：${error}`
         console.error(errmessage);

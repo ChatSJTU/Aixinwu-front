@@ -130,7 +130,7 @@ export const OrderPageView = () => {
             return;
         }
         checkoutAddressUpdate(client!, checkout.id, addr)
-            .then(data => { setSelectedAddress(addr); })
+            .then(data => { setSelectedAddress(addr); setCheckout(data); })
             .catch(err => message.error(err));
     }
 
@@ -161,7 +161,10 @@ export const OrderPageView = () => {
         {
             checkoutFind(client!, cartCtx.checkoutId)
                 .then(data => updateCheckoutAndCartNum(data))
-                .catch(err => message.error(err));
+                .catch(err => {
+                    message.error(err);
+                    cartCtx.incrCartError();
+                });
         }
     }, [cartCtx.checkoutId, router]);
 
