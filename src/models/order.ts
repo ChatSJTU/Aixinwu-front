@@ -36,6 +36,11 @@ export interface OrderListProductsProps {
     rowSelection?: TableRowSelection<OrderProduct>;
 }
 
+interface LineItemThumbnail {
+    url: string;
+    alt: string;
+}
+ 
 interface LineItem {
     productName: string;
     variant: {
@@ -50,6 +55,7 @@ interface LineItem {
         };
     };
     quantity: number;
+    thumbnail: LineItemThumbnail;
 }
 
 export interface OrderInfo {
@@ -66,5 +72,5 @@ export interface OrderInfo {
     }
     lines: LineItem[];
     shippingAddress: AddressInfo;
-    totoalCOunt: number;
+    totalCount: number;
 }
