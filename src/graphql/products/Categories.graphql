@@ -1,4 +1,4 @@
-query Categories {
+query Categories($channel: String!) {
   categories(first: 300) {
     edges {
       node {
@@ -12,7 +12,7 @@ query Categories {
         parent {
           id
         }
-        products(channel: "axw-store") {
+        products(channel: $channel) {
           totalCount
         }
       }

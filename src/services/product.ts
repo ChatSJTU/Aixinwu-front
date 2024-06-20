@@ -1,5 +1,6 @@
 import { 
     CategoriesDocument,
+    CategoriesQuery,
     ProductDetailDocument,
     ProductDetailQuery,
     ProductsByCategoryIdDocument,
@@ -14,9 +15,14 @@ import { Category, ProductDetail, VarientDetail, ProductSummary } from "@/models
 import { ApolloClient } from "@apollo/client";
 
 //获取商品分类列表（扁平和树）
-export async function fetchCategories(client: ApolloClient<object>) {
+export async function fetchCategories(client: ApolloClient<object>, channel: string) {
     try {
-        const resp = await client.query({ query: CategoriesDocument }); 
+        const resp = await client.query<CategoriesQuery>({
+            query: CategoriesDocument,
+            variables: {
+                channel: channel
+            }
+        }); 
         if (!resp.data || !resp.data.categories) {
             throw "数据为空";
         }
@@ -43,6 +49,26 @@ export async function fetchCategories(client: ApolloClient<object>) {
                     parentCategory.children.push(category);
                 }
             }
+        });
+
+        // 递归函数计算总产品数
+        const calculateTotalProducts = (category: Category): number => {
+            console.log(category);
+            if (!category.children || category.children.length === 0) {
+                return category.products?.totalCount || 0;
+            }
+            let totalCount = 0;
+            category.children.forEach(child => {
+                totalCount += calculateTotalProducts(child);
+            });
+            if (category.products) {
+                category.products = { ...category.products, totalCount: totalCount };
+            }
+            return totalCount;
+        };
+
+        treeCategories.forEach(rootCategory => {
+            calculateTotalProducts(rootCategory);
         });
 
         return { flatList, treeCategories };
@@ -97,7 +123,7 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
 };
 
 // 按分类 ID 获取商品列表
-export async function fetchProductsByCategoryID(client: ApolloClient<object>, first:number, categoryID: string[], sort: string) {
+export async function fetchProductsByCategoryID(client: ApolloClient<object>, channel: string, first:number, categoryID: string[], sort: string) {
     try {
         const sortOptions: { [key: string]: ProductOrderField } = {
             'time': ProductOrderField.LastModifiedAt,
@@ -111,6 +137,7 @@ export async function fetchProductsByCategoryID(client: ApolloClient<object>, fi
         const resp = await client.query<ProductsByCategoryIdQuery>({
             query: ProductsByCategoryIdDocument,
             variables: {
+                channel: channel,
                 first: first,
                 categories: categoryID,
                 field: sortField
@@ -140,12 +167,13 @@ export async function fetchProductsByCategoryID(client: ApolloClient<object>, fi
 };
 
 // 按collection slugs获取商品列表
-export async function fetchProductsByCollection(client: ApolloClient<object>, first:number, slug:String) {
+export async function fetchProductsByCollection(client: ApolloClient<object>, channel:string, first:number, slug:String) {
     try {
         
         const resp = await client.query<ProductsByCollectionQuery>({
             query: ProductsByCollectionDocument,
             variables: {
+                channel: channel,
                 first: first,
                 slugs: [slug]
             }

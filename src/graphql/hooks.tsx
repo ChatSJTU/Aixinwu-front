@@ -32959,7 +32959,9 @@ export type StatisticsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type StatisticsQuery = { __typename?: 'Query', statistics?: { __typename?: 'Statistics', circulatedCurrency?: number | null, circulatedItems?: number | null, users?: number | null, views?: number | null } | null };
 
-export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+export type CategoriesQueryVariables = Exact<{
+  channel: Scalars['String']['input'];
+}>;
 
 
 export type CategoriesQuery = { __typename?: 'Query', categories?: { __typename?: 'CategoryCountableConnection', edges: Array<{ __typename?: 'CategoryCountableEdge', node: { __typename?: 'Category', id: string, level: number, description?: any | null, name: string, seoDescription?: string | null, seoTitle?: string | null, slug: string, parent?: { __typename?: 'Category', id: string } | null, products?: { __typename?: 'ProductCountableConnection', totalCount?: number | null } | null } }> } | null };
@@ -32973,6 +32975,7 @@ export type ProductDetailQueryVariables = Exact<{
 export type ProductDetailQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, slug: string, seoTitle?: string | null, seoDescription?: string | null, channel?: string | null, created: any, description?: any | null, availableForPurchaseAt?: any | null, isAvailableForPurchase?: boolean | null, name: string, collections?: Array<{ __typename?: 'Collection', id: string, name: string, slug: string, description?: any | null }> | null, variants?: Array<{ __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, quantityAvailable?: number | null, updatedAt: any, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null }> | null, media?: Array<{ __typename?: 'ProductMedia', alt: string, id: string, url: string, sortOrder?: number | null, type: ProductMediaType }> | null } | null };
 
 export type ProductsByCategoryIdQueryVariables = Exact<{
+  channel: Scalars['String']['input'];
   first: Scalars['Int']['input'];
   categories?: InputMaybe<Array<Scalars['ID']['input']> | Scalars['ID']['input']>;
   field: ProductOrderField;
@@ -32982,6 +32985,7 @@ export type ProductsByCategoryIdQueryVariables = Exact<{
 export type ProductsByCategoryIdQuery = { __typename?: 'Query', products?: { __typename?: 'ProductCountableConnection', totalCount?: number | null, edges: Array<{ __typename?: 'ProductCountableEdge', node: { __typename?: 'Product', id: string, name: string, rating?: number | null, slug: string, updatedAt: any, isAvailable?: boolean | null, availableForPurchase?: any | null, availableForPurchaseAt?: any | null, images?: Array<{ __typename?: 'ProductImage', id: string, url: string, alt?: string | null, sortOrder?: number | null }> | null, pricing?: { __typename?: 'ProductPricingInfo', displayGrossPrices: boolean, onSale?: boolean | null, priceRange?: { __typename?: 'TaxedMoneyRange', start?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null, stop?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null, discount?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } }> } | null };
 
 export type ProductsByCollectionQueryVariables = Exact<{
+  channel: Scalars['String']['input'];
   first: Scalars['Int']['input'];
   slugs?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
@@ -33793,7 +33797,7 @@ export type StatisticsLazyQueryHookResult = ReturnType<typeof useStatisticsLazyQ
 export type StatisticsSuspenseQueryHookResult = ReturnType<typeof useStatisticsSuspenseQuery>;
 export type StatisticsQueryResult = Apollo.QueryResult<StatisticsQuery, StatisticsQueryVariables>;
 export const CategoriesDocument = gql`
-    query Categories {
+    query Categories($channel: String!) {
   categories(first: 300) {
     edges {
       node {
@@ -33807,7 +33811,7 @@ export const CategoriesDocument = gql`
         parent {
           id
         }
-        products(channel: "axw-store") {
+        products(channel: $channel) {
           totalCount
         }
       }
@@ -33828,10 +33832,11 @@ export const CategoriesDocument = gql`
  * @example
  * const { data, loading, error } = useCategoriesQuery({
  *   variables: {
+ *      channel: // value for 'channel'
  *   },
  * });
  */
-export function useCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<CategoriesQuery, CategoriesQueryVariables>) {
+export function useCategoriesQuery(baseOptions: Apollo.QueryHookOptions<CategoriesQuery, CategoriesQueryVariables> & ({ variables: CategoriesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<CategoriesQuery, CategoriesQueryVariables>(CategoriesDocument, options);
       }
@@ -33925,11 +33930,11 @@ export type ProductDetailLazyQueryHookResult = ReturnType<typeof useProductDetai
 export type ProductDetailSuspenseQueryHookResult = ReturnType<typeof useProductDetailSuspenseQuery>;
 export type ProductDetailQueryResult = Apollo.QueryResult<ProductDetailQuery, ProductDetailQueryVariables>;
 export const ProductsByCategoryIdDocument = gql`
-    query ProductsByCategoryID($first: Int!, $categories: [ID!], $field: ProductOrderField!) {
+    query ProductsByCategoryID($channel: String!, $first: Int!, $categories: [ID!], $field: ProductOrderField!) {
   products(
     first: $first
     filter: {categories: $categories}
-    channel: "axw-store"
+    channel: $channel
     last: 24
     sortBy: {direction: ASC, field: $field}
   ) {
@@ -33989,6 +33994,7 @@ export const ProductsByCategoryIdDocument = gql`
  * @example
  * const { data, loading, error } = useProductsByCategoryIdQuery({
  *   variables: {
+ *      channel: // value for 'channel'
  *      first: // value for 'first'
  *      categories: // value for 'categories'
  *      field: // value for 'field'
@@ -34012,8 +34018,8 @@ export type ProductsByCategoryIdLazyQueryHookResult = ReturnType<typeof useProdu
 export type ProductsByCategoryIdSuspenseQueryHookResult = ReturnType<typeof useProductsByCategoryIdSuspenseQuery>;
 export type ProductsByCategoryIdQueryResult = Apollo.QueryResult<ProductsByCategoryIdQuery, ProductsByCategoryIdQueryVariables>;
 export const ProductsByCollectionDocument = gql`
-    query ProductsByCollection($first: Int!, $slugs: [String!]) {
-  collections(first: 1, channel: "axw-store", filter: {slugs: $slugs}) {
+    query ProductsByCollection($channel: String!, $first: Int!, $slugs: [String!]) {
+  collections(first: 1, channel: $channel, filter: {slugs: $slugs}) {
     edges {
       node {
         id
@@ -34085,6 +34091,7 @@ export const ProductsByCollectionDocument = gql`
  * @example
  * const { data, loading, error } = useProductsByCollectionQuery({
  *   variables: {
+ *      channel: // value for 'channel'
  *      first: // value for 'first'
  *      slugs: // value for 'slugs'
  *   },

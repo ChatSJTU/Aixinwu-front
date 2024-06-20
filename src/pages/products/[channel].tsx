@@ -4,6 +4,7 @@ import { Grid, Typography, Row, Col, Menu, Segmented, Flex, Spin, Empty, Divider
 import type { MenuProps } from 'antd';
 import type { PaginationProps } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined, AppstoreOutlined } from "@ant-design/icons";
+import { useRouter } from 'next/router';
 
 // import Link from "next/link";
 import AuthContext from '@/contexts/auth';
@@ -37,6 +38,9 @@ const ProductsPage = () => {
     const authCtx = useContext(AuthContext);
     const client = authCtx.client;
     const message = useContext(MessageContext);
+    const router = useRouter();
+    const { channel } = router.query;
+
     const [coinDirection, setCoinDirection] = useState<string>('up');
     const [selectedSortOption, setSelectedSortOption] = useState<string>('default');
     const [categories, setCategories] = useState<Category[] | null>(null);
@@ -44,12 +48,17 @@ const ProductsPage = () => {
     const [currentCategoryID, setCurrentCategoryID] = useState<string[] | null>(null);
     const [shownProducts, setShownProducts] = useState<ProductSummary[] | null>(null);
     const [shownProductsPage, setShownProductsPage] = useState(1);
+    const [currentChannel, setCurrentChannel] = useState<string>("");
     
     const screens = Grid.useBreakpoint();
 
     useEffect(() => {
-        fetchCategories(client!)
+        if (channel == undefined || channel == "")
+            return;
+        setCurrentChannel(channel as string);
+        fetchCategories(client!, channel as string)
             .then(({ flatList, treeCategories }) => {
+                console.log(treeCategories);
                 setCategories(treeCategories);
                 setCurrentCategoryID(flatList.map(category => category.id));
                 setFlatCategories(flatList);
@@ -58,11 +67,11 @@ const ProductsPage = () => {
                 //     .catch(err => message.error(err));
                 })
             .catch(err => message.error(err));
-    }, []);
+    }, [channel, router]);
 
     useEffect(() => {
         if (!currentCategoryID) return;
-        fetchProductsByCategoryID(client!, 24, currentCategoryID!, selectedSortOption)
+        fetchProductsByCategoryID(client!, currentChannel, 24, currentCategoryID!, selectedSortOption)
             .then(products => setShownProducts(products))
             .catch(err => message.error(err));
     }, [currentCategoryID, selectedSortOption]);
@@ -72,9 +81,15 @@ const ProductsPage = () => {
         categories
             .filter(category => category.level <= levelLimit)
             .map(category => {
+                if (category.products?.totalCount === 0) return null;
                 if (category.children && category.children.length > 0 && category.level <= levelLimit - 1)
-                    return formatMenuItem(category.name, category.id, null, buildMenuItems(category.children));
-                return formatMenuItem(category.name, category.id);
+                    return formatMenuItem(
+                            <>{category.name} <span className="secondary-text">{`(${category.products?.totalCount || 0})`}</span></>, 
+                            category.id, 
+                            null, 
+                            buildMenuItems(category.children)
+                        );
+                return formatMenuItem(<>{category.name} <span className="secondary-text">{`(${category.products?.totalCount || 0})`}</span></>, category.id);
             }
     );
 
@@ -94,7 +109,7 @@ const ProductsPage = () => {
 
     const handlePageinationChange: PaginationProps['onChange'] = (page) => {
         setShownProductsPage(page);
-        fetchProductsByCategoryID(client!, page * 24, currentCategoryID!, selectedSortOption)
+        fetchProductsByCategoryID(client!, currentChannel, page * 24, currentCategoryID!, selectedSortOption)
             .then(products => setShownProducts(products))
             .catch(err => message.error(err));
     };
@@ -138,7 +153,7 @@ const ProductsPage = () => {
             <Head>
                 <title>商品列表 - 上海交通大学绿色爱心屋</title>
             </Head>
-            <PageHeader title="置换专区"/>
+            <PageHeader title={currentChannel === "axw-shared" ? "租赁专区" : "置换专区"}/>
             <Row>
                 <Col span={screens.md ? 6 : 24}>
                     <div className="container basic-card">

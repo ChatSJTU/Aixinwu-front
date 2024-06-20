@@ -13,27 +13,30 @@ export const HomeRightContent = () => {
     const authCtx = useContext(AuthContext);
     const client = authCtx.client;
     const [hotProducts, setHotProducts] = useState<ProductSummary[] | null>(null);
+    const [hotSharedProducts, setHotSharedProducts] = useState<ProductSummary[] | null>(null);
 
     useEffect(() => {
-        fetchProductsByCollection(client!, 12, 'hot-products')
+        fetchProductsByCollection(client!, 'axw-store', 12, 'hot-products')
             .then(products => setHotProducts(products))
+        fetchProductsByCollection(client!, 'axw-shared', 12, 'hot-products')
+            .then(products => setHotSharedProducts(products))
     }, [])
 
     return (
         <>
             <BasicCard title="热门置换" divider
                 titleExtra={
-                    <Link href="/products" target="_blank">{'全部>>'}</Link>
+                    <Link href="/products/axw-store" target="_blank">{'全部>>'}</Link>
                 }
                 >
                 <ProductGrid products={hotProducts || []} />
             </BasicCard>
             <BasicCard title="热门租赁" divider
                 titleExtra={
-                    <Link href="/products" target="_blank">{'全部>>'}</Link>
+                    <Link href="/products/axw-shared" target="_blank">{'全部>>'}</Link>
                 }
                 >
-                <ProductGrid products={[]} />
+                <ProductGrid products={hotSharedProducts || []} />
             </BasicCard>
         </>
     )

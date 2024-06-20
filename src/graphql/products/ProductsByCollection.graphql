@@ -1,7 +1,7 @@
-query ProductsByCollection($first: Int!, $slugs: [String!]) {
+query ProductsByCollection($channel: String!, $first: Int!, $slugs: [String!]) {
   collections(
     first: 1
-    channel: "axw-store"
+    channel: $channel
     filter: {slugs: $slugs}
   ) {
     edges {
