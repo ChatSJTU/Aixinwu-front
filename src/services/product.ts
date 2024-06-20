@@ -53,7 +53,6 @@ export async function fetchCategories(client: ApolloClient<object>, channel: str
 
         // 递归函数计算总产品数
         const calculateTotalProducts = (category: Category): number => {
-            console.log(category);
             if (!category.children || category.children.length === 0) {
                 return category.products?.totalCount || 0;
             }

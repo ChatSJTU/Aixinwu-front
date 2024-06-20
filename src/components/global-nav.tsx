@@ -105,7 +105,7 @@ const NavBar = () => {
               <Link href="/" className="title">SJTU 爱心屋</Link>
               <div style={{display: 'flex'}}>
               <Menu className="menu" style={{ minWidth: 0, flex: "auto" }}
-                  selectedKeys={[router.pathname]}
+                  selectedKeys={[router.asPath]}
                   mode="horizontal"
                   items={menuItems.map((item) => ({
                       key: item.value,
