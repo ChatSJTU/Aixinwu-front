@@ -83,8 +83,8 @@ const NavBar = () => {
   };
 
   const menuItems = [
-      { label: "置换", value: "/products" },
-    //   { label: "租赁", value: "/2" },
+      { label: "置换", value: "/products/axw-store" },
+      { label: "租赁", value: "/products/axw-shared" },
     //   { label: "失物招领", value: "/3" },
       { label: "预捐赠", value: "/pre-donate" },
   ];
