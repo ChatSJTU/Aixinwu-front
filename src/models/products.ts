@@ -35,6 +35,7 @@ export interface ProductSummary {
     image_url: string[]; // 长度至少为1
     product_name: string;
     product_id: number;
+    product_slug: string;
     detailed_product_name?: string;
     cost: number;
     stock?: number;

@@ -9,13 +9,13 @@ import { AxCoin } from "./axcoin";
 const { Text } = Typography;
 
 export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSummary }) => {
-    const { image_url, product_id, product_name, detailed_product_name, cost, stock } = productSummary;
+    const { image_url, product_id, product_slug, product_name, detailed_product_name, cost, stock } = productSummary;
     const themeCtx = useContext(ThemeContext);
     return (
         <div
             className="preview-card-container"
         >
-            <a target="_blank" href={`/products/single/${detailed_product_name}`}>
+            <a target="_blank" href={`/products/single/${product_slug}`}>
                 <Card
                     hoverable
                     className="preview-card"
@@ -33,7 +33,7 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
                                 <Text strong style={{marginLeft:'2px', color: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"}}>{cost >= 1000 ? cost.toFixed(1) : cost.toFixed(2)}</Text>
                             </div>
                         </Flex>
-                        {(detailed_product_name && false) &&
+                        {detailed_product_name &&
                             <Text type="secondary" className="two-line-ellipsis">
                                 {detailed_product_name!.length < 30 ? detailed_product_name : `${detailed_product_name!.substring(0, 30)}...`}
                             </Text>
