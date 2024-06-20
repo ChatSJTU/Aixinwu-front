@@ -32991,6 +32991,15 @@ export type StatisticsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type StatisticsQuery = { __typename?: 'Query', statistics?: { __typename?: 'Statistics', circulatedCurrency?: number | null, circulatedItems?: number | null, users?: number | null, views?: number | null } | null };
 
+export type OrderFragmentFragment = { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, thumbnail?: { __typename?: 'Image', alt?: string | null, url: string } | null, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null };
+
+export type OrderPayMutationVariables = Exact<{
+  ID: Scalars['ID']['input'];
+}>;
+
+
+export type OrderPayMutation = { __typename?: 'Mutation', orderConfirm?: { __typename?: 'OrderConfirm', order?: { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, thumbnail?: { __typename?: 'Image', alt?: string | null, url: string } | null, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } | null, errors: Array<{ __typename?: 'OrderError', code: OrderErrorCode, field?: string | null, message?: string | null }> } | null };
+
 export type CategoriesQueryVariables = Exact<{
   channel: Scalars['String']['input'];
 }>;
@@ -33158,6 +33167,45 @@ export const CheckoutForCartFragmentFragmentDoc = gql`
     name
     type
     description
+  }
+}
+    ${UserAddressFragmentFragmentDoc}`;
+export const OrderFragmentFragmentDoc = gql`
+    fragment OrderFragment on Order {
+  created
+  id
+  isPaid
+  number
+  paymentStatus
+  checkoutId
+  total {
+    gross {
+      amount
+    }
+  }
+  lines {
+    productName
+    thumbnail(format: WEBP, size: 128) {
+      alt
+      url
+    }
+    variant {
+      media {
+        url(format: WEBP, size: 128)
+      }
+      id
+      pricing {
+        price {
+          gross {
+            amount
+          }
+        }
+      }
+    }
+    quantity
+  }
+  shippingAddress {
+    ...UserAddressFragment
   }
 }
     ${UserAddressFragmentFragmentDoc}`;
@@ -34051,6 +34099,46 @@ export type StatisticsQueryHookResult = ReturnType<typeof useStatisticsQuery>;
 export type StatisticsLazyQueryHookResult = ReturnType<typeof useStatisticsLazyQuery>;
 export type StatisticsSuspenseQueryHookResult = ReturnType<typeof useStatisticsSuspenseQuery>;
 export type StatisticsQueryResult = Apollo.QueryResult<StatisticsQuery, StatisticsQueryVariables>;
+export const OrderPayDocument = gql`
+    mutation OrderPay($ID: ID!) {
+  orderConfirm(id: $ID) {
+    order {
+      ...OrderFragment
+    }
+    errors {
+      code
+      field
+      message
+    }
+  }
+}
+    ${OrderFragmentFragmentDoc}`;
+export type OrderPayMutationFn = Apollo.MutationFunction<OrderPayMutation, OrderPayMutationVariables>;
+
+/**
+ * __useOrderPayMutation__
+ *
+ * To run a mutation, you first call `useOrderPayMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOrderPayMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [orderPayMutation, { data, loading, error }] = useOrderPayMutation({
+ *   variables: {
+ *      ID: // value for 'ID'
+ *   },
+ * });
+ */
+export function useOrderPayMutation(baseOptions?: Apollo.MutationHookOptions<OrderPayMutation, OrderPayMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<OrderPayMutation, OrderPayMutationVariables>(OrderPayDocument, options);
+      }
+export type OrderPayMutationHookResult = ReturnType<typeof useOrderPayMutation>;
+export type OrderPayMutationResult = Apollo.MutationResult<OrderPayMutation>;
+export type OrderPayMutationOptions = Apollo.BaseMutationOptions<OrderPayMutation, OrderPayMutationVariables>;
 export const CategoriesDocument = gql`
     query Categories($channel: String!) {
   categories(first: 300) {
@@ -34705,47 +34793,13 @@ export const UserOrdersDocument = gql`
     orders(first: $maxFetch) {
       edges {
         node {
-          created
-          id
-          isPaid
-          number
-          paymentStatus
-          checkoutId
-          total {
-            gross {
-              amount
-            }
-          }
-          lines {
-            productName
-            thumbnail(format: WEBP, size: 128) {
-              alt
-              url
-            }
-            variant {
-              media {
-                url(format: WEBP, size: 128)
-              }
-              id
-              pricing {
-                price {
-                  gross {
-                    amount
-                  }
-                }
-              }
-            }
-            quantity
-          }
-          shippingAddress {
-            ...UserAddressFragment
-          }
+          ...OrderFragment
         }
       }
     }
   }
 }
-    ${UserAddressFragmentFragmentDoc}`;
+    ${OrderFragmentFragmentDoc}`;
 
 /**
  * __useUserOrdersQuery__

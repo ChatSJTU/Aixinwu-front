@@ -3,41 +3,7 @@ query UserOrders($maxFetch: Int = 50) {
   orders(first: $maxFetch) {
     edges {
       node {
-        created
-        id
-        isPaid
-        number
-        paymentStatus
-        checkoutId
-        total {
-          gross {
-            amount
-          }
-        }
-        lines {
-          productName
-          thumbnail(format: WEBP, size: 128) {
-            alt
-            url
-          }
-          variant {
-            media {
-              url(format: WEBP, size: 128)
-            }
-            id
-            pricing {
-              price {
-                gross {
-                  amount
-                }
-              }
-            }
-          }
-          quantity
-        }
-        shippingAddress {
-          ...UserAddressFragment
-        }
+        ...OrderFragment
       }
     }
   }

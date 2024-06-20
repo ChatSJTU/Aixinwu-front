@@ -1,0 +1,12 @@
+mutation OrderPay($ID: ID!) {
+  orderConfirm(id: $ID) {
+    order {
+      ...OrderFragment
+    }
+    errors {
+      code
+      field
+      message
+    }
+  }
+}
