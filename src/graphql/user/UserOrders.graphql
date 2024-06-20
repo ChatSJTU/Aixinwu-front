@@ -16,6 +16,10 @@ query UserOrders($maxFetch: Int = 50) {
         }
         lines {
           productName
+          thumbnail(format: WEBP, size: 128) {
+            alt
+            url
+          }
           variant {
             media {
               url(format: WEBP, size: 128)

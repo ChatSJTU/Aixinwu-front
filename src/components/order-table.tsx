@@ -18,7 +18,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
     const toOrderDetail = (orderId: string) => {
         router.push(`/orders/${orderId}`);
     };
-
+    
     const dataSource = orders.map(order => ({
         key: order.id,
         orderId: order.number,
@@ -27,7 +27,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
         totalCost: order.total.gross.amount,
         orderStatus: order.isPaid,
         productName: order.lines.length > 1 ? `${order.lines[0].productName}...等${order.lines.length}件商品` : order.lines[0].productName,
-        imageUrl: order.lines[0].variant.media[0].url, // 只取第一个产品的第一个图片
+        imageUrl: order.lines[0].variant.media[0]?.url ?? order.lines[0].thumbnail?.url, // 只取第一个产品的第一个图片
     }));
 
     const columns: TableColumnsType<any> = [
