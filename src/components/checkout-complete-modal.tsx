@@ -12,6 +12,7 @@ const { Text, Link } = Typography;
 interface CheckoutCompleteModalProps {
     isopen: boolean;
     checkout: CheckoutDetail;
+    onClose: () => {};
 }
 
 export const CheckoutCompleteModal: React.FC<CheckoutCompleteModalProps> = (props) => {
@@ -93,6 +94,7 @@ export const CheckoutCompleteModal: React.FC<CheckoutCompleteModalProps> = (prop
             footer={null}
             keyboard={false}
             maskClosable={false}
+            onCancel={props.onClose}
             width={240}
         >
             <Flex align="center" justify="center" vertical={true} style={{

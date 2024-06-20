@@ -12,7 +12,6 @@ mutation CheckoutComplete($id: ID!) {
         id
         gateway
         chargeStatus
-        actions
         capturedAmount {
           amount
         }

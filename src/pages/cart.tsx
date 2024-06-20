@@ -152,6 +152,10 @@ export const OrderPageView = () => {
         setCompleteModalOpen(true);
     }
 
+    const handleCompleteModalClose = () => {
+        setCompleteModalOpen(false);
+    }
+
     useEffect(() => {
         if (cartCtx.checkoutId != undefined)
         {
@@ -336,7 +340,7 @@ export const OrderPageView = () => {
                         </Affix>                    
                     </Col>
                 </Row>
-                <CheckoutCompleteModal isopen={isCompleteModalOpen} checkout={checkout}/>
+                <CheckoutCompleteModal isopen={isCompleteModalOpen} checkout={checkout} onClose={handleCompleteModalClose}/>
             </>
         );
     }
@@ -370,7 +374,7 @@ export const OrderPageView = () => {
                         </Space>
                     </div>
                 </Row>
-                <CheckoutCompleteModal isopen={isCompleteModalOpen} checkout={checkout}/>
+                <CheckoutCompleteModal isopen={isCompleteModalOpen} checkout={checkout} onClose={handleCompleteModalClose}/>
             </>
         );
     }
