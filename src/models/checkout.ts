@@ -13,6 +13,7 @@ export interface CheckoutDetail {
     quantity: number;
     shippingAddress: AddressInfo;
     isShippingRequired: boolean;
+    availableShippingMethods : ShippingMethodDetail[] | null;
 }
 
 export interface CheckoutLineDetail {
@@ -39,4 +40,12 @@ export interface CheckoutTableListProps {
     onItemNumberChange: Function;
     onItemNumberMinus: Function;
     onItemNumberPlus: Function;
+}
+
+export interface ShippingMethodDetail {
+    active: boolean;
+    id: string;
+    name: string;
+    type: string;
+    description: string;
 }

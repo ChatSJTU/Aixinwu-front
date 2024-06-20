@@ -32910,6 +32910,21 @@ export type CheckoutAddLineMutationVariables = Exact<{
 
 export type CheckoutAddLineMutation = { __typename?: 'Mutation', checkoutLinesAdd?: { __typename?: 'CheckoutLinesAdd', checkout?: { __typename?: 'Checkout', id: string, quantity: number, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, variant: { __typename?: 'ProductVariant', name: string, product: { __typename?: 'Product', name: string } } }> } | null, errors: Array<{ __typename?: 'CheckoutError', field?: string | null, code: CheckoutErrorCode, message?: string | null }> } | null };
 
+export type CheckoutBillingAddressUpdateMutationVariables = Exact<{
+  billingAddress: AddressInput;
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type CheckoutBillingAddressUpdateMutation = { __typename?: 'Mutation', checkoutBillingAddressUpdate?: { __typename?: 'CheckoutBillingAddressUpdate', errors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null }> } | null };
+
+export type CheckoutCompleteMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type CheckoutCompleteMutation = { __typename?: 'Mutation', checkoutComplete?: { __typename?: 'CheckoutComplete', order?: { __typename?: 'Order', id: string, status: OrderStatus, isPaid: boolean, paymentStatus: PaymentChargeStatusEnum, paymentStatusDisplay: string, created: any, chargeStatus: OrderChargeStatusEnum, number: string, checkoutId?: string | null, payments: Array<{ __typename?: 'Payment', id: string, gateway: string, chargeStatus: PaymentChargeStatusEnum, actions: Array<OrderAction>, created: any, isActive: boolean, paymentMethodType: string, capturedAmount?: { __typename?: 'Money', amount: number } | null }>, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, errors: Array<{ __typename?: 'OrderError', code: OrderErrorCode, message?: string | null }> } | null, errors: Array<{ __typename?: 'CheckoutError', field?: string | null, message?: string | null }> } | null };
+
 export type CheckoutCreateMutationVariables = Exact<{
   channel: Scalars['String']['input'];
 }>;
@@ -32922,9 +32937,9 @@ export type CheckoutFindQueryVariables = Exact<{
 }>;
 
 
-export type CheckoutFindQuery = { __typename?: 'Query', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } | null };
+export type CheckoutFindQuery = { __typename?: 'Query', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> } | null };
 
-export type CheckoutForCartFragmentFragment = { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null };
+export type CheckoutForCartFragmentFragment = { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> };
 
 export type CheckoutGetQuantityQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -32939,7 +32954,7 @@ export type CheckoutLineDeleteMutationVariables = Exact<{
 }>;
 
 
-export type CheckoutLineDeleteMutation = { __typename?: 'Mutation', checkoutLineDelete?: { __typename?: 'CheckoutLineDelete', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } | null, errors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null, lines?: Array<string> | null }> } | null };
+export type CheckoutLineDeleteMutation = { __typename?: 'Mutation', checkoutLineDelete?: { __typename?: 'CheckoutLineDelete', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> } | null, errors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null, lines?: Array<string> | null }> } | null };
 
 export type CheckoutLinesUpdateMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -32948,7 +32963,7 @@ export type CheckoutLinesUpdateMutationVariables = Exact<{
 }>;
 
 
-export type CheckoutLinesUpdateMutation = { __typename?: 'Mutation', checkoutLinesUpdate?: { __typename?: 'CheckoutLinesUpdate', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } | null, checkoutErrors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null, lines?: Array<string> | null }> } | null };
+export type CheckoutLinesUpdateMutation = { __typename?: 'Mutation', checkoutLinesUpdate?: { __typename?: 'CheckoutLinesUpdate', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> } | null, checkoutErrors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null, lines?: Array<string> | null }> } | null };
 
 export type CheckoutShippingAddressUpdateMutationVariables = Exact<{
   shippingAddress: AddressInput;
@@ -32957,6 +32972,14 @@ export type CheckoutShippingAddressUpdateMutationVariables = Exact<{
 
 
 export type CheckoutShippingAddressUpdateMutation = { __typename?: 'Mutation', checkoutShippingAddressUpdate?: { __typename?: 'CheckoutShippingAddressUpdate', errors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null }> } | null };
+
+export type CheckoutShippingMethodUpdateMutationVariables = Exact<{
+  checkoutId: Scalars['ID']['input'];
+  shippingMethodId: Scalars['ID']['input'];
+}>;
+
+
+export type CheckoutShippingMethodUpdateMutation = { __typename?: 'Mutation', checkoutShippingMethodUpdate?: { __typename?: 'CheckoutShippingMethodUpdate', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> } | null, errors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null }> } | null };
 
 export type CarouselUrlsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -33050,7 +33073,7 @@ export type UserOrdersQueryVariables = Exact<{
 }>;
 
 
-export type UserOrdersQuery = { __typename?: 'Query', me?: { __typename?: 'User', orders?: { __typename?: 'OrderCountableConnection', edges: Array<{ __typename?: 'OrderCountableEdge', node: { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } }> } | null } | null };
+export type UserOrdersQuery = { __typename?: 'Query', me?: { __typename?: 'User', orders?: { __typename?: 'OrderCountableConnection', edges: Array<{ __typename?: 'OrderCountableEdge', node: { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, thumbnail?: { __typename?: 'Image', alt?: string | null, url: string } | null, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } }> } | null } | null };
 
 export const UserAddressFragmentFragmentDoc = gql`
     fragment UserAddressFragment on Address {
@@ -33121,6 +33144,13 @@ export const CheckoutForCartFragmentFragmentDoc = gql`
   isShippingRequired
   shippingAddress {
     ...UserAddressFragment
+  }
+  availableShippingMethods {
+    active
+    id
+    name
+    type
+    description
   }
 }
     ${UserAddressFragmentFragmentDoc}`;
@@ -33536,6 +33566,112 @@ export function useCheckoutAddLineMutation(baseOptions?: Apollo.MutationHookOpti
 export type CheckoutAddLineMutationHookResult = ReturnType<typeof useCheckoutAddLineMutation>;
 export type CheckoutAddLineMutationResult = Apollo.MutationResult<CheckoutAddLineMutation>;
 export type CheckoutAddLineMutationOptions = Apollo.BaseMutationOptions<CheckoutAddLineMutation, CheckoutAddLineMutationVariables>;
+export const CheckoutBillingAddressUpdateDocument = gql`
+    mutation CheckoutBillingAddressUpdate($billingAddress: AddressInput!, $id: ID!) {
+  checkoutBillingAddressUpdate(billingAddress: $billingAddress, id: $id) {
+    errors {
+      code
+      field
+      message
+    }
+  }
+}
+    `;
+export type CheckoutBillingAddressUpdateMutationFn = Apollo.MutationFunction<CheckoutBillingAddressUpdateMutation, CheckoutBillingAddressUpdateMutationVariables>;
+
+/**
+ * __useCheckoutBillingAddressUpdateMutation__
+ *
+ * To run a mutation, you first call `useCheckoutBillingAddressUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCheckoutBillingAddressUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [checkoutBillingAddressUpdateMutation, { data, loading, error }] = useCheckoutBillingAddressUpdateMutation({
+ *   variables: {
+ *      billingAddress: // value for 'billingAddress'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCheckoutBillingAddressUpdateMutation(baseOptions?: Apollo.MutationHookOptions<CheckoutBillingAddressUpdateMutation, CheckoutBillingAddressUpdateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CheckoutBillingAddressUpdateMutation, CheckoutBillingAddressUpdateMutationVariables>(CheckoutBillingAddressUpdateDocument, options);
+      }
+export type CheckoutBillingAddressUpdateMutationHookResult = ReturnType<typeof useCheckoutBillingAddressUpdateMutation>;
+export type CheckoutBillingAddressUpdateMutationResult = Apollo.MutationResult<CheckoutBillingAddressUpdateMutation>;
+export type CheckoutBillingAddressUpdateMutationOptions = Apollo.BaseMutationOptions<CheckoutBillingAddressUpdateMutation, CheckoutBillingAddressUpdateMutationVariables>;
+export const CheckoutCompleteDocument = gql`
+    mutation CheckoutComplete($id: ID!) {
+  checkoutComplete(id: $id) {
+    order {
+      id
+      status
+      isPaid
+      paymentStatus
+      paymentStatusDisplay
+      payments {
+        id
+        gateway
+        chargeStatus
+        actions
+        capturedAmount {
+          amount
+        }
+        created
+        isActive
+        paymentMethodType
+      }
+      created
+      chargeStatus
+      number
+      total {
+        gross {
+          amount
+        }
+      }
+      errors {
+        code
+        message
+      }
+      checkoutId
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+    `;
+export type CheckoutCompleteMutationFn = Apollo.MutationFunction<CheckoutCompleteMutation, CheckoutCompleteMutationVariables>;
+
+/**
+ * __useCheckoutCompleteMutation__
+ *
+ * To run a mutation, you first call `useCheckoutCompleteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCheckoutCompleteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [checkoutCompleteMutation, { data, loading, error }] = useCheckoutCompleteMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCheckoutCompleteMutation(baseOptions?: Apollo.MutationHookOptions<CheckoutCompleteMutation, CheckoutCompleteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CheckoutCompleteMutation, CheckoutCompleteMutationVariables>(CheckoutCompleteDocument, options);
+      }
+export type CheckoutCompleteMutationHookResult = ReturnType<typeof useCheckoutCompleteMutation>;
+export type CheckoutCompleteMutationResult = Apollo.MutationResult<CheckoutCompleteMutation>;
+export type CheckoutCompleteMutationOptions = Apollo.BaseMutationOptions<CheckoutCompleteMutation, CheckoutCompleteMutationVariables>;
 export const CheckoutCreateDocument = gql`
     mutation CheckoutCreate($channel: String!) {
   checkoutCreate(input: {channel: $channel, lines: []}) {
@@ -33781,6 +33917,50 @@ export function useCheckoutShippingAddressUpdateMutation(baseOptions?: Apollo.Mu
 export type CheckoutShippingAddressUpdateMutationHookResult = ReturnType<typeof useCheckoutShippingAddressUpdateMutation>;
 export type CheckoutShippingAddressUpdateMutationResult = Apollo.MutationResult<CheckoutShippingAddressUpdateMutation>;
 export type CheckoutShippingAddressUpdateMutationOptions = Apollo.BaseMutationOptions<CheckoutShippingAddressUpdateMutation, CheckoutShippingAddressUpdateMutationVariables>;
+export const CheckoutShippingMethodUpdateDocument = gql`
+    mutation CheckoutShippingMethodUpdate($checkoutId: ID!, $shippingMethodId: ID!) {
+  checkoutShippingMethodUpdate(
+    id: $checkoutId
+    shippingMethodId: $shippingMethodId
+  ) {
+    checkout {
+      ...CheckoutForCartFragment
+    }
+    errors {
+      code
+      field
+      message
+    }
+  }
+}
+    ${CheckoutForCartFragmentFragmentDoc}`;
+export type CheckoutShippingMethodUpdateMutationFn = Apollo.MutationFunction<CheckoutShippingMethodUpdateMutation, CheckoutShippingMethodUpdateMutationVariables>;
+
+/**
+ * __useCheckoutShippingMethodUpdateMutation__
+ *
+ * To run a mutation, you first call `useCheckoutShippingMethodUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCheckoutShippingMethodUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [checkoutShippingMethodUpdateMutation, { data, loading, error }] = useCheckoutShippingMethodUpdateMutation({
+ *   variables: {
+ *      checkoutId: // value for 'checkoutId'
+ *      shippingMethodId: // value for 'shippingMethodId'
+ *   },
+ * });
+ */
+export function useCheckoutShippingMethodUpdateMutation(baseOptions?: Apollo.MutationHookOptions<CheckoutShippingMethodUpdateMutation, CheckoutShippingMethodUpdateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CheckoutShippingMethodUpdateMutation, CheckoutShippingMethodUpdateMutationVariables>(CheckoutShippingMethodUpdateDocument, options);
+      }
+export type CheckoutShippingMethodUpdateMutationHookResult = ReturnType<typeof useCheckoutShippingMethodUpdateMutation>;
+export type CheckoutShippingMethodUpdateMutationResult = Apollo.MutationResult<CheckoutShippingMethodUpdateMutation>;
+export type CheckoutShippingMethodUpdateMutationOptions = Apollo.BaseMutationOptions<CheckoutShippingMethodUpdateMutation, CheckoutShippingMethodUpdateMutationVariables>;
 export const CarouselUrlsDocument = gql`
     query CarouselUrls {
   carousel {
@@ -34489,6 +34669,10 @@ export const UserOrdersDocument = gql`
           }
           lines {
             productName
+            thumbnail(format: WEBP, size: 128) {
+              alt
+              url
+            }
             variant {
               media {
                 url(format: WEBP, size: 128)

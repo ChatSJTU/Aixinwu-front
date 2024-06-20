@@ -13,6 +13,7 @@ import { MessageContext } from "@/contexts/message";
 import { useRouter } from "next/router";
 import { fetchUserAddresses } from "@/services/user";
 import { AddressInfo } from "@/models/address";
+import { CheckoutCompleteModal } from "@/components/checkout-complete-modal";
 const { Title, Text, Link, Paragraph } = Typography;
 const { Panel } = Collapse;
 const { useBreakpoint } = Grid;
@@ -28,6 +29,7 @@ export const OrderPageView = () => {
     const [top, setTop] = React.useState<number>(70);
     const [selectedAddress, setSelectedAddress] = useState<AddressInfo | undefined>(undefined);
     const [addresses, setAddresses] = useState<AddressInfo[]>([]);
+    const [isCompleteModalOpen, setCompleteModalOpen] = useState<boolean>(false);
     
     function updateCheckoutAndCartNum(checkout: CheckoutDetail) {
         //cartCtx.setCheckoutId(checkout.id);
@@ -135,6 +137,20 @@ export const OrderPageView = () => {
     const handleAddressClick = (addr: AddressInfo) => {
         updateSelectedAddress(addr);
     };
+
+    const handleSubmitClick = () => {
+        if (checkout == undefined)
+        {
+            message.error("操作失败：购物车不存在。请刷新页面重试！");
+            return;
+        }
+        if (selectedAddress == undefined)
+        {
+            message.error("操作失败：请先选择收获地址。");
+            return;
+        }
+        setCompleteModalOpen(true);
+    }
 
     useEffect(() => {
         if (cartCtx.checkoutId != undefined)
@@ -252,7 +268,7 @@ export const OrderPageView = () => {
                     {/* 总计： <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{totalCost}</span> */}
                     总计： <AxCoin value={checkout.totalPrice} coloredValue/>
                     </Text>
-                    <Button type="primary">提交订单</Button>
+                    <Button type="primary" onClick={handleSubmitClick}>提交订单</Button>
                 </Space>
             </div>
         </div>
@@ -320,6 +336,7 @@ export const OrderPageView = () => {
                         </Affix>                    
                     </Col>
                 </Row>
+                <CheckoutCompleteModal isopen={isCompleteModalOpen} checkout={checkout}/>
             </>
         );
     }
@@ -353,6 +370,7 @@ export const OrderPageView = () => {
                         </Space>
                     </div>
                 </Row>
+                <CheckoutCompleteModal isopen={isCompleteModalOpen} checkout={checkout}/>
             </>
         );
     }

@@ -16,8 +16,14 @@ import {
     CheckoutShippingAddressUpdate,
     CheckoutShippingAddressUpdateMutation,
     CheckoutShippingAddressUpdateDocument,
+    CheckoutShippingMethodUpdateMutation,
+    CheckoutShippingMethodUpdateDocument,
+    CheckoutBillingAddressUpdateMutation,
+    CheckoutBillingAddressUpdateDocument,
+    CheckoutCompleteMutation,
+    CheckoutCompleteDocument,
 } from "@/graphql/hooks";
-import { CheckoutCreateResult, CheckoutDetail, CheckoutLineDetail, CheckoutLineVarientDetail } from "@/models/checkout";
+import { CheckoutCreateResult, CheckoutDetail, CheckoutLineDetail, CheckoutLineVarientDetail, ShippingMethodDetail } from "@/models/checkout";
 import { Token } from "@/models/token";
 import { ApolloClient } from "@apollo/client";
 import { mapAddressInfo } from "./user";
@@ -30,6 +36,13 @@ function mapCheckoutForCart(data: Checkout) : CheckoutDetail {
         quantity: data.quantity,
         shippingAddress: data.shippingAddress == undefined ? undefined : mapAddressInfo(data.shippingAddress as Address),
         isShippingRequired: data.isShippingRequired,
+        availableShippingMethods: data.availableShippingMethods.map(x=>({
+            active: x.active,
+            id: x.id,
+            name: x.name,
+            type: x.type,
+            description: x.description,
+        }) as ShippingMethodDetail),
         lines: data.lines.map(x=>({
             id: x.id,
             quantity: x.quantity,
@@ -236,6 +249,96 @@ export async function checkoutAddressUpdate(client: ApolloClient<object>, checko
           throw resp.data.checkoutShippingAddressUpdate.errors[0].message;
         }
         return true;
+    } catch (error) {
+        var errmessage = `请求失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+};
+
+//更新发货方式
+export async function checkoutShippingMethodUpdate(client: ApolloClient<object>, checkoutId: string, shippingMethodId: string) {
+    try {
+        const resp = await client.mutate<CheckoutShippingMethodUpdateMutation>({
+            mutation: CheckoutShippingMethodUpdateDocument,
+            variables: {
+                checkoutId: checkoutId,
+                shippingMethodId: shippingMethodId
+            }
+        }); 
+        if (!resp.data || 
+            !resp.data.checkoutShippingMethodUpdate) {
+          throw "更新发货方式失败";
+        }
+        if (resp.data.checkoutShippingMethodUpdate.errors.length != 0)
+        {
+          throw resp.data.checkoutShippingMethodUpdate.errors[0].message;
+        }
+        var data = resp.data?.checkoutShippingMethodUpdate.checkout as Checkout;
+        return mapCheckoutForCart(data);
+    } catch (error) {
+        var errmessage = `请求失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+};
+
+//更新账单地址
+export async function checkoutBillingAddressUpdate(client: ApolloClient<object>, checkoutId: string, address: AddressInfo) {
+    try {
+        const resp = await client.mutate<CheckoutBillingAddressUpdateMutation>({
+            mutation: CheckoutBillingAddressUpdateDocument,
+            variables: {
+                id: checkoutId,
+                billingAddress: {
+                    country: address.country.code,
+                    countryArea: address.countryArea,
+                    city: address.city,
+                    cityArea: address.cityArea,
+                    streetAddress1: address.streetAddress1,
+                    streetAddress2: address.streetAddress2,
+                    postalCode: address.postalCode,
+                    companyName: address.companyName,
+                    firstName: address.firstName,
+                    lastName: address.lastName,
+                    phone: address.phone,
+                }
+            }
+        }); 
+        if (!resp.data || 
+            !resp.data.checkoutBillingAddressUpdate) {
+          throw "更新账单地址失败";
+        }
+        if (resp.data.checkoutBillingAddressUpdate.errors.length != 0)
+        {
+          throw resp.data.checkoutBillingAddressUpdate.errors[0].message;
+        }
+        return true;
+    } catch (error) {
+        var errmessage = `请求失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+};
+
+//下单
+export async function checkoutComplete(client: ApolloClient<object>, checkoutId: string) {
+    try {
+        const resp = await client.mutate<CheckoutCompleteMutation>({
+            mutation: CheckoutCompleteDocument,
+            variables: {
+                id: checkoutId
+            }
+        }); 
+        if (!resp.data || 
+            !resp.data.checkoutComplete) {
+          throw "下单失败";
+        }
+        if (resp.data.checkoutComplete.errors.length != 0)
+        {
+          throw resp.data.checkoutComplete.errors[0].message;
+        }
+        return resp.data.checkoutComplete.order?.id;
     } catch (error) {
         var errmessage = `请求失败：${error}`
         console.error(errmessage);

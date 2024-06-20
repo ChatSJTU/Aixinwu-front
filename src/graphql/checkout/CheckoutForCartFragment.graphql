@@ -46,4 +46,11 @@ fragment CheckoutForCartFragment on Checkout {
   shippingAddress {
     ...UserAddressFragment
   }
+  availableShippingMethods {
+    active
+    id
+    name
+    type
+    description
+  }
 }
