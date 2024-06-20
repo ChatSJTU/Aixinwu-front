@@ -129,25 +129,35 @@ export const AuthContextProvider = (props : LayoutProps) => {
     return createGraphqlClient(token, isLoggedIn, refreshToken, setToken, setExp);
   }, [token, isLoggedIn]);
 
+  const doRefresh = () => {
+    oidcRefreshToken(new ApolloClient({
+      link: new HttpLink({
+        uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
+      }),
+      cache: new InMemoryCache()
+    }), refreshToken).then((data)=>{
+      if (!data)
+        return;
+      setToken(data);
+      setExp((new Date().getTime() + 20 * 60 * 1000));
+    });
+  };
+
   useEffect(() => {
     if (timerId == undefined)
     {
       var id = setInterval(() => {
         if (refreshToken == "")
           return;
-        oidcRefreshToken(new ApolloClient({
-          link: new HttpLink({
-            uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
-          }),
-          cache: new InMemoryCache()
-        }), refreshToken).then((data)=>{
-          if (!data)
-            return;
-          setToken(data);
-          setExp((new Date().getTime() + 20 * 60 * 1000));
-        });
+        doRefresh();
       }, 20 * 60 * 1000); //20 * 60
       setTimerId(id);
+    }
+  });
+
+  useEffect(() => {
+    if (!isLoggedIn && !!refreshToken) {
+      doRefresh();
     }
   });
 
