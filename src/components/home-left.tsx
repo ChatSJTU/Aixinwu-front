@@ -38,11 +38,11 @@ export const HomeLeftContent = () => {
 
     useEffect(() => {
         // 暂时硬编码了通知和公告两个PageType的ID
-        fetchArticlesByType(client!, "UGFnZVR5cGU6NQ==", 6)
-            .then(res => setNoticeSummaries(res))
+        fetchArticlesByType(client!, 10, 10, "UGFnZVR5cGU6NQ==")
+            .then(res => setNoticeSummaries(res.articleSummaries))
             .catch(err => message.error(err));
-        fetchArticlesByType(client!, "UGFnZVR5cGU6NA==", 6)
-            .then(res => setNewsSummaries(res))
+        fetchArticlesByType(client!, 10, 10, "UGFnZVR5cGU6NA==")
+            .then(res => setNewsSummaries(res.articleSummaries))
             .catch(err => message.error(err))
     }, [])
 

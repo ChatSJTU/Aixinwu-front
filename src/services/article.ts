@@ -34,12 +34,13 @@ export async function fetchArticleCategories(client: ApolloClient<object>) {
 };
 
 // 根据分类获取文章内容, 返回ArticleSummary[]
-export async function fetchArticlesByType(client: ApolloClient<object>, caregoryID: string, maxFetch: Number = 100) {
+export async function fetchArticlesByType(client: ApolloClient<object>, first: number, last: number, caregoryID: string) {
     try {
         const resp = await client.query({
             query: ArticleByTypeDocument,
             variables: {
-                maxFetch: maxFetch,
+                first: first,
+                last: last,
                 type: caregoryID,
                 fetchContent: false,
             }
@@ -60,7 +61,10 @@ export async function fetchArticlesByType(client: ApolloClient<object>, caregory
             description: edge.node.seoDescription,
             publish_time: edge.node.publishedAt,
         }));
-        return res;
+        return ({
+            totalCount: edges.totalCount,
+            articleSummaries: res,
+        });
 
     } catch (error) {
         var errmessage = `获取文章列表失败：${error}`
