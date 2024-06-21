@@ -17,7 +17,7 @@ interface AxCoinProps {
 export const AxCoin: React.FC<AxCoinProps> = ({ 
     size = 22,
     style,
-    value,
+    value = -Infinity,
     coloredValue = false,
     valueStyle,
     originValue
@@ -37,14 +37,15 @@ export const AxCoin: React.FC<AxCoinProps> = ({
                 component={themeCtx.userTheme == 'light' ? AxCoinLight : AxCoinDark} 
                 style={iconStyle}
             />
-            {value && 
+            {value >= 0 && 
                 <div style={{alignItems: 'baseline', display: 'inline-flex'}}>
                     <p
                         className = {coloredValue ? '' : 'primary-text'}
                         style={{
                             fontSize: size * 0.8,
                             fontWeight: '500',
-                            lineHeight: `${size}px`,
+                            lineHeight: 1,
+                            margin: 0,
                             ...(coloredValue==true
                                 ? {color : (style?.color || (themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"))}
                                 : {}),
@@ -58,7 +59,7 @@ export const AxCoin: React.FC<AxCoinProps> = ({
                             className='secondary-text'
                             style={{
                                 fontSize: size * 0.6,
-                                lineHeight: `${size}px`,
+                                lineHeight: 1,
                                 marginLeft: '6px'
                             }}
                         >
