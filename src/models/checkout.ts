@@ -32,6 +32,7 @@ export interface CheckoutLineVarientDetail {
     product_slug: string;
     product_thumbnail: string;
     product_category: string;
+    stock: number;
 }
 
 export interface CheckoutTableListProps {

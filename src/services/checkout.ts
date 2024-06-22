@@ -56,6 +56,7 @@ function mapCheckoutForCart(data: Checkout) : CheckoutDetail {
                 product_slug: x.variant.product.slug,
                 product_thumbnail: x.variant.product.thumbnail?.url,
                 product_category: x.variant.product.category?.name,
+                stock: x.variant.stocks![0].quantity
             }) as CheckoutLineVarientDetail,
         }) as CheckoutLineDetail),
     } as CheckoutDetail;

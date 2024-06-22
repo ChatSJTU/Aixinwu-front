@@ -11,6 +11,8 @@ fragment CheckoutForCartFragment on Checkout {
       }
     }
     variant {
+      name
+      id
       product {
         id
         name
@@ -31,8 +33,10 @@ fragment CheckoutForCartFragment on Checkout {
           }
         }
       }
-      name
-      id
+      stocks(countryCode: CN) {
+        id
+        quantity
+      }
     }
   }
   totalPrice {
