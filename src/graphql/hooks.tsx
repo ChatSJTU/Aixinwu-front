@@ -32879,13 +32879,14 @@ export type ArticleByIdQueryVariables = Exact<{
 export type ArticleByIdQuery = { __typename?: 'Query', pages?: { __typename?: 'PageCountableConnection', edges: Array<{ __typename?: 'PageCountableEdge', cursor: string, node: { __typename?: 'Page', id: string, title: string, slug: string, seoDescription?: string | null, publishedAt?: any | null, content?: any | null, pageType: { __typename?: 'PageType', id: string, name: string } } }> } | null };
 
 export type ArticleByTypeQueryVariables = Exact<{
-  maxFetch?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
   type?: InputMaybe<Array<Scalars['ID']['input']> | Scalars['ID']['input']>;
   fetchContent?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
-export type ArticleByTypeQuery = { __typename?: 'Query', pages?: { __typename?: 'PageCountableConnection', edges: Array<{ __typename?: 'PageCountableEdge', cursor: string, node: { __typename?: 'Page', id: string, title: string, slug: string, seoDescription?: string | null, publishedAt?: any | null, content?: any | null } }> } | null };
+export type ArticleByTypeQuery = { __typename?: 'Query', pages?: { __typename?: 'PageCountableConnection', totalCount?: number | null, edges: Array<{ __typename?: 'PageCountableEdge', cursor: string, node: { __typename?: 'Page', id: string, title: string, slug: string, seoDescription?: string | null, publishedAt?: any | null, content?: any | null } }> } | null };
 
 export type ArticleCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -33542,9 +33543,10 @@ export type ArticleByIdLazyQueryHookResult = ReturnType<typeof useArticleByIdLaz
 export type ArticleByIdSuspenseQueryHookResult = ReturnType<typeof useArticleByIdSuspenseQuery>;
 export type ArticleByIdQueryResult = Apollo.QueryResult<ArticleByIdQuery, ArticleByIdQueryVariables>;
 export const ArticleByTypeDocument = gql`
-    query ArticleByType($maxFetch: Int = 20, $type: [ID!], $fetchContent: Boolean = false) {
+    query ArticleByType($first: Int = 10, $last: Int = 10, $type: [ID!], $fetchContent: Boolean = false) {
   pages(
-    first: $maxFetch
+    first: $first
+    last: $last
     sortBy: {direction: ASC, field: TITLE}
     filter: {pageTypes: $type}
   ) {
@@ -33559,6 +33561,7 @@ export const ArticleByTypeDocument = gql`
       }
       cursor
     }
+    totalCount
   }
 }
     `;
@@ -33575,7 +33578,8 @@ export const ArticleByTypeDocument = gql`
  * @example
  * const { data, loading, error } = useArticleByTypeQuery({
  *   variables: {
- *      maxFetch: // value for 'maxFetch'
+ *      first: // value for 'first'
+ *      last: // value for 'last'
  *      type: // value for 'type'
  *      fetchContent: // value for 'fetchContent'
  *   },
@@ -33599,7 +33603,7 @@ export type ArticleByTypeSuspenseQueryHookResult = ReturnType<typeof useArticleB
 export type ArticleByTypeQueryResult = Apollo.QueryResult<ArticleByTypeQuery, ArticleByTypeQueryVariables>;
 export const ArticleCategoriesDocument = gql`
     query ArticleCategories {
-  pageTypes(first: 12, sortBy: {direction: ASC, field: NAME}) {
+  pageTypes(first: 1000, sortBy: {direction: ASC, field: NAME}) {
     edges {
       node {
         id

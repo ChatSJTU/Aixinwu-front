@@ -14,6 +14,7 @@ const { Title, Link, Text } = Typography;
 const { useBreakpoint } = Grid;
 
 const ArticleList: React.FC = () => {
+    const pageSize: number = 10;
     const router = useRouter();
     const screens = useBreakpoint();
     const authCtx = useContext(AuthContext);
@@ -23,6 +24,23 @@ const ArticleList: React.FC = () => {
     const [articleSummaries, setArticleSummaries] = useState<ArticleSummary[] | null>(null);
     const [currentCategoryID, setcurrentCategoryID] = useState<string | null>(null);
     const [currentCategoryName, setcurrentCategoryName] = useState<string | null>(null);
+    const [shownPage, setShownPage] = useState<number>(1);
+    const [totalResultsCount, setTotalResultsCount] = useState<number>(0);
+
+    const fetchPagedArticles = (page: number) => {
+        if (page < 1) {
+            message.error("Page num cannot be zero!")
+            return;
+        }
+        if (currentCategoryID) {
+            fetchArticlesByType(client!, page * pageSize, pageSize, currentCategoryID)
+                .then(res => {
+                    setArticleSummaries(res.articleSummaries);
+                    setTotalResultsCount(res.totalCount);
+                })
+                .catch(err => message.error(err))
+        }
+    }
 
     useEffect(() => {
         fetchArticleCategories(client!)
@@ -36,12 +54,8 @@ const ArticleList: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (currentCategoryID) {
-            fetchArticlesByType(client!, currentCategoryID, 20)
-                .then(res => setArticleSummaries(res))
-                .catch(err => message.error(err))
-        }
-
+        setShownPage(1);
+        fetchPagedArticles(1);
     }, [currentCategoryID]);
 
     const handleMenuClick = (e: any) => {
@@ -108,7 +122,15 @@ const ArticleList: React.FC = () => {
                                         description={<Text type="secondary">{item.description}</Text>}
                                     />
                                 </List.Item>
+
                             )}
+                            pagination={{
+                                total: totalResultsCount,
+                                current: shownPage,
+                                pageSize: pageSize,
+                                onChange: (page: number) => fetchPagedArticles(page),
+                                showTotal: (total) => `共 ${total} 篇文章`,
+                            }}
                         />
                     </div>
                 </Col>

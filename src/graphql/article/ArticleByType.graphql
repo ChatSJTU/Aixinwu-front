@@ -1,6 +1,7 @@
-query ArticleByType($maxFetch: Int = 20, $type: [ID!], $fetchContent: Boolean = false) {
+query ArticleByType($first: Int = 10, $last: Int = 10, $type: [ID!], $fetchContent: Boolean = false) {
   pages(
-    first: $maxFetch
+    first: $first
+    last: $last
     sortBy: {direction: ASC, field: TITLE}
     filter: {pageTypes: $type}
   ) {
@@ -15,5 +16,6 @@ query ArticleByType($maxFetch: Int = 20, $type: [ID!], $fetchContent: Boolean = 
       }
       cursor
     }
+    totalCount
   }
 }

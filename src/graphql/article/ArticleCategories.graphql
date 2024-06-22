@@ -1,5 +1,5 @@
 query ArticleCategories {
-  pageTypes(first: 12, sortBy: {direction: ASC, field: NAME}) {
+  pageTypes(first: 1000, sortBy: {direction: ASC, field: NAME}) {
     edges {
       node {
         id

@@ -311,6 +311,7 @@ code {
 }
 
 .address-card{
+    min-width: 240px;
     border-width: 1px;
     @include themify {
         border-color: themed('primary-border-color') !important;

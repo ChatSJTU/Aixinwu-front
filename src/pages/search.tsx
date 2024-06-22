@@ -34,7 +34,6 @@ const SearchResultPage = () => {
     const [resultList, setResultList] = useState<ProductSummary[] | ArticleSummary[]>([]);  // 搜索结果列表
 
     useEffect(() => {
-        console.log(query);
         if (query.keyword && query.domain && query.sort && query.page) {
             const keyword = query.keyword as string;
             const domain = query.domain as string;
