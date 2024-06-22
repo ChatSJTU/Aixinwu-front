@@ -7,6 +7,7 @@ import { Button, Flex, Modal, Progress } from "antd";
 import React, { useContext } from "react";
 import { useEffect } from "react";
 import { Space, Typography } from 'antd';
+import { useRouter } from "next/router";
 const { Text, Link } = Typography;
 
 interface CheckoutCompleteModalProps {
@@ -20,6 +21,7 @@ export const CheckoutCompleteModal: React.FC<CheckoutCompleteModalProps> = (prop
     const cartCtx = useContext(CartContext);
     const client = authCtx.client;
     const message = useContext(MessageContext);
+    const router = useRouter();
     
     const [process, setProcess] = React.useState<number>(0);
     const [processStatus, setProcessStatus] = React.useState<"exception" | undefined>(undefined);
@@ -85,6 +87,7 @@ export const CheckoutCompleteModal: React.FC<CheckoutCompleteModalProps> = (prop
         }
         setProcess(100);
         setProcessInfo("下单成功，正在跳转……");
+        router.push(`/order/detail?id=${res3}&autopay=true`)
 
     }, () => {}, [props.isopen]);
 
