@@ -41,7 +41,9 @@ export const CheckoutTableList: React.FC<CheckoutTableListProps> = (
             width="15%"
             align="center"
             render={(_, line: CheckoutLineDetail) => (
-                <Image src={line.varient.product_thumbnail} preview={false}/>
+                <a target="_blank" href={`/products/single/${line.varient.product_slug}`}>
+                  <Image src={line.varient.product_thumbnail} preview={false}/>
+                </a>
             )}
           />
           <Column
@@ -49,6 +51,7 @@ export const CheckoutTableList: React.FC<CheckoutTableListProps> = (
             ellipsis={true}
             width="35%"
             render={(_, line: CheckoutLineDetail) => (
+              <a target="_blank" href={`/products/single/${line.varient.product_slug}`}>
               <Space
                 direction="vertical"
                 style={{maxWidth: "100%"}}
@@ -76,6 +79,7 @@ export const CheckoutTableList: React.FC<CheckoutTableListProps> = (
                   {line.varient.product_category}
                 </Paragraph>
               </Space>
+              </a>
             )}
           />
           <Column
