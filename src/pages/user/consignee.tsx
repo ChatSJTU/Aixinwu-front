@@ -92,33 +92,33 @@ const UserConsigneePage = () => {
                     <PageHeader title={"收货信息管理"} />
                     <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal()}>新增收货地址</Button>
                 </div>
-                <center>
-                    <div className="address-list-container" style={{ maxHeight: '400px', marginTop: '30px'}}>
-                        <Space direction="vertical" size="small" style={{ maxWidth: '900px' }}>
-                            <List
-                                grid={{ gutter: 8, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 6 }}
-                                dataSource={addrList}
-                                renderItem={(item) => (
-                                    <List.Item>
-                                        <div className="address-card-container">
-                                            <Card className='address-card'
-                                                title={
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                                                        <span>{`${item.firstName} ${item.lastName}`}</span>
-                                                        <div>
-                                                            <Button size={"small"} type={"text"} icon={<EditOutlined />} onClick={() => { showModal(item) }} />
-                                                            <Button size={"small"} type={"text"} icon={<DeleteOutlined />} style={{ color: '#ff4d4f' }} onClick={() => { handleAddressDelete(item.id) }} />
-                                                        </div>
+                <div className="address-list-container" style={{ maxHeight: '400px', marginTop: '30px' }}>
+                    <Space direction="vertical" size="small" style={{ maxWidth: '900px' }}>
+                        <List
+                            grid={{ gutter: 8, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 6 }}
+                            dataSource={addrList}
+                            renderItem={(item) => (
+                                <List.Item>
+                                    <div className="address-card-container">
+                                        <Card className='address-card'
+                                            title={
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                                                    <span>{`${item.firstName} ${item.lastName}`}</span>
+                                                    <div>
+                                                        <Button size={"small"} type={"text"} icon={<EditOutlined />} onClick={() => { showModal(item) }} />
+                                                        <Button size={"small"} type={"text"} icon={<DeleteOutlined />} style={{ color: '#ff4d4f' }} onClick={() => { handleAddressDelete(item.id) }} />
                                                     </div>
-                                                }>
-                                                {`${item.phone === "" ? '/' : item.phone},${item.city}, ${item.postalCode}, ${item.countryArea}, ${item.country.country}`}
-                                            </Card>
-                                        </div>
-                                    </List.Item>
-                                )}
-                            />
-                        </Space>
-                    </div>
+                                                </div>
+                                            }>
+                                            {`${item.phone === "" ? '/' : item.phone},${item.city}, ${item.postalCode}, ${item.countryArea}, ${item.country.country}`}
+                                        </Card>
+                                    </div>
+                                </List.Item>
+                            )}
+                        />
+                    </Space>
+                </div>
+                <center>
                     <Modal title={modalTitle} open={isModalVisible} onCancel={handleCancel} onOk={() => form.submit()}>
                         <Form form={form} layout="vertical" onFinish={handleSubmit}>
                             <Form.Item label="姓名" rules={[{ required: true }]}>

@@ -287,6 +287,9 @@ code {
 .address-list-container {
     overflow-y: scroll;
     overflow-x: hidden;
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 12px;
 
     &::-webkit-scrollbar-thumb {
         background-color: transparent;
@@ -313,18 +316,17 @@ code {
 .address-card{
     min-width: 240px;
     border-width: 1px;
-    @include themify {
-        border-color: themed('primary-border-color') !important;
+    border-style: solid;
+    transition: border-color 0.3s, box-shadow 0.3s;
+
+    &:hover {
+        border-color: #5373ae !important;
+        box-shadow: 0 4px 8px rgba(141, 152, 213, 0.3);
     }
 }
 
 .address-card-container {
     border-radius: 8px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    &:hover {
-        border-color: #5373ae;
-        box-shadow: 0 4px 8px rgba(141, 152, 213, 0.3);
-    }
 }
 
 /* others */
