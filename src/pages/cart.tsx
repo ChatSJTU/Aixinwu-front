@@ -146,7 +146,7 @@ export const OrderPageView = () => {
         }
         if (selectedAddress == undefined)
         {
-            message.error("操作失败：请先选择收获地址。");
+            message.error("操作失败：请先选择收货地址。");
             return;
         }
         setCompleteModalOpen(true);
