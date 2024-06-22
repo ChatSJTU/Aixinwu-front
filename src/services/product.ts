@@ -104,6 +104,7 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
             images: data.media?.map(x=>x.url),
             detailed_product_name: "",
             desc: textJoined,
+            channel: data.channel,
             varients: data.variants?.map(x=>({
                 name: x.name,
                 id: x.id,

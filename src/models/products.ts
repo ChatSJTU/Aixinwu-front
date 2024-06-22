@@ -13,6 +13,7 @@ export interface Category {
   
 export interface ProductDetail {
     images: string[] | null;
+    channel: string;
     name: string;
     id: string;
     slug: string;
