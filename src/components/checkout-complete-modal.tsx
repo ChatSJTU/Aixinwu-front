@@ -13,7 +13,7 @@ const { Text, Link } = Typography;
 interface CheckoutCompleteModalProps {
     isopen: boolean;
     checkout: CheckoutDetail;
-    onClose: () => {};
+    onClose: () => void;
 }
 
 export const CheckoutCompleteModal: React.FC<CheckoutCompleteModalProps> = (props) => {
@@ -38,6 +38,7 @@ export const CheckoutCompleteModal: React.FC<CheckoutCompleteModalProps> = (prop
     useAsyncEffect(async () => {
         if (!props.isopen) return;
         setProcess(0);
+        setProcessStatus(undefined);
         setProcessInfo("正在处理中……");
         try
         {
