@@ -109,9 +109,9 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
                 name: x.name,
                 id: x.id,
                 sku: x.sku,
-                stock: x.quantityAvailable,
+                stock: x.stocks![0].quantity,
                 update_time: x.updatedAt,
-                price: x.pricing?.priceUndiscounted?.gross.amount
+                price: x.pricing?.priceUndiscounted?.gross.amount,
             } as VarientDetail))
         } as ProductDetail;
         return res;

@@ -29,6 +29,10 @@ query ProductDetail($channel: String, $slug: String) {
       }
       quantityAvailable(countryCode: CN)
       updatedAt
+      stocks(countryCode: CN) {
+        id
+        quantity
+      }
     }
     media {
       alt

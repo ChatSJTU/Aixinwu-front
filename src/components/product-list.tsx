@@ -139,7 +139,7 @@ export const CheckoutTableList: React.FC<CheckoutTableListProps> = (
                   alignItems: "center",
                   justifyContent: "center"
                 }}>
-                  库存：（Todo）
+                  库存：{line.varient.stock}
                 </Text>
               </Space>
             )}
