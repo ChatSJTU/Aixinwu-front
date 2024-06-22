@@ -1,5 +1,5 @@
-import { Image, Spin, Divider, Row, Col, Button, Typography, Carousel, Breadcrumb, Space, Flex, Tooltip, Grid, Radio } from 'antd'
-import { ShoppingCartOutlined } from '@ant-design/icons';
+import { Image, Spin, Divider, Row, Col, Button, Typography, Carousel, Breadcrumb, Space, Flex, Tooltip, Grid, Radio, Modal } from 'antd'
+import { ShoppingCartOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import Head from "next/head";
 import { useEffect, useState, useRef, useContext } from 'react';
@@ -9,7 +9,10 @@ import MarkdownRenderer from '@/components/markdown-renderer';
 import { getProductDetail } from '@/services/product';
 import AuthContext from '@/contexts/auth';
 import CartContext from '@/contexts/cart';
+import { DirectBuyModal } from '@/components/direct-buy-modal';
+import { MessageContext } from '@/contexts/message';
 
+const { confirm } = Modal;
 const { Title, Text, Link } = Typography;
 const { useBreakpoint } = Grid;
 
@@ -20,11 +23,15 @@ const ProductDetailsPage: React.FC = () => {
     const authCtx = useContext(AuthContext);
     const cartCtx = useContext(CartContext);
     const client = authCtx.client;
+    const message = useContext(MessageContext);
+    
     const isMobile = !screens.lg;
     const { slug } = router.query;
     const [product, setProduct] = useState<ProductDetail | undefined>(undefined);
     const [varient, setVarient] = useState<VarientDetail | undefined>(undefined);
 
+    const [isDirectBuyModalOpen, setDirectBuyModalOpen] = useState<boolean>(false);
+    
     useEffect(() => {
         if (slug == undefined || slug == "")
             return;
@@ -40,6 +47,33 @@ const ProductDetailsPage: React.FC = () => {
         };
         fetchProductDetail();
     }, [slug, router]);
+
+    const handleBuyClick = () => {
+        if (varient == undefined)
+        {
+            message.error("操作失败：未选择商品分类或分类不存在。");
+            return;
+        }
+        confirm({
+            title: '下单确认',
+            icon: <InfoCircleFilled />,
+            content: (
+                <Space size="small">
+                    {'是否确认购买'}
+                    {varient.sku ?? product?.name}
+                </Space>
+            ),
+            onOk() {
+                setDirectBuyModalOpen(true);
+            },
+            onCancel() {
+            },
+        });
+    }
+
+    const handleDirectBuyModalClose = () => {
+        setDirectBuyModalOpen(false);
+    }
 
     if (!product) {
         return (
@@ -118,7 +152,7 @@ const ProductDetailsPage: React.FC = () => {
                                         }}
                                         optionType="button">
                                         {product.varients.map(x => (
-                                            <Radio.Button value={x.id}>{x.name}</Radio.Button>
+                                            <Radio.Button value={x.id} checked={x.id == varient?.id}>{x.name}</Radio.Button>
                                         ))}
                                     </Radio.Group>
                                 )
@@ -151,7 +185,7 @@ const ProductDetailsPage: React.FC = () => {
                                     type='default'
                                     icon={<AxCoin size={14} />}
                                     style={{ borderColor: '#eb2f96' }}
-                                    onClick={() => { }}
+                                    onClick={handleBuyClick}
                                 >
                                     立即购买
                                 </Button>
@@ -164,6 +198,7 @@ const ProductDetailsPage: React.FC = () => {
                     <MarkdownRenderer content={product.desc} />
                 </div>
             </div>
+            <DirectBuyModal isopen={isDirectBuyModalOpen} varient={varient!} product={product!} onClose={handleDirectBuyModalClose}/>
         </>
     );
 };
