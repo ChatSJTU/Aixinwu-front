@@ -22,66 +22,70 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
     const message = useContext(MessageContext);
 
     const toOrderDetail = (orderId: string) => {
-        router.push(`/orders/${orderId}`);
-    };
+        router.push(`/order/detail?id=${orderId}`)
+    }
 
     const handlePayClick = (orderId: string) => {
-        orderPay(client!, orderId)
-            .then(data => {
-                message.success("支付成功");
-            })
-            .catch(err => {
-                message.error(err);
-            });
+        router.push(`/order/detail?id=${orderId}&autopay=true`)
     }
     
-    const dataSource = orders.map(order => ({
-        key: order.id,
-        orderId: order.number,
-        paymentStatus: [order.paymentStatus, order.id],
-        createTime: order.created.split('T')[0],
-        totalCost: order.total.gross.amount,
-        orderStatus: order.isPaid,
-        productName: order.lines.length > 1 ? `${order.lines[0].productName}...等${order.lines.length}件商品` : order.lines[0].productName,
-        imageUrl: order.lines[0].variant.media[0]?.url ?? order.lines[0].thumbnail?.url, // 只取第一个产品的第一个图片
-    }));
-
     const columns: TableColumnsType<any> = [
         {
-            title: '订单编号',
+            title: '订单序号',
             align: 'center',
             dataIndex: 'orderId',
             key: 'orderId',
             width: '12%',
-            render: (_, record: OrderInfo) => <Text strong style={{ fontSize: '18px' }}>{record.number}</Text>
+            render: (_, record: OrderInfo) => (
+                <a href={`/order/detail?id=${record.id}`}>
+                    <Text style={{ fontSize: '16px' }}>{record.number}</Text>
+                </a>
+            )
         },
         {
             title: '商品图片',
             align: 'center',
             dataIndex: 'imageUrl',
             key: 'imageUrl',
-            render: (_, record: OrderInfo) => <Image src={record.lines[0].variant.media[0]?.url ?? record.lines[0].thumbnail?.url} preview={false} />,
+            render: (_, record: OrderInfo) => (
+                <a href={`/order/detail?id=${record.id}`}>
+                    <Image src={record.lines[0].variant.media[0]?.url ?? record.lines[0].thumbnail?.url} preview={false} />
+                </a>
+            ),
         },
         {
             title: '名称',
             align: 'center',
             dataIndex: 'productName',
             key: 'productName',
-            render: (_, record: OrderInfo) => <Text strong style={{ fontSize: '18px' }}>{record.lines.length > 1 ? `${record.lines[0].productName}...等${record.lines.length}件商品` : record.lines[0].productName}</Text>
+            render: (_, record: OrderInfo) => (
+                <a href={`/order/detail?id=${record.id}`}>
+                    <Text style={{ fontSize: '16px' }}>
+                        {record.lines.length > 1 ? `${record.lines[0].productName}...等${record.lines.length}件商品` : record.lines[0].productName}
+                    </Text>
+                </a>
+            )
         },
         {
             title: '下单时间',
             align: 'center',
             dataIndex: 'createTime',
             key: 'createTime',
-            render: (_, record: OrderInfo) => <Text style={{ fontSize: '16px' }}><CalendarOutlined style={{ marginRight: '4px' }} />{record.created.split('T')[0]}</Text>
+            render: (_, record: OrderInfo) => (
+                <Text style={{ fontSize: '16px' }}>
+                    <CalendarOutlined style={{ marginRight: '4px' }} />
+                    {record.created.split('T')[0]}
+                </Text>
+            )
         },
         {
             title: '总价',
             align: 'center',
             dataIndex: 'totalCost',
             key: 'totalCost',
-            render: (_, record: OrderInfo) => <AxCoin value={record.total.gross.amount} size={20} coloredValue></AxCoin>
+            render: (_, record: OrderInfo) => (
+                <AxCoin value={record.total.gross.amount} size={20} coloredValue></AxCoin>
+            )
         },
         {
             title: '状态',
@@ -122,5 +126,5 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
             },
         },
     ];
-    return <Table dataSource={orders} columns={columns} pagination={{ hideOnSinglePage: true, pageSize: 4 }} />;
+    return <Table dataSource={orders} columns={columns} pagination={{ hideOnSinglePage: true, pageSize: 10 }} />;
 };
