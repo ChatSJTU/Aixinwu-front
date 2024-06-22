@@ -1,0 +1,5 @@
+query OrderDetailed($id: ID!) {
+  order(id: $id) {
+    ...OrderDetailedFragment
+  }
+}

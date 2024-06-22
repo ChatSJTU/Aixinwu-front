@@ -338,3 +338,10 @@ code {
         color: themed('secondary-text-color') !important;
     }
 }
+
+.block-item {
+    padding: 16px;
+    @include themify {
+        border-top: themed('primary-border-color') solid 1px;
+    }
+}

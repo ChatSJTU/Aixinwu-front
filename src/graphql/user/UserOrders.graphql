@@ -3,7 +3,7 @@ query UserOrders($maxFetch: Int = 50) {
   orders(first: $maxFetch) {
     edges {
       node {
-        ...OrderFragment
+        ...OrderBriefFragment
       }
     }
   }

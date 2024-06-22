@@ -32991,10 +32991,19 @@ export type StatisticsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type StatisticsQuery = { __typename?: 'Query', statistics?: { __typename?: 'Statistics', circulatedCurrency?: number | null, circulatedItems?: number | null, users?: number | null, views?: number | null } | null };
 
-export type OrderFragmentFragment = { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, thumbnail?: { __typename?: 'Image', alt?: string | null, url: string } | null, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null };
+export type OrderBriefFragmentFragment = { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, thumbnail?: { __typename?: 'Image', alt?: string | null, url: string } | null, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null };
+
+export type OrderDetailedQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type OrderDetailedQuery = { __typename?: 'Query', order?: { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, customerNote: string, displayGrossPrices: boolean, isShippingRequired: boolean, paymentStatusDisplay: string, status: OrderStatus, statusDisplay: string, updatedAt: any, channel: { __typename?: 'Channel', id: string, slug: string }, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, id: string, isShippingRequired: boolean, productSku?: string | null, quantityFulfilled: number, quantityToFulfill: number, thumbnail?: { __typename?: 'Image', alt?: string | null, url: string } | null, variant?: { __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null } | null, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, shippingMethod?: { __typename?: 'ShippingMethod', id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null, price: { __typename?: 'Money', amount: number, currency: string } } | null, totalAuthorized: { __typename?: 'Money', amount: number, currency: string }, totalBalance: { __typename?: 'Money', currency: string, amount: number }, totalCanceled: { __typename?: 'Money', currency: string, amount: number }, totalCharged: { __typename?: 'Money', currency: string, amount: number }, totalRefunded: { __typename?: 'Money', currency: string, amount: number }, subtotal: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, weight: { __typename?: 'Weight', unit: WeightUnitsEnum, value: number }, discounts: Array<{ __typename?: 'OrderDiscount', id: string, name?: string | null, reason?: string | null, type: OrderDiscountType, value: any, valueType: DiscountValueTypeEnum, translatedName?: string | null, amount: { __typename?: 'Money', amount: number, currency: string } }>, payments: Array<{ __typename?: 'Payment', created: any, id: string, gateway: string, chargeStatus: PaymentChargeStatusEnum }> } | null };
+
+export type OrderDetailedFragmentFragment = { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, customerNote: string, displayGrossPrices: boolean, isShippingRequired: boolean, paymentStatusDisplay: string, status: OrderStatus, statusDisplay: string, updatedAt: any, channel: { __typename?: 'Channel', id: string, slug: string }, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, id: string, isShippingRequired: boolean, productSku?: string | null, quantityFulfilled: number, quantityToFulfill: number, thumbnail?: { __typename?: 'Image', alt?: string | null, url: string } | null, variant?: { __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null } | null, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, shippingMethod?: { __typename?: 'ShippingMethod', id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null, price: { __typename?: 'Money', amount: number, currency: string } } | null, totalAuthorized: { __typename?: 'Money', amount: number, currency: string }, totalBalance: { __typename?: 'Money', currency: string, amount: number }, totalCanceled: { __typename?: 'Money', currency: string, amount: number }, totalCharged: { __typename?: 'Money', currency: string, amount: number }, totalRefunded: { __typename?: 'Money', currency: string, amount: number }, subtotal: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, weight: { __typename?: 'Weight', unit: WeightUnitsEnum, value: number }, discounts: Array<{ __typename?: 'OrderDiscount', id: string, name?: string | null, reason?: string | null, type: OrderDiscountType, value: any, valueType: DiscountValueTypeEnum, translatedName?: string | null, amount: { __typename?: 'Money', amount: number, currency: string } }>, payments: Array<{ __typename?: 'Payment', created: any, id: string, gateway: string, chargeStatus: PaymentChargeStatusEnum }> };
 
 export type OrderPayMutationVariables = Exact<{
-  ID: Scalars['ID']['input'];
+  id: Scalars['ID']['input'];
 }>;
 
 
@@ -33170,8 +33179,8 @@ export const CheckoutForCartFragmentFragmentDoc = gql`
   }
 }
     ${UserAddressFragmentFragmentDoc}`;
-export const OrderFragmentFragmentDoc = gql`
-    fragment OrderFragment on Order {
+export const OrderBriefFragmentFragmentDoc = gql`
+    fragment OrderBriefFragment on Order {
   created
   id
   isPaid
@@ -33206,6 +33215,130 @@ export const OrderFragmentFragmentDoc = gql`
   }
   shippingAddress {
     ...UserAddressFragment
+  }
+}
+    ${UserAddressFragmentFragmentDoc}`;
+export const OrderDetailedFragmentFragmentDoc = gql`
+    fragment OrderDetailedFragment on Order {
+  channel {
+    id
+    slug
+  }
+  created
+  id
+  isPaid
+  number
+  paymentStatus
+  checkoutId
+  total {
+    gross {
+      amount
+      currency
+    }
+  }
+  lines {
+    productName
+    thumbnail(format: WEBP, size: 128) {
+      alt
+      url
+    }
+    variant {
+      media {
+        url(format: WEBP, size: 128)
+      }
+      id
+      pricing {
+        price {
+          gross {
+            amount
+            currency
+          }
+        }
+      }
+      name
+      sku
+    }
+    quantity
+    id
+    isShippingRequired
+    productSku
+    quantityFulfilled
+    quantityToFulfill
+    totalPrice {
+      gross {
+        amount
+        currency
+      }
+    }
+  }
+  shippingAddress {
+    ...UserAddressFragment
+  }
+  customerNote
+  displayGrossPrices
+  isShippingRequired
+  paymentStatusDisplay
+  shippingMethod {
+    id
+    name
+    price {
+      amount
+      currency
+    }
+    type
+    description
+  }
+  status
+  statusDisplay
+  totalAuthorized {
+    amount
+    currency
+  }
+  totalBalance {
+    currency
+    amount
+  }
+  totalCanceled {
+    currency
+    amount
+  }
+  totalCharged {
+    currency
+    amount
+  }
+  totalRefunded {
+    currency
+    amount
+  }
+  subtotal {
+    gross {
+      amount
+      currency
+    }
+  }
+  updatedAt
+  weight {
+    unit
+    value
+  }
+  discounts {
+    id
+    name
+    reason
+    amount {
+      amount
+      currency
+    }
+    type
+    value
+    valueType
+    translatedName
+  }
+  payments {
+    created
+    id
+    gateway
+    chargeStatus
   }
 }
     ${UserAddressFragmentFragmentDoc}`;
@@ -34099,11 +34232,51 @@ export type StatisticsQueryHookResult = ReturnType<typeof useStatisticsQuery>;
 export type StatisticsLazyQueryHookResult = ReturnType<typeof useStatisticsLazyQuery>;
 export type StatisticsSuspenseQueryHookResult = ReturnType<typeof useStatisticsSuspenseQuery>;
 export type StatisticsQueryResult = Apollo.QueryResult<StatisticsQuery, StatisticsQueryVariables>;
+export const OrderDetailedDocument = gql`
+    query OrderDetailed($id: ID!) {
+  order(id: $id) {
+    ...OrderDetailedFragment
+  }
+}
+    ${OrderDetailedFragmentFragmentDoc}`;
+
+/**
+ * __useOrderDetailedQuery__
+ *
+ * To run a query within a React component, call `useOrderDetailedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrderDetailedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrderDetailedQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useOrderDetailedQuery(baseOptions: Apollo.QueryHookOptions<OrderDetailedQuery, OrderDetailedQueryVariables> & ({ variables: OrderDetailedQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OrderDetailedQuery, OrderDetailedQueryVariables>(OrderDetailedDocument, options);
+      }
+export function useOrderDetailedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrderDetailedQuery, OrderDetailedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OrderDetailedQuery, OrderDetailedQueryVariables>(OrderDetailedDocument, options);
+        }
+export function useOrderDetailedSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OrderDetailedQuery, OrderDetailedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<OrderDetailedQuery, OrderDetailedQueryVariables>(OrderDetailedDocument, options);
+        }
+export type OrderDetailedQueryHookResult = ReturnType<typeof useOrderDetailedQuery>;
+export type OrderDetailedLazyQueryHookResult = ReturnType<typeof useOrderDetailedLazyQuery>;
+export type OrderDetailedSuspenseQueryHookResult = ReturnType<typeof useOrderDetailedSuspenseQuery>;
+export type OrderDetailedQueryResult = Apollo.QueryResult<OrderDetailedQuery, OrderDetailedQueryVariables>;
 export const OrderPayDocument = gql`
-    mutation OrderPay($ID: ID!) {
-  orderConfirm(id: $ID) {
+    mutation OrderPay($id: ID!) {
+  orderConfirm(id: $id) {
     order {
-      ...OrderFragment
+      ...OrderBriefFragment
     }
     errors {
       code
@@ -34112,7 +34285,7 @@ export const OrderPayDocument = gql`
     }
   }
 }
-    ${OrderFragmentFragmentDoc}`;
+    ${OrderBriefFragmentFragmentDoc}`;
 export type OrderPayMutationFn = Apollo.MutationFunction<OrderPayMutation, OrderPayMutationVariables>;
 
 /**
@@ -34128,7 +34301,7 @@ export type OrderPayMutationFn = Apollo.MutationFunction<OrderPayMutation, Order
  * @example
  * const [orderPayMutation, { data, loading, error }] = useOrderPayMutation({
  *   variables: {
- *      ID: // value for 'ID'
+ *      id: // value for 'id'
  *   },
  * });
  */
@@ -34793,13 +34966,13 @@ export const UserOrdersDocument = gql`
     orders(first: $maxFetch) {
       edges {
         node {
-          ...OrderFragment
+          ...OrderBriefFragment
         }
       }
     }
   }
 }
-    ${OrderFragmentFragmentDoc}`;
+    ${OrderBriefFragmentFragmentDoc}`;
 
 /**
  * __useUserOrdersQuery__

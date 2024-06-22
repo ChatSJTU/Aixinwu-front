@@ -1,0 +1,122 @@
+fragment OrderDetailedFragment on Order {
+  channel {
+    id
+    slug
+  }
+  created
+  id
+  isPaid
+  number
+  paymentStatus
+  checkoutId
+  total {
+    gross {
+      amount
+      currency
+    }
+  }
+  lines {
+    productName
+    thumbnail(format: WEBP, size: 128) {
+      alt
+      url
+    }
+    variant {
+      media {
+        url(format: WEBP, size: 128)
+      }
+      id
+      pricing {
+        price {
+          gross {
+            amount
+            currency
+          }
+        }
+      }
+      name
+      sku
+    }
+    quantity
+    id
+    isShippingRequired
+    productSku
+    quantityFulfilled
+    quantityToFulfill
+    totalPrice {
+      gross {
+        amount
+        currency
+      }
+    }
+  }
+  shippingAddress {
+    ...UserAddressFragment
+  }
+  customerNote
+  displayGrossPrices
+  isShippingRequired
+  paymentStatusDisplay
+  shippingMethod {
+    id
+    name
+    price {
+      amount
+      currency
+    }
+    type
+    description
+  }
+  status
+  statusDisplay
+  totalAuthorized {
+    amount
+    currency
+  }
+  totalBalance {
+    currency
+    amount
+  }
+  totalCanceled {
+    currency
+    amount
+  }
+  totalCharged {
+    currency
+    amount
+  }
+  totalRefunded {
+    currency
+    amount
+  }
+  subtotal {
+    gross {
+      amount
+      currency
+    }
+  }
+  updatedAt
+  weight {
+    unit
+    value
+  }
+  discounts {
+    id
+    name
+    reason
+    amount {
+      amount
+      currency
+    }
+    type
+    value
+    valueType
+    translatedName
+  }
+  payments {
+    created
+    id
+    gateway
+    chargeStatus
+  }
+}

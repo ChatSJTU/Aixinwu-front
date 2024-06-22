@@ -1,7 +1,7 @@
-mutation OrderPay($ID: ID!) {
-  orderConfirm(id: $ID) {
+mutation OrderPay($id: ID!) {
+  orderConfirm(id: $id) {
     order {
-      ...OrderFragment
+      ...OrderBriefFragment
     }
     errors {
       code
