@@ -1,13 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import Head from "next/head";
 import UserLayout from "@/components/user-center-layout"
-import { Form, Modal, Input, Card, List, Button, Space, Spin } from "antd";
+import { Form, Modal, Input, Card, List, Button, Space, Spin, Tag } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { addUserAddress, deleteUserAddress, updateUserAddress, fetchUserAddresses } from "@/services/user";
+import { addUserAddress, deleteUserAddress, updateUserAddress, fetchUserAddresses, setDefaultUserAddress } from "@/services/user";
 import AuthContext from "@/contexts/auth";
 import { MessageContext } from '@/contexts/message';
 import { AddressInfo } from "@/models/address";
 import { PageHeader } from "@/components/page-header";
+import { splitConsigneeName, joinConsigneeName } from "@/utils/process-consignee-name";
 
 const UserConsigneePage = () => {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -23,6 +24,7 @@ const UserConsigneePage = () => {
     useEffect(() => {
         fetchAddress();
     }, [])
+
 
     const fetchAddress = () => {
         fetchUserAddresses(client!)
@@ -48,8 +50,16 @@ const UserConsigneePage = () => {
             .catch(err => message.error(err))
     }
 
+    const handleSetDefaultAddress = (id: string) => {
+        setDefaultUserAddress(client!, id)
+            .then(() => fetchAddress())
+            .catch(err => message.error(err));
+    };
+
     const showModal = (addr?: AddressInfo) => {
         if (addr) {
+            let formValue: any = addr;
+            formValue.fullname = joinConsigneeName(addr.firstName, addr.lastName);
             setModalTitle("编辑收货地址");
             setEditingAddr(addr);
             form.setFieldsValue(addr);
@@ -65,9 +75,14 @@ const UserConsigneePage = () => {
         setIsModalVisible(false);
     };
 
-    const handleSubmit = (values: AddressInfo) => {
+    const handleSubmit = (values: any) => {
         let modifiedValues: any = values;
-        modifiedValues.country = values.country.code
+        let [lastName, firstName] = splitConsigneeName(values.fullname);
+        delete modifiedValues.fullname;
+        modifiedValues.country = "US";
+        modifiedValues.firstName = firstName;
+        modifiedValues.lastName = lastName;
+
         if (editingAddr) {
             handleAddressUpdate(editingAddr.id, modifiedValues);
         } else {
@@ -93,17 +108,22 @@ const UserConsigneePage = () => {
                     <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal()}>新增收货地址</Button>
                 </div>
                 <div className="address-list-container" style={{ maxHeight: '400px', marginTop: '30px' }}>
-                    <Space direction="vertical" size="small" style={{ maxWidth: '900px' }}>
+                    <Space direction="vertical" size="small">
                         <List
-                            grid={{ gutter: 8, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 6 }}
+                            grid={{ gutter: 14, xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 2 }}
                             dataSource={addrList}
                             renderItem={(item) => (
                                 <List.Item>
-                                    <div className="address-card-container">
+                                    <div onClick={() => handleSetDefaultAddress(item.id)}>
                                         <Card className='address-card'
                                             title={
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                                                    <span>{`${item.firstName} ${item.lastName}`}</span>
+                                                    <div>
+                                                        <span>{`${item.lastName} ${item.firstName}`}</span>
+                                                        {item.isDefaultShippingAddress &&
+                                                            <Tag color="blue" style={{ marginLeft: '12px' }}>默认</Tag>
+                                                        }
+                                                    </div>
                                                     <div>
                                                         <Button size={"small"} type={"text"} icon={<EditOutlined />} onClick={() => { showModal(item) }} />
                                                         <Button size={"small"} type={"text"} icon={<DeleteOutlined />} style={{ color: '#ff4d4f' }} onClick={() => { handleAddressDelete(item.id) }} />
@@ -121,43 +141,32 @@ const UserConsigneePage = () => {
                 <center>
                     <Modal title={modalTitle} open={isModalVisible} onCancel={handleCancel} onOk={() => form.submit()}>
                         <Form form={form} layout="vertical" onFinish={handleSubmit}>
-                            <Form.Item label="姓名" rules={[{ required: true }]}>
-                                <Space.Compact block>
-                                    <Form.Item name="firstName" noStyle>
-                                        <Input />
-                                    </Form.Item>
-                                    <Form.Item name="lastName" noStyle>
-                                        <Input />
-                                    </Form.Item>
-                                </Space.Compact>
-                            </Form.Item>
-                            <Form.Item name={["country", "code"]} label="国家" rules={[{ required: true }]}>
+                            <Form.Item name="fullname" label="姓名" rules={[{ required: true }]}>
                                 <Input />
                             </Form.Item>
-                            <Form.Item name="countryArea" label="省" rules={[{ required: true }]}>
+                            <Form.Item name="countryArea" label="省或直辖市" rules={[{ required: true }]}>
                                 <Input />
                             </Form.Item>
                             <Form.Item name="city" label="城市" rules={[{ required: true }]}>
                                 <Input />
                             </Form.Item>
-                            <Form.Item name="cityArea" label="区县" rules={[{ required: false }]}>
+                            <Form.Item name="cityArea" label="区/县" rules={[{ required: true }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="streetAddress1" label="详细地址" rules={[{ required: true }]}>
                                 <Input />
                             </Form.Item>
                             <Form.Item name="phone" label="电话号码" rules={[{ required: false }]}>
                                 <Input />
                             </Form.Item>
-                            <Form.Item name="postalCode" label="邮政编码" rules={[{ required: true }]}>
+                            {/*
+                            <Form.Item name="postalCode" label="邮政编码" rules={[{ required: false }]}>
                                 <Input />
                             </Form.Item>
-                            <Form.Item name="companyName" label="单位名称" rules={[{ required: true }]}>
+                            <Form.Item name="companyName" label="单位名称" rules={[{ required: false }]}>
                                 <Input />
                             </Form.Item>
-                            <Form.Item name="streetAddress1" label="街道1" rules={[{ required: false }]}>
-                                <Input />
-                            </Form.Item>
-                            <Form.Item name="streetAddress2" label="街道2" rules={[{ required: false }]}>
-                                <Input />
-                            </Form.Item>
+                            */}
                         </Form>
                     </Modal>
                 </center>

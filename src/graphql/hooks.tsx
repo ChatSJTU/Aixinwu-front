@@ -33069,6 +33069,13 @@ export type UserAddressDeleteMutation = { __typename?: 'Mutation', accountAddres
 
 export type UserAddressFragmentFragment = { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } };
 
+export type UserAddressSetDefaultMutationVariables = Exact<{
+  ID: Scalars['ID']['input'];
+}>;
+
+
+export type UserAddressSetDefaultMutation = { __typename?: 'Mutation', accountSetDefaultAddress?: { __typename?: 'AccountSetDefaultAddress', errors: Array<{ __typename?: 'AccountError', code: AccountErrorCode, field?: string | null, message?: string | null }> } | null };
+
 export type UserAddressUpdateMutationVariables = Exact<{
   ID: Scalars['ID']['input'];
   NewAddr: AddressInput;
@@ -34805,6 +34812,43 @@ export function useUserAddressDeleteMutation(baseOptions?: Apollo.MutationHookOp
 export type UserAddressDeleteMutationHookResult = ReturnType<typeof useUserAddressDeleteMutation>;
 export type UserAddressDeleteMutationResult = Apollo.MutationResult<UserAddressDeleteMutation>;
 export type UserAddressDeleteMutationOptions = Apollo.BaseMutationOptions<UserAddressDeleteMutation, UserAddressDeleteMutationVariables>;
+export const UserAddressSetDefaultDocument = gql`
+    mutation UserAddressSetDefault($ID: ID!) {
+  accountSetDefaultAddress(id: $ID, type: SHIPPING) {
+    errors {
+      code
+      field
+      message
+    }
+  }
+}
+    `;
+export type UserAddressSetDefaultMutationFn = Apollo.MutationFunction<UserAddressSetDefaultMutation, UserAddressSetDefaultMutationVariables>;
+
+/**
+ * __useUserAddressSetDefaultMutation__
+ *
+ * To run a mutation, you first call `useUserAddressSetDefaultMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUserAddressSetDefaultMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [userAddressSetDefaultMutation, { data, loading, error }] = useUserAddressSetDefaultMutation({
+ *   variables: {
+ *      ID: // value for 'ID'
+ *   },
+ * });
+ */
+export function useUserAddressSetDefaultMutation(baseOptions?: Apollo.MutationHookOptions<UserAddressSetDefaultMutation, UserAddressSetDefaultMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UserAddressSetDefaultMutation, UserAddressSetDefaultMutationVariables>(UserAddressSetDefaultDocument, options);
+      }
+export type UserAddressSetDefaultMutationHookResult = ReturnType<typeof useUserAddressSetDefaultMutation>;
+export type UserAddressSetDefaultMutationResult = Apollo.MutationResult<UserAddressSetDefaultMutation>;
+export type UserAddressSetDefaultMutationOptions = Apollo.BaseMutationOptions<UserAddressSetDefaultMutation, UserAddressSetDefaultMutationVariables>;
 export const UserAddressUpdateDocument = gql`
     mutation UserAddressUpdate($ID: ID!, $NewAddr: AddressInput!) {
   accountAddressUpdate(id: $ID, input: $NewAddr) {

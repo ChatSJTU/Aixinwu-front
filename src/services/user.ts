@@ -12,7 +12,9 @@ import {
     UserOrdersDocument,
     UserOrdersQuery,
     UserCheckoutsQuery,
-    UserCheckoutsDocument
+    UserCheckoutsDocument,
+    UserAddressSetDefaultMutation,
+    UserAddressSetDefaultDocument
 } from "@/graphql/hooks";
 
 import { AddressInfo } from "@/models/address";
@@ -163,6 +165,30 @@ export async function updateUserAddress(client: ApolloClient<object>, id: string
         
     } catch (error) {
         var errmessage = `更新用户收货地址失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+}
+
+// 设置默认用户收货地址
+export async function setDefaultUserAddress(client: ApolloClient<object>, id: string) {
+    try {
+        const resp = await client.mutate<UserAddressSetDefaultMutation>({
+            mutation: UserAddressSetDefaultDocument,
+            variables: {
+              ID: id,
+            }
+        }); 
+        if (!resp.data || !resp.data.accountSetDefaultAddress){
+            throw "数据为空"
+        }
+        if (resp.data.accountSetDefaultAddress.errors.length != 0)
+        {
+          throw resp.data.accountSetDefaultAddress.errors[0].message;
+        }
+        
+    } catch (error) {
+        var errmessage = `设置默认用户收货地址失败：${error}`
         console.error(errmessage);
         throw errmessage;
     }
