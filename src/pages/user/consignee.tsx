@@ -79,7 +79,7 @@ const UserConsigneePage = () => {
         let modifiedValues: any = values;
         let [lastName, firstName] = splitConsigneeName(values.fullname);
         delete modifiedValues.fullname;
-        modifiedValues.country = "US";
+        modifiedValues.country = "CN";
         modifiedValues.firstName = firstName;
         modifiedValues.lastName = lastName;
 
