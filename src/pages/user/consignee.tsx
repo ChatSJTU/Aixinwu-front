@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import Head from "next/head";
 import UserLayout from "@/components/user-center-layout"
 import { Form, Modal, Input, Card, List, Button, Space, Spin, Tag } from "antd";
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined, HomeOutlined } from '@ant-design/icons';
 import { addUserAddress, deleteUserAddress, updateUserAddress, fetchUserAddresses, setDefaultUserAddress } from "@/services/user";
 import AuthContext from "@/contexts/auth";
 import { MessageContext } from '@/contexts/message';
@@ -114,7 +114,7 @@ const UserConsigneePage = () => {
                             dataSource={addrList}
                             renderItem={(item) => (
                                 <List.Item>
-                                    <div onClick={() => handleSetDefaultAddress(item.id)}>
+                                    <div>
                                         <Card className='address-card'
                                             title={
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
@@ -125,12 +125,15 @@ const UserConsigneePage = () => {
                                                         }
                                                     </div>
                                                     <div>
-                                                        <Button size={"small"} type={"text"} icon={<EditOutlined />} onClick={() => { showModal(item) }} />
-                                                        <Button size={"small"} type={"text"} icon={<DeleteOutlined />} style={{ color: '#ff4d4f' }} onClick={() => { handleAddressDelete(item.id) }} />
+                                                        {!item.isDefaultShippingAddress &&
+                                                            <Button size={"small"} type={"text"} icon={<HomeOutlined />} onClick={() => { handleSetDefaultAddress(item.id) }} title="设为默认" />
+                                                        }
+                                                        <Button size={"small"} type={"text"} icon={<EditOutlined />} onClick={() => { showModal(item) }} title="编辑" />
+                                                        <Button size={"small"} type={"text"} icon={<DeleteOutlined />} style={{ color: '#ff4d4f' }} onClick={() => { handleAddressDelete(item.id) }} title="删除"/>
                                                     </div>
                                                 </div>
                                             }>
-                                            {`${item.phone === "" ? '/' : item.phone},${item.city}, ${item.postalCode}, ${item.countryArea}, ${item.country.country}`}
+                                            {`${item.phone === "" ? '/' : item.phone}, ${item.streetAddress1}, ${item.city}, ${item.countryArea}, ${item.country.country}`}
                                         </Card>
                                     </div>
                                 </List.Item>
