@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import Head from "next/head";
 import UserLayout from "@/components/user-center-layout"
-import { Form, Modal, Input, Card, List, Button, Space, Spin, Tag } from "antd";
+import { Form, Modal, Input, Card, List, Button, Space, Spin, Tag, Select } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined, HomeOutlined } from '@ant-design/icons';
 import { addUserAddress, deleteUserAddress, updateUserAddress, fetchUserAddresses, setDefaultUserAddress } from "@/services/user";
 import AuthContext from "@/contexts/auth";
@@ -34,7 +34,10 @@ const UserConsigneePage = () => {
 
     const handleAddressAdd = (NewAddr: any) => {
         addUserAddress(client!, NewAddr)
-            .then(() => fetchAddress())
+            .then(() => {
+                setIsModalVisible(false);
+                fetchAddress();
+            })
             .catch(err => message.error(err))
     }
 
@@ -46,13 +49,19 @@ const UserConsigneePage = () => {
 
     const handleAddressUpdate = (ID: string, NewAddr: any) => {
         updateUserAddress(client!, ID, NewAddr)
-            .then(() => fetchAddress())
+            .then(() => {
+                setIsModalVisible(false);
+                fetchAddress();
+            })
             .catch(err => message.error(err))
     }
 
     const handleSetDefaultAddress = (id: string) => {
         setDefaultUserAddress(client!, id)
-            .then(() => fetchAddress())
+            .then(() => {
+                setIsModalVisible(false);
+                fetchAddress();
+            })
             .catch(err => message.error(err));
     };
 
@@ -82,13 +91,15 @@ const UserConsigneePage = () => {
         modifiedValues.country = "CN";
         modifiedValues.firstName = firstName;
         modifiedValues.lastName = lastName;
+        modifiedValues.countryArea = "上海市";
+        modifiedValues.city = "闵行区";
+        modifiedValues.cityArea = "";
 
         if (editingAddr) {
             handleAddressUpdate(editingAddr.id, modifiedValues);
         } else {
             handleAddressAdd(modifiedValues);
         }
-        setIsModalVisible(false);
     };
 
     if (!addrList) {
@@ -133,7 +144,7 @@ const UserConsigneePage = () => {
                                                     </div>
                                                 </div>
                                             }>
-                                            {`${item.phone === "" ? '/' : item.phone}, ${item.streetAddress1}, ${item.city}, ${item.countryArea}, ${item.country.country}`}
+                                            {`${item.phone === "" ? '/' : item.phone}, ${item.streetAddress1}, 上海交通大学`}
                                         </Card>
                                     </div>
                                 </List.Item>
@@ -147,7 +158,7 @@ const UserConsigneePage = () => {
                             <Form.Item name="fullname" label="姓名" rules={[{ required: true }]}>
                                 <Input />
                             </Form.Item>
-                            <Form.Item name="countryArea" label="省或直辖市" rules={[{ required: true }]}>
+                            {/* <Form.Item name="countryArea" label="省或直辖市" rules={[{ required: true }]}>
                                 <Input />
                             </Form.Item>
                             <Form.Item name="city" label="城市" rules={[{ required: true }]}>
@@ -155,11 +166,17 @@ const UserConsigneePage = () => {
                             </Form.Item>
                             <Form.Item name="cityArea" label="区/县" rules={[{ required: true }]}>
                                 <Input />
+                            </Form.Item> */}
+                            <Form.Item name="streetAddress1" label="校区" rules={[{ required: true }]}>
+                                <Select>
+                                    <Select.Option value="闵行校区">闵行校区</Select.Option>
+                                    <Select.Option value="徐汇校区">徐汇校区</Select.Option>
+                                    <Select.Option value="黄浦校区">黄浦校区</Select.Option>
+                                    <Select.Option value="长宁校区">长宁校区</Select.Option>
+                                    <Select.Option value="张江校区">张江校区</Select.Option>
+                                </Select>
                             </Form.Item>
-                            <Form.Item name="streetAddress1" label="详细地址" rules={[{ required: true }]}>
-                                <Input />
-                            </Form.Item>
-                            <Form.Item name="phone" label="电话号码" rules={[{ required: false }]}>
+                            <Form.Item name="phone" label="电话号码" rules={[{ required: true }]}>
                                 <Input />
                             </Form.Item>
                             {/*
