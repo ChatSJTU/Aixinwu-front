@@ -36,7 +36,8 @@ export const CartContextProvider = (props : LayoutProps) => {
         if (checkoutId === undefined || checkoutId === "" || checkoutErrorCounter >= 3)
         {
             setCheckoutErrorCounter(0);
-            fetchUserCheckouts(client!, process.env.NEXT_PUBLIC_CHANNEL!)
+            if (authCtx.isLoggedIn) {
+                fetchUserCheckouts(client!, process.env.NEXT_PUBLIC_CHANNEL!)
                 .then(data => {
                     if (!!data && data.length > 0) {
                         setCheckoutId(data[0]);
@@ -56,6 +57,15 @@ export const CartContextProvider = (props : LayoutProps) => {
                     }
                 })
                 .catch(err => message.error(err));
+            }
+            else {
+                checkoutCreate(client!, process.env.NEXT_PUBLIC_CHANNEL!)
+                    .then(data => {
+                        setCheckoutId(data.id);
+                        setTotalQuantity(data.quantity)
+                    })
+                    .catch(err => message.error(err));
+            }
         }
         else
         {
