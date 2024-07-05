@@ -41,7 +41,7 @@ export const CheckoutTableList: React.FC<CheckoutTableListProps> = (
             width="15%"
             align="center"
             render={(_, line: CheckoutLineDetail) => (
-                <a target="_blank" href={`/products/single/${line.varient.product_slug}`}>
+                <a href={`/products/single/${line.varient.product_slug}`}>
                   <Image src={line.varient.product_thumbnail} preview={false}/>
                 </a>
             )}
@@ -51,7 +51,7 @@ export const CheckoutTableList: React.FC<CheckoutTableListProps> = (
             ellipsis={true}
             width="35%"
             render={(_, line: CheckoutLineDetail) => (
-              <a target="_blank" href={`/products/single/${line.varient.product_slug}`}>
+              <a href={`/products/single/${line.varient.product_slug}`}>
               <Space
                 direction="vertical"
                 style={{maxWidth: "100%"}}

@@ -23,7 +23,7 @@ const TestPage = () => {
         </div>
         <BasicCard title="测试卡片"
         titleExtra={
-            <Typography.Link href="/articles" target="_blank">{"更多>>"}</Typography.Link>
+            <Typography.Link href="/articles">{"更多>>"}</Typography.Link>
         }>
         </BasicCard>
     </>

@@ -116,7 +116,7 @@ const ArticleList: React.FC = () => {
                                     <List.Item.Meta
                                         title={
                                             <div className="link-container-ellipsis" style={{ maxWidth: '800px' }}>
-                                                <Link className="link-ellipsis" href={`/articles/${item.id}`} target="_blank">{item.title}</Link>
+                                                <Link className="link-ellipsis" href={`/articles/${item.id}`}>{item.title}</Link>
                                             </div>
                                         }
                                         description={<Text type="secondary">{item.description}</Text>}

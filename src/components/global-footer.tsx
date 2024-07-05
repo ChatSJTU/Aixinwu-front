@@ -52,7 +52,7 @@ const GlobalFooter = () => {
                     <Space direction="vertical">
                         <div><ShopOutlined /> 闵行校区学生服务中心一楼</div>
                         <div>
-                            <ClockCircleOutlined /> 8:30-20:00&nbsp;&nbsp;&nbsp;
+                            <ClockCircleOutlined /> 8:20-19:50&nbsp;&nbsp;&nbsp;
                             <PhoneOutlined style={{transform: "scaleX(-1)"}}/> 021-54745672&nbsp;&nbsp;&nbsp;
                             <MailOutlined /> <Link className="footer-link" href="mailto:aixinwu@sjtu.edu.cn">aixinwu@sjtu.edu.cn</Link>
                         </div>

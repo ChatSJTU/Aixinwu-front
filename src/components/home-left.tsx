@@ -50,7 +50,7 @@ export const HomeLeftContent = () => {
         <>
             <BasicCard title="通知" divider
                 titleExtra={
-                    <Link href="/articles" target="_blank">{'更多>>'}</Link>
+                    <Link href="/articles">{'更多>>'}</Link>
                 }
             >
                 {noticeSummaries &&
@@ -71,7 +71,7 @@ export const HomeLeftContent = () => {
                                 <List.Item.Meta
                                     title={
                                         <div className="link-container-ellipsis">
-                                            <Link className="link-ellipsis" href={`/articles/${item.id}`} target="_blank">{item.title}</Link>
+                                            <Link className="link-ellipsis" href={`/articles/${item.id}`} >{item.title}</Link>
                                         </div>
                                     }
                                 />
@@ -85,7 +85,7 @@ export const HomeLeftContent = () => {
             </BasicCard>
             <BasicCard title="动态" divider
                 titleExtra={
-                    <Link href="/articles" target="_blank">{'更多>>'}</Link>
+                    <Link href="/articles" >{'更多>>'}</Link>
                 }
             >
                 {newsSummaries &&
@@ -106,7 +106,7 @@ export const HomeLeftContent = () => {
                                 <List.Item.Meta
                                     title={
                                         <div className="link-container-ellipsis">
-                                            <Link className="link-ellipsis" href={`/articles/${item.id}`} target="_blank">{item.title}</Link>
+                                            <Link className="link-ellipsis" href={`/articles/${item.id}`}>{item.title}</Link>
                                         </div>
                                     }
                                 />
