@@ -35,7 +35,7 @@ query ProductsByCollection($channel: String!, $first: Int!, $slugs: [String!]) {
               pricing {
                 displayGrossPrices
                 onSale
-                priceRange {
+                priceRangeUndiscounted {
                   start {
                     gross {
                       amount

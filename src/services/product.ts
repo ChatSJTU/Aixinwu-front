@@ -190,7 +190,7 @@ export async function fetchProductsByCollection(client: ApolloClient<object>, ch
                 product_id: edge.node.id,
                 product_slug: edge.node.slug,
                 detailed_product_name: edge.node.seoDescription,
-                cost: edge.node.pricing?.priceRange?.start?.gross?.amount || 0,
+                cost: edge.node.pricing?.priceRangeUndiscounted?.start?.gross?.amount || 0,
                 stock: edge.node.isAvailable ? 1 : 0,
             }))
         );
