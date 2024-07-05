@@ -32933,6 +32933,14 @@ export type CheckoutCreateMutationVariables = Exact<{
 
 export type CheckoutCreateMutation = { __typename?: 'Mutation', checkoutCreate?: { __typename?: 'CheckoutCreate', checkout?: { __typename?: 'Checkout', id: string, quantity: number } | null, errors: Array<{ __typename?: 'CheckoutError', field?: string | null, code: CheckoutErrorCode, message?: string | null }> } | null };
 
+export type CheckoutEmailUpdateMutationVariables = Exact<{
+  email?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type CheckoutEmailUpdateMutation = { __typename?: 'Mutation', checkoutEmailUpdate?: { __typename?: 'CheckoutEmailUpdate', checkout?: { __typename?: 'Checkout', id: string } | null, errors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null, lines?: Array<string> | null }> } | null };
+
 export type CheckoutFindQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -33915,6 +33923,48 @@ export function useCheckoutCreateMutation(baseOptions?: Apollo.MutationHookOptio
 export type CheckoutCreateMutationHookResult = ReturnType<typeof useCheckoutCreateMutation>;
 export type CheckoutCreateMutationResult = Apollo.MutationResult<CheckoutCreateMutation>;
 export type CheckoutCreateMutationOptions = Apollo.BaseMutationOptions<CheckoutCreateMutation, CheckoutCreateMutationVariables>;
+export const CheckoutEmailUpdateDocument = gql`
+    mutation CheckoutEmailUpdate($email: String = "", $id: ID = "") {
+  checkoutEmailUpdate(email: $email, id: $id) {
+    checkout {
+      id
+    }
+    errors {
+      code
+      field
+      message
+      lines
+    }
+  }
+}
+    `;
+export type CheckoutEmailUpdateMutationFn = Apollo.MutationFunction<CheckoutEmailUpdateMutation, CheckoutEmailUpdateMutationVariables>;
+
+/**
+ * __useCheckoutEmailUpdateMutation__
+ *
+ * To run a mutation, you first call `useCheckoutEmailUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCheckoutEmailUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [checkoutEmailUpdateMutation, { data, loading, error }] = useCheckoutEmailUpdateMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCheckoutEmailUpdateMutation(baseOptions?: Apollo.MutationHookOptions<CheckoutEmailUpdateMutation, CheckoutEmailUpdateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CheckoutEmailUpdateMutation, CheckoutEmailUpdateMutationVariables>(CheckoutEmailUpdateDocument, options);
+      }
+export type CheckoutEmailUpdateMutationHookResult = ReturnType<typeof useCheckoutEmailUpdateMutation>;
+export type CheckoutEmailUpdateMutationResult = Apollo.MutationResult<CheckoutEmailUpdateMutation>;
+export type CheckoutEmailUpdateMutationOptions = Apollo.BaseMutationOptions<CheckoutEmailUpdateMutation, CheckoutEmailUpdateMutationVariables>;
 export const CheckoutFindDocument = gql`
     query CheckoutFind($id: ID!) {
   checkout(id: $id) {

@@ -2,7 +2,7 @@ import AuthContext from "@/contexts/auth";
 import CartContext from "@/contexts/cart";
 import { MessageContext } from "@/contexts/message";
 import { CheckoutDetail } from "@/models/checkout";
-import { checkoutBillingAddressUpdate, checkoutComplete, checkoutShippingMethodUpdate } from "@/services/checkout";
+import { checkoutBillingAddressUpdate, checkoutComplete, checkoutEmailUpdate, checkoutShippingMethodUpdate } from "@/services/checkout";
 import { Button, Flex, Modal, Progress } from "antd";
 import React, { useContext } from "react";
 import { useEffect } from "react";
@@ -56,7 +56,7 @@ export const CheckoutCompleteModal: React.FC<CheckoutCompleteModalProps> = (prop
             console.log(err)
             return;
         }
-        setProcess(33);
+        setProcess(25);
         try
         {
             if (!props.checkout.shippingAddress) {
@@ -73,10 +73,27 @@ export const CheckoutCompleteModal: React.FC<CheckoutCompleteModalProps> = (prop
             console.log(err)
             return;
         }
-        setProcess(66);
+        setProcess(50);
         try
         {
-            var res3 = await checkoutComplete(client!, props.checkout.id);
+            if (!authCtx.userInfo?.email) {
+                setProcessStatus("exception");
+                setProcessInfo("未找到用户邮箱地址");
+                return;
+            }
+            var res3 = await checkoutEmailUpdate(client!, props.checkout.id, authCtx.userInfo?.email);
+        }
+        catch(err)
+        {
+            setProcessStatus("exception");
+            setProcessInfo("设置邮箱地址失败");
+            console.log(err)
+            return;
+        }
+        setProcess(75);
+        try
+        {
+            var res4 = await checkoutComplete(client!, props.checkout.id);
             cartCtx.setCheckoutId(undefined);
         }
         catch(err)
@@ -88,7 +105,7 @@ export const CheckoutCompleteModal: React.FC<CheckoutCompleteModalProps> = (prop
         }
         setProcess(100);
         setProcessInfo("下单成功，正在跳转……");
-        router.push(`/order/detail?id=${res3}&autopay=true`)
+        router.push(`/order/detail?id=${res4}&autopay=true`)
 
     }, () => {}, [props.isopen]);
 

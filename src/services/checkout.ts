@@ -22,6 +22,8 @@ import {
     CheckoutBillingAddressUpdateDocument,
     CheckoutCompleteMutation,
     CheckoutCompleteDocument,
+    CheckoutEmailUpdateMutation,
+    CheckoutEmailUpdateDocument,
 } from "@/graphql/hooks";
 import { CheckoutCreateResult, CheckoutDetail, CheckoutLineDetail, CheckoutLineVarientDetail, ShippingMethodDetail } from "@/models/checkout";
 import { Token } from "@/models/token";
@@ -321,6 +323,33 @@ export async function checkoutBillingAddressUpdate(client: ApolloClient<object>,
         throw errmessage;
     }
 };
+
+//更新邮箱地址
+export async function checkoutEmailUpdate(client: ApolloClient<object>, checkoutId: string, email: string) {
+    try {
+        const resp = await client.mutate<CheckoutEmailUpdateMutation>({
+            mutation: CheckoutEmailUpdateDocument,
+            variables: {
+                id: checkoutId,
+                email: email
+            }
+        }); 
+        if (!resp.data || 
+            !resp.data.checkoutEmailUpdate) {
+          throw "更新邮箱地址失败";
+        }
+        if (resp.data.checkoutEmailUpdate.errors.length != 0)
+        {
+          throw resp.data.checkoutEmailUpdate.errors[0].message;
+        }
+        return true;
+    } catch (error) {
+        var errmessage = `请求失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+};
+
 
 //下单
 export async function checkoutComplete(client: ApolloClient<object>, checkoutId: string) {
