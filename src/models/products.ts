@@ -19,7 +19,11 @@ export interface ProductDetail {
     slug: string;
     detailed_product_name: string | null;
     desc: string;
-    varients: VarientDetail[]
+    varients: VarientDetail[];
+    price: {
+        min: number;
+        max: number;
+    };
 }
 
 export interface VarientDetail {
@@ -38,9 +42,12 @@ export interface ProductSummary {
     product_id: number;
     product_slug: string;
     detailed_product_name?: string;
-    cost: number;
     stock?: number;
     [propName: string]: any;
+    price: {
+        min: number;
+        max: number;
+    };
 }
 
 export interface ProductSummaryProps {

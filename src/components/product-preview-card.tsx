@@ -9,7 +9,9 @@ import { AxCoin } from "./axcoin";
 const { Text } = Typography;
 
 export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSummary }) => {
-    const { image_url, product_id, product_slug, product_name, detailed_product_name, cost, stock } = productSummary;
+    const { image_url, product_id, product_slug, product_name, detailed_product_name, price, stock } = productSummary;
+    const minPrice = price?.min || 0;
+    const maxPrice = price?.max || 0;
     const themeCtx = useContext(ThemeContext);
     return (
         <div
@@ -30,7 +32,7 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
                             </div>
                             <div style={{whiteSpace: 'nowrap'}}>
                                 <AxCoin size={14}/>
-                                <Text strong style={{marginLeft:'2px', color: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"}}>{cost >= 1000 ? cost.toFixed(1) : cost.toFixed(2)}</Text>
+                                <Text strong style={{marginLeft:'2px', color: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"}}>{minPrice >= 1000 ? minPrice.toFixed(1) : minPrice.toFixed(2)}</Text>
                             </div>
                         </Flex>
                         {detailed_product_name &&

@@ -96,6 +96,7 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
         var data = resp.data?.product;
         const textBlocks = JSON.parse(data.description).blocks.map((block: any) => (block.data.text));
         const textJoined = textBlocks.join('<br />')
+        console.log(data);
         var res = {
             id: data.id,
             slug: data.slug,
@@ -153,7 +154,10 @@ export async function fetchProductsByCategoryID(client: ApolloClient<object>, ch
             product_id: edge.node.id,
             product_slug: edge.node.slug,
             detailed_product_name: edge.node.seoDescription,
-            cost: edge.node.pricing?.priceRange?.start?.gross?.amount || 0,
+            price: {
+                min:edge.node.pricing?.priceRangeUndiscounted?.start?.gross?.amount || 0,
+                max:edge.node.pricing?.priceRangeUndiscounted?.stop?.gross?.amount || 0
+            },
             stock: edge.node.isAvailable ? 1 : 0,
         }));
 
@@ -189,7 +193,11 @@ export async function fetchProductsByCollection(client: ApolloClient<object>, ch
                 product_id: edge.node.id,
                 product_slug: edge.node.slug,
                 detailed_product_name: edge.node.seoDescription,
-                cost: edge.node.pricing?.priceRangeUndiscounted?.start?.gross?.amount || 0,
+                // cost: edge.node.pricing?.priceRangeUndiscounted?.start?.gross?.amount || 0,
+                price: {
+                    min:edge.node.pricing?.priceRangeUndiscounted?.start?.gross?.amount || 0,
+                    max:edge.node.pricing?.priceRangeUndiscounted?.stop?.gross?.amount || 0
+                },
                 stock: edge.node.isAvailable ? 1 : 0,
             }))
         );
@@ -234,7 +242,11 @@ export async function searchProducts(client: ApolloClient<object>, first:number,
             product_id: edge.node.id,
             product_slug: edge.node.slug,
             detailed_product_name: edge.node.seoDescription,
-            cost: edge.node.pricing?.priceRange?.start?.gross?.amount || 0,
+            // cost: edge.node.pricing?.priceRange?.start?.gross?.amount || 0,
+            price: {
+                min:edge.node.pricing?.priceRangeUndiscounted?.start?.gross?.amount || 0,
+                max:edge.node.pricing?.priceRangeUndiscounted?.stop?.gross?.amount || 0
+            },
             stock: edge.node.isAvailable ? 1 : 0,
         }));
 

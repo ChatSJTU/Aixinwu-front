@@ -25,7 +25,7 @@ query ProductsSearchByName($first: Int!, $search: String!, $field: ProductOrderF
         pricing {
           displayGrossPrices
           onSale
-          priceRange {
+          priceRangeUndiscounted {
             start {
               gross {
                 amount
