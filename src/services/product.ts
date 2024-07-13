@@ -112,7 +112,11 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
                 stock: x.stocks!.length > 0 ? x.stocks![0].quantity : 0,
                 update_time: x.updatedAt,
                 price: x.pricing?.priceUndiscounted?.gross.amount,
-            } as VarientDetail))
+            } as VarientDetail)),
+            price: {
+                min: data.pricing?.priceRangeUndiscounted?.start?.gross?.amount || 0,
+                max: data.pricing?.priceRangeUndiscounted?.stop?.gross?.amount || 0
+            }
         } as ProductDetail;
         return res;
     } catch (error) {

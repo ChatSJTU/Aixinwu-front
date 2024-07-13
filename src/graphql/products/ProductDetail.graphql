@@ -41,5 +41,19 @@ query ProductDetail($channel: String, $slug: String) {
       sortOrder
       type
     }
+    pricing {
+      priceRangeUndiscounted {
+        start {
+          gross {
+            amount
+          }
+        }
+        stop {
+          gross {
+            amount
+          }
+        }
+      }
+    }
   }
 }

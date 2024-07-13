@@ -1,8 +1,9 @@
-import { Image, Spin, Divider, Row, Col, Button, Typography, Carousel, Breadcrumb, Space, Flex, Tooltip, Grid, Radio, Modal } from 'antd'
+import { Image, Spin, Divider, Row, Col, Button, Typography, Carousel, Breadcrumb, Space, Flex, Tooltip, Grid, Radio, Modal, ConfigProvider } from 'antd'
 import { ShoppingCartOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import Head from "next/head";
 import { useEffect, useState, useRef, useContext } from 'react';
+import { TinyColor } from '@ctrl/tinycolor';
 import { AxCoin } from '@/components/axcoin';
 import { ProductDetail, VarientDetail } from '@/models/products'
 import MarkdownRenderer from '@/components/markdown-renderer';
@@ -11,6 +12,7 @@ import AuthContext from '@/contexts/auth';
 import CartContext from '@/contexts/cart';
 import { DirectBuyModal } from '@/components/direct-buy-modal';
 import { MessageContext } from '@/contexts/message';
+import ThemeContext from "@/contexts/theme";
 
 const { confirm } = Modal;
 const { Title, Text, Link } = Typography;
@@ -22,13 +24,14 @@ const ProductDetailsPage: React.FC = () => {
     const screens = useBreakpoint();
     const authCtx = useContext(AuthContext);
     const cartCtx = useContext(CartContext);
+    const themeCtx = useContext(ThemeContext);
     const client = authCtx.client;
     const message = useContext(MessageContext);
     
     const isMobile = !screens.lg;
     const { slug } = router.query;
     const [product, setProduct] = useState<ProductDetail | undefined>(undefined);
-    const [selectedVarient, setSelectedVarient] = useState<number>(0);
+    const [selectedVarient, setSelectedVarient] = useState<number>(-Infinity);
 
     const [isDirectBuyModalOpen, setDirectBuyModalOpen] = useState<boolean>(false);
     
@@ -39,8 +42,8 @@ const ProductDetailsPage: React.FC = () => {
             try {
                 var resp = await getProductDetail(client!, process.env.NEXT_PUBLIC_CHANNEL!, slug as string);
                 setProduct(resp);
-                console.log(resp);
-                setSelectedVarient(0);
+                if (resp.varients.length === 1)
+                    setSelectedVarient(0);
             } catch (err) {
                 console.error(err)
                 //router.push('/404');
@@ -83,6 +86,11 @@ const ProductDetailsPage: React.FC = () => {
             </center>
         ); // 可以显示加载状态指示器
     }
+
+    const getHoverColor = (color: string) =>
+        new TinyColor(color).lighten(15).toString();
+      const getActiveColor = (color: string) =>
+        new TinyColor(color).darken(15).toString();
 
     return (
         <>
@@ -132,7 +140,7 @@ const ProductDetailsPage: React.FC = () => {
                         style={isMobile ? { textAlign: 'center' } : { paddingLeft: '150px' }}
                     >
                         <Space direction='vertical' size={'middle'}>
-                            <Title level={2}
+                            <Title level={3}
                                 style={{ marginTop: '0px' }}>
                                 {product.name}
                             </Title>
@@ -145,49 +153,68 @@ const ProductDetailsPage: React.FC = () => {
                                     </Title>
                                 )
                             }
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                { selectedVarient >= 0 
+                                    ? <AxCoin size={24} value={product?.varients[selectedVarient]?.price} coloredValue={true} />
+                                    : (product?.price.min === product?.price.max)
+                                        ? <AxCoin size={24} value={product?.price.min} coloredValue={true} />
+                                        : <AxCoin size={24} value={product?.price.min} maxValue={product?.price.max} shownRange={true} coloredValue={true} />
+                                }
+                            </div>  
                             {
                                 product.varients.length > 1 && (
-                                    <Radio.Group
-                                        onChange={(e) => {
-                                            setSelectedVarient(Number(e.target.value));
-                                        }}
-                                        optionType="button"
-                                        value={selectedVarient}>
+                                    <Space wrap>
                                         {product.varients.map((x, index) => (
-                                            <Radio.Button 
-                                                key={x.id} 
-                                                value={index} 
+                                            <Radio.Group
+                                                key={x.id}
+                                                onChange={(e) => {
+                                                    setSelectedVarient(Number(e.target.value));
+                                                }}
+                                                value={selectedVarient}
+                                                optionType="button"
                                             >
-                                                {x.name}
-                                            </Radio.Button>
+                                                <Radio.Button value={index}>
+                                                    {x.name}
+                                                </Radio.Button>
+                                            </Radio.Group>
                                         ))}
-                                    </Radio.Group>
-                                )
+                                    </Space>
+                                    )
                             }
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Text style={{ fontSize: '16px' }}>售价：&nbsp;</Text>
-                                <AxCoin size={24} value={product?.varients[selectedVarient]?.price} coloredValue={true} />
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                            {selectedVarient >= 0 && <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <Text type='secondary'>{`库存: ${product?.varients[selectedVarient]?.stock}`}</Text>
-                            </div>
-                            <Space size="large">
+                            </div>}
+                            <Space size="middle">
+                                <ConfigProvider
+                                    theme={{
+                                        components: {
+                                            Button: {
+                                                colorPrimary: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882",
+                                                colorPrimaryHover: getHoverColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
+                                                colorPrimaryActive: getActiveColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
+                                                lineWidth: 0,
+                                            },
+                                        },
+                                    }}
+                                    >
+                                    <Button
+                                        size="large"
+                                        type='primary'
+                                        // style={{ backgroundColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
+                                        onClick={handleBuyClick}
+                                        disabled={selectedVarient < 0 || product?.varients[selectedVarient]?.stock <= 0}
+                                    >
+                                        立即购买
+                                    </Button>
+                                </ConfigProvider>
                                 <Button
-                                    type='primary'
-                                    icon={<ShoppingCartOutlined />}
-                                    style={{ backgroundColor: '#eb2f96' }}
-                                    onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, 1) }}
-                                                                    >
-                                    添加到爱心篮
-                                </Button>
-                                <Button
+                                    size="large"
                                     type='default'
-                                    icon={<AxCoin size={14} />}
-                                    style={{ borderColor: '#eb2f96' }}
-                                    onClick={handleBuyClick}
-                                    disabled={product?.varients[selectedVarient]?.stock <= 0}
+                                    icon={<ShoppingCartOutlined />}
+                                    style={{ borderColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
+                                    onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, 1) }}
                                 >
-                                    立即购买
+                                    添加到爱心篮
                                 </Button>
                             </Space>
                         </Space>

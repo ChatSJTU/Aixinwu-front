@@ -60,7 +60,7 @@ export const AxCoin: React.FC<AxCoinProps> = ({
                         }}
                     >
                         {(shownRange && !shownFromSign && maxValue >= 0)
-                            ? `${value >= 1000 ? value.toFixed(1) : value.toFixed(2)} - ${maxValue >= 1000 ? maxValue.toFixed(1) : maxValue.toFixed(2)}`
+                            ? `${value >= 1000 ? value.toFixed(1) : value.toFixed(2)}~${maxValue >= 1000 ? maxValue.toFixed(1) : maxValue.toFixed(2)}`
                             : `${value >= 1000 ? value.toFixed(1) : value.toFixed(2)}`
                         }
                     </p>

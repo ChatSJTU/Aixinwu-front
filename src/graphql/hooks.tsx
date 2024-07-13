@@ -33031,7 +33031,7 @@ export type ProductDetailQueryVariables = Exact<{
 }>;
 
 
-export type ProductDetailQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, slug: string, seoTitle?: string | null, seoDescription?: string | null, channel?: string | null, created: any, description?: any | null, availableForPurchaseAt?: any | null, isAvailableForPurchase?: boolean | null, name: string, collections?: Array<{ __typename?: 'Collection', id: string, name: string, slug: string, description?: any | null }> | null, variants?: Array<{ __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, quantityAvailable?: number | null, updatedAt: any, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null, stocks?: Array<{ __typename?: 'Stock', id: string, quantity: number }> | null }> | null, media?: Array<{ __typename?: 'ProductMedia', alt: string, id: string, url: string, sortOrder?: number | null, type: ProductMediaType }> | null } | null };
+export type ProductDetailQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, slug: string, seoTitle?: string | null, seoDescription?: string | null, channel?: string | null, created: any, description?: any | null, availableForPurchaseAt?: any | null, isAvailableForPurchase?: boolean | null, name: string, collections?: Array<{ __typename?: 'Collection', id: string, name: string, slug: string, description?: any | null }> | null, variants?: Array<{ __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, quantityAvailable?: number | null, updatedAt: any, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null, stocks?: Array<{ __typename?: 'Stock', id: string, quantity: number }> | null }> | null, media?: Array<{ __typename?: 'ProductMedia', alt: string, id: string, url: string, sortOrder?: number | null, type: ProductMediaType }> | null, pricing?: { __typename?: 'ProductPricingInfo', priceRangeUndiscounted?: { __typename?: 'TaxedMoneyRange', start?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null, stop?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null } | null };
 
 export type ProductsByCategoryIdQueryVariables = Exact<{
   channel: Scalars['String']['input'];
@@ -34476,6 +34476,20 @@ export const ProductDetailDocument = gql`
       url(size: 1024, format: ORIGINAL)
       sortOrder
       type
+    }
+    pricing {
+      priceRangeUndiscounted {
+        start {
+          gross {
+            amount
+          }
+        }
+        stop {
+          gross {
+            amount
+          }
+        }
+      }
     }
   }
 }
