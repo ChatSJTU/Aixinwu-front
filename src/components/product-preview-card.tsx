@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Card, Image, Typography, Space, Flex } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons';
-import ThemeContext from "@/contexts/theme";
 
 import { ProductSummaryProps } from "@/models/products";
 import { AxCoin } from "./axcoin";
@@ -12,7 +11,7 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
     const { image_url, product_id, product_slug, product_name, detailed_product_name, price, stock } = productSummary;
     const minPrice = price?.min || 0;
     const maxPrice = price?.max || 0;
-    const themeCtx = useContext(ThemeContext);
+
     return (
         <div
             className="preview-card-container"
@@ -31,8 +30,13 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
                                 <Text style={{marginLeft:'2px'}}>{stock}</Text>
                             </div>
                             <div style={{whiteSpace: 'nowrap'}}>
-                                <AxCoin size={14}/>
-                                <Text strong style={{marginLeft:'2px', color: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"}}>{minPrice >= 1000 ? minPrice.toFixed(1) : minPrice.toFixed(2)}</Text>
+                                <AxCoin coloredValue size={15} 
+                                    value={minPrice} shownFromSign={minPrice !== maxPrice}
+                                    valueStyle={{fontSize: '16px', paddingLeft: '-2px'}}
+                                />
+                                {/* <Text strong style={{marginLeft:'2px', color: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"}}>
+                                    {minPrice >= 1000 ? minPrice.toFixed(1) : minPrice.toFixed(2)}
+                                </Text> */}
                             </div>
                         </Flex>
                         {detailed_product_name &&

@@ -12,6 +12,9 @@ interface AxCoinProps {
   coloredValue?: boolean;       // 是否使用主题色绘制价格（可选）
   valueStyle?: React.CSSProperties; // 价格style（可选）
   originValue?: number          // 原价（可选，value存在时生效）
+  shownFromSign?: boolean;      // 是否显示"起"（可选）
+  shownRange?: boolean;         // 是否显示价格区间（可选，maxValue存在且shownFromSign为false时生效）
+  maxValue?: number;            // 最大价格（可选）
 }
 
 export const AxCoin: React.FC<AxCoinProps> = ({ 
@@ -20,14 +23,19 @@ export const AxCoin: React.FC<AxCoinProps> = ({
     value = -Infinity,
     coloredValue = false,
     valueStyle,
-    originValue
+    originValue,
+    shownFromSign = false,
+    shownRange = false,
+    maxValue = -Infinity
 }) => {
 
     const themeCtx = useContext(ThemeContext);
 
+    const colorStyle = { color: style?.color || (themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882") };
+
     const iconStyle = {
         ...style,
-        color: style?.color || (themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
+        ...colorStyle,
         fontSize: size,
     };
 
@@ -37,24 +45,36 @@ export const AxCoin: React.FC<AxCoinProps> = ({
                 component={themeCtx.userTheme == 'light' ? AxCoinLight : AxCoinDark} 
                 style={iconStyle}
             />
-            {value >= 0 && 
-                <div style={{alignItems: 'baseline', display: 'inline-flex'}}>
+            {value >= 0 &&             
+                <div style={{ alignItems: 'baseline', display: 'inline-flex' }}>
                     <p
-                        className = {coloredValue ? '' : 'primary-text'}
+                        className={coloredValue ? '' : 'primary-text'}
                         style={{
-                            fontSize: size * 0.8,
+                            fontSize: size,
                             fontWeight: '500',
                             lineHeight: 1,
                             margin: 0,
-                            ...(coloredValue==true
-                                ? {color : (style?.color || (themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"))}
-                                : {}),
+                            marginTop: -size*0.1,
+                            ...coloredValue ? colorStyle : {},
                             ...valueStyle
                         }}
                     >
-                        {`${value.toFixed(2)}`}
+                        {(shownRange && !shownFromSign && maxValue >= 0)
+                            ? `${value >= 1000 ? value.toFixed(1) : value.toFixed(2)} - ${maxValue >= 1000 ? maxValue.toFixed(1) : maxValue.toFixed(2)}`
+                            : `${value >= 1000 ? value.toFixed(1) : value.toFixed(2)}`
+                        }
                     </p>
-                    {originValue && 
+                    {shownFromSign &&
+                        <p
+                            style={{
+                                fontSize: size * 0.7,
+                                lineHeight: 0,
+                                marginLeft: '2px',
+                                ...coloredValue ? colorStyle : {},
+                            }}
+                        >{"起"}</p>
+                    }
+                    {originValue &&
                         <del
                             className='secondary-text'
                             style={{
