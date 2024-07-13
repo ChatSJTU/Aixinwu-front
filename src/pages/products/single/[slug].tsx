@@ -168,18 +168,10 @@ const ProductDetailsPage: React.FC = () => {
                                 <Text style={{ fontSize: '16px' }}>售价：&nbsp;</Text>
                                 <AxCoin size={24} value={product?.varients[selectedVarient]?.price} coloredValue={true} />
                             </div>
-                            {
-                                varient?.stock && (
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Text type='secondary'>{`库存: ${varient?.stock}`}</Text>
-                                    </div>
-                                )
-                            }
-                            <Flex justify="space-between"
-                                align="center"
-                                style={isMobile ? { marginTop: '10px', width: 'auto' }
-                                    : { marginTop: '50px', width: '400px' }}
-                            >
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Text type='secondary'>{`库存: ${product?.varients[selectedVarient]?.stock}`}</Text>
+                            </div>
+                            <Space size="large">
                                 <Button
                                     type='primary'
                                     icon={<ShoppingCartOutlined />}

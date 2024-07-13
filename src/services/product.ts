@@ -95,7 +95,6 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
         }
         var data = resp.data?.product;
         const textBlocks = JSON.parse(data.description).blocks.map((block: any) => (block.data.text));
-        console.log(textBlocks)
         const textJoined = textBlocks.join('<br />')
         var res = {
             id: data.id,
@@ -109,7 +108,7 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
                 name: x.name,
                 id: x.id,
                 sku: x.sku,
-                stock: x.stocks![0].quantity,
+                stock: x.stocks!.length > 0 ? x.stocks![0].quantity : 0,
                 update_time: x.updatedAt,
                 price: x.pricing?.priceUndiscounted?.gross.amount,
             } as VarientDetail))
