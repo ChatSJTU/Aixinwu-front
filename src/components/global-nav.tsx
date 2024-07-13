@@ -37,7 +37,7 @@ const NavBar = () => {
     {
       key: '2',
       label: (
-        <a href="user/coin-log" rel="noopener noreferrer">
+        <a href="/user/coin-log" rel="noopener noreferrer">
           <span>账户余额：</span>
           <AxCoin size={14} 
             value={authCtx.userInfo?.balance}
