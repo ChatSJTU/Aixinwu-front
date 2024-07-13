@@ -28,7 +28,7 @@ const ProductDetailsPage: React.FC = () => {
     const isMobile = !screens.lg;
     const { slug } = router.query;
     const [product, setProduct] = useState<ProductDetail | undefined>(undefined);
-    const [varient, setVarient] = useState<VarientDetail | undefined>(undefined);
+    const [selectedVarient, setSelectedVarient] = useState<number>(0);
 
     const [isDirectBuyModalOpen, setDirectBuyModalOpen] = useState<boolean>(false);
     
@@ -39,7 +39,8 @@ const ProductDetailsPage: React.FC = () => {
             try {
                 var resp = await getProductDetail(client!, process.env.NEXT_PUBLIC_CHANNEL!, slug as string);
                 setProduct(resp);
-                setVarient(resp.varients[0]);
+                console.log(resp);
+                setSelectedVarient(0);
             } catch (err) {
                 console.error(err)
                 //router.push('/404');
@@ -49,7 +50,7 @@ const ProductDetailsPage: React.FC = () => {
     }, [slug, router]);
 
     const handleBuyClick = () => {
-        if (varient == undefined)
+        if (selectedVarient == undefined)
         {
             message.error("操作失败：未选择商品分类或分类不存在。");
             return;
@@ -60,7 +61,7 @@ const ProductDetailsPage: React.FC = () => {
             content: (
                 <Space size="small">
                     {'是否确认购买'}
-                    {varient.sku ?? product?.name}
+                    {product?.varients[selectedVarient].sku ?? product?.name}
                 </Space>
             ),
             onOk() {
@@ -148,18 +149,24 @@ const ProductDetailsPage: React.FC = () => {
                                 product.varients.length > 1 && (
                                     <Radio.Group
                                         onChange={(e) => {
-                                            setVarient(product.varients.find(x => x.id == e.target.value));
+                                            setSelectedVarient(Number(e.target.value));
                                         }}
-                                        optionType="button">
-                                        {product.varients.map(x => (
-                                            <Radio.Button value={x.id} checked={x.id == varient?.id}>{x.name}</Radio.Button>
+                                        optionType="button"
+                                        value={selectedVarient}>
+                                        {product.varients.map((x, index) => (
+                                            <Radio.Button 
+                                                key={x.id} 
+                                                value={index} 
+                                            >
+                                                {x.name}
+                                            </Radio.Button>
                                         ))}
                                     </Radio.Group>
                                 )
                             }
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <Text style={{ fontSize: '16px' }}>售价：&nbsp;</Text>
-                                <AxCoin size={24} value={varient?.price} coloredValue={true} />
+                                <AxCoin size={24} value={product?.varients[selectedVarient]?.price} coloredValue={true} />
                             </div>
                             {
                                 varient?.stock && (
@@ -177,8 +184,8 @@ const ProductDetailsPage: React.FC = () => {
                                     type='primary'
                                     icon={<ShoppingCartOutlined />}
                                     style={{ backgroundColor: '#eb2f96' }}
-                                    onClick={() => { cartCtx.addLines(varient!.id, 1) }}
-                                >
+                                    onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, 1) }}
+                                                                    >
                                     添加到爱心篮
                                 </Button>
                                 <Button
@@ -186,10 +193,11 @@ const ProductDetailsPage: React.FC = () => {
                                     icon={<AxCoin size={14} />}
                                     style={{ borderColor: '#eb2f96' }}
                                     onClick={handleBuyClick}
+                                    disabled={product?.varients[selectedVarient]?.stock <= 0}
                                 >
                                     立即购买
                                 </Button>
-                            </Flex>
+                            </Space>
                         </Space>
                     </Col>
                 </Row>
@@ -198,7 +206,7 @@ const ProductDetailsPage: React.FC = () => {
                     <MarkdownRenderer content={product.desc} />
                 </div>
             </div>
-            <DirectBuyModal isopen={isDirectBuyModalOpen} varient={varient!} product={product!} onClose={handleDirectBuyModalClose}/>
+            <DirectBuyModal isopen={isDirectBuyModalOpen} varient={product?.varients[selectedVarient!]} product={product!} onClose={handleDirectBuyModalClose}/>
         </>
     );
 };
