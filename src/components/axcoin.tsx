@@ -18,7 +18,7 @@ interface AxCoinProps {
 }
 
 export const AxCoin: React.FC<AxCoinProps> = ({ 
-    size = 22,
+    size = 20,
     style,
     value = -Infinity,
     coloredValue = false,
