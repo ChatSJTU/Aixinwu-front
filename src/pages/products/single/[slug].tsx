@@ -1,4 +1,4 @@
-import { Image, Spin, Divider, Row, Col, Button, Typography, Carousel, Breadcrumb, Space, Flex, Tooltip, Grid, Radio, Modal, ConfigProvider } from 'antd'
+import { Image, Spin, Divider, Row, Col, Button, Typography, Carousel, Breadcrumb, Space, InputNumber, Tooltip, Grid, Radio, Modal, ConfigProvider } from 'antd'
 import { ShoppingCartOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import Head from "next/head";
@@ -32,6 +32,7 @@ const ProductDetailsPage: React.FC = () => {
     const { slug } = router.query;
     const [product, setProduct] = useState<ProductDetail | undefined>(undefined);
     const [selectedVarient, setSelectedVarient] = useState<number>(-Infinity);
+    const [queryQuantity, setQueryQuantity] = useState<number>(1);
 
     const [isDirectBuyModalOpen, setDirectBuyModalOpen] = useState<boolean>(false);
     
@@ -139,9 +140,9 @@ const ProductDetailsPage: React.FC = () => {
                     <Col span={isMobile ? 24 : 15}
                         style={isMobile ? { textAlign: 'center' } : { paddingLeft: '150px' }}
                     >
-                        <Space direction='vertical' size={'middle'}>
+                        <Space direction='vertical' size={'large'}>
                             <Title level={3}
-                                style={{ marginTop: '0px' }}>
+                                style={{ marginTop: '0px', marginBottom: '-4px' }}>
                                 {product.name}
                             </Title>
                             {
@@ -164,6 +165,7 @@ const ProductDetailsPage: React.FC = () => {
                             {
                                 product.varients.length > 1 && (
                                     <Space wrap>
+                                        <Text type='secondary'>分类：</Text>
                                         {product.varients.map((x, index) => (
                                             <Radio.Group
                                                 key={x.id}
@@ -181,9 +183,58 @@ const ProductDetailsPage: React.FC = () => {
                                     </Space>
                                     )
                             }
-                            {selectedVarient >= 0 && <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Text type='secondary'>{`库存: ${product?.varients[selectedVarient]?.stock}`}</Text>
-                            </div>}
+                            {selectedVarient >= 0 && <Space style={{ alignItems: 'center', width: '100%' }}>
+                                <Text type='secondary'>数量：</Text>
+                                <Space.Compact style={{ width: 'auto' }}>
+                                    <Button
+                                        style={{ width: '30px', padding: 0 }}
+                                        onClick={() => { queryQuantity > 1 && setQueryQuantity(queryQuantity - 1) }}
+                                        disabled={queryQuantity <= 1}
+                                    >
+                                        -
+                                    </Button>
+                                    <InputNumber
+                                        style={{ width: '40px' }}  // 确保InputNumber宽度合适
+                                        min={Math.min(1, product?.varients[selectedVarient]?.stock)} 
+                                        max={Math.min(
+                                            product?.varients[selectedVarient]?.quantityLimit,
+                                            product?.varients[selectedVarient]?.stock,
+                                            50
+                                        )} value={product?.varients[selectedVarient]?.stock > 0 
+                                            ? queryQuantity
+                                            : 0
+                                        }
+                                        controls={false}
+                                        onChange={value => {
+                                            if (value !== null) {
+                                                setQueryQuantity(value);
+                                            }
+                                        }}
+                                        disabled={product?.varients[selectedVarient]?.stock <= 0}
+                                    />
+                                    <Button
+                                        style={{ width: '30px', padding: 0 }}
+                                        onClick={() => { 
+                                            queryQuantity < product?.varients[selectedVarient]?.quantityLimit 
+                                            && queryQuantity < product?.varients[selectedVarient]?.stock
+                                            && queryQuantity < 50
+                                            && setQueryQuantity(queryQuantity + 1) 
+                                        }}
+                                        disabled={queryQuantity >= product?.varients[selectedVarient]?.quantityLimit 
+                                            || queryQuantity >= product?.varients[selectedVarient]?.stock
+                                            || queryQuantity >= 50
+                                        }
+                                    >
+                                        +
+                                    </Button>
+                                </Space.Compact>
+                                {product?.varients[selectedVarient]?.stock > 0 
+                                    ? <Text type='secondary'>{
+                                    `库存${product?.varients[selectedVarient]?.stock}件（限购${product?.varients[selectedVarient]?.quantityLimit}件）`
+                                    }</Text>
+                                    : <Text type='secondary'>已售罄</Text>
+                                }
+                            </Space>}
                             <Space size="middle">
                                 <ConfigProvider
                                     theme={{
@@ -202,7 +253,7 @@ const ProductDetailsPage: React.FC = () => {
                                         type='primary'
                                         // style={{ backgroundColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
                                         onClick={handleBuyClick}
-                                        disabled={selectedVarient < 0 || product?.varients[selectedVarient]?.stock <= 0}
+                                        disabled={selectedVarient < 0 || queryQuantity > product?.varients[selectedVarient]?.stock}
                                     >
                                         立即购买
                                     </Button>
