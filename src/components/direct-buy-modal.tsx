@@ -16,6 +16,7 @@ interface DirectBuyModalProps {
     isopen: boolean;
     product: ProductDetail;
     varient: VarientDetail;
+    count: number;
     onClose: () => void;
 }
 
@@ -64,7 +65,7 @@ export const DirectBuyModal: React.FC<DirectBuyModalProps> = (props) => {
                 client!, 
                 checkout.id,
                 props.varient.id,
-                1
+                props.count
             );
         }
         catch(err)

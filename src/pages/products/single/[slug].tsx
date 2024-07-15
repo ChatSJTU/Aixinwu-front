@@ -263,7 +263,7 @@ const ProductDetailsPage: React.FC = () => {
                                     type='default'
                                     icon={<ShoppingCartOutlined />}
                                     style={{ borderColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
-                                    onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, 1) }}
+                                    onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, queryQuantity) }}
                                 >
                                     添加到爱心篮
                                 </Button>
@@ -276,7 +276,12 @@ const ProductDetailsPage: React.FC = () => {
                     <MarkdownRenderer content={product.desc} />
                 </div>
             </div>
-            <DirectBuyModal isopen={isDirectBuyModalOpen} varient={product?.varients[selectedVarient!]} product={product!} onClose={handleDirectBuyModalClose}/>
+            <DirectBuyModal 
+                isopen={isDirectBuyModalOpen} 
+                varient={product?.varients[selectedVarient!]} 
+                product={product!} 
+                count={queryQuantity}
+                onClose={handleDirectBuyModalClose}/>
         </>
     );
 };
