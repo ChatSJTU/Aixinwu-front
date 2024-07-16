@@ -109,7 +109,7 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
                 name: x.name,
                 id: x.id,
                 sku: x.sku,
-                stock: x.stocks!.length > 0 ? x.stocks![0].quantity : 0,
+                stock: x.quantityAvailable || 0,
                 update_time: x.updatedAt,
                 price: x.pricing?.priceUndiscounted?.gross.amount,
                 quantityLimit: x.quantityLimitPerCustomer || 50

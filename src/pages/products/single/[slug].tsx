@@ -36,6 +36,12 @@ const ProductDetailsPage: React.FC = () => {
 
     const [isDirectBuyModalOpen, setDirectBuyModalOpen] = useState<boolean>(false);
     
+    const overQuantity = (
+        queryQuantity > product?.varients[selectedVarient]?.quantityLimit!
+            || queryQuantity > product?.varients[selectedVarient]?.stock!
+            || queryQuantity > 50
+    );
+    
     useEffect(() => {
         if (slug == undefined || slug == "")
             return;
@@ -214,16 +220,9 @@ const ProductDetailsPage: React.FC = () => {
                                     />
                                     <Button
                                         style={{ width: '30px', padding: 0 }}
-                                        onClick={() => { 
-                                            queryQuantity < product?.varients[selectedVarient]?.quantityLimit 
-                                            && queryQuantity < product?.varients[selectedVarient]?.stock
-                                            && queryQuantity < 50
-                                            && setQueryQuantity(queryQuantity + 1) 
+                                        onClick={() => { !overQuantity && setQueryQuantity(queryQuantity + 1) 
                                         }}
-                                        disabled={queryQuantity >= product?.varients[selectedVarient]?.quantityLimit 
-                                            || queryQuantity >= product?.varients[selectedVarient]?.stock
-                                            || queryQuantity >= 50
-                                        }
+                                        disabled={overQuantity}
                                     >
                                         +
                                     </Button>
@@ -253,7 +252,7 @@ const ProductDetailsPage: React.FC = () => {
                                         type='primary'
                                         // style={{ backgroundColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
                                         onClick={handleBuyClick}
-                                        disabled={selectedVarient < 0 || queryQuantity > product?.varients[selectedVarient]?.stock}
+                                        disabled={selectedVarient < 0 || overQuantity}
                                     >
                                         立即购买
                                     </Button>
@@ -262,6 +261,7 @@ const ProductDetailsPage: React.FC = () => {
                                     size="large"
                                     type='default'
                                     icon={<ShoppingCartOutlined />}
+                                    disabled={selectedVarient < 0 || overQuantity}
                                     style={{ borderColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
                                     onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, queryQuantity) }}
                                 >
