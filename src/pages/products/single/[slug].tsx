@@ -29,7 +29,7 @@ const ProductDetailsPage: React.FC = () => {
     const message = useContext(MessageContext);
     
     const isMobile = !screens.lg;
-    const { slug } = router.query;
+    const { slug, shared } = router.query;
     const [product, setProduct] = useState<ProductDetail | undefined>(undefined);
     const [selectedVarient, setSelectedVarient] = useState<number>(-Infinity);
     const [queryQuantity, setQueryQuantity] = useState<number>(1);
@@ -40,14 +40,16 @@ const ProductDetailsPage: React.FC = () => {
         queryQuantity > product?.varients[selectedVarient]?.quantityLimit!
             || queryQuantity > product?.varients[selectedVarient]?.stock!
             || queryQuantity > 50
-    );
+    ); 
+
+    const channel = shared == "true" ? process.env.NEXT_PUBLIC_CHANNEL2 : process.env.NEXT_PUBLIC_CHANNEL;
     
     useEffect(() => {
         if (slug == undefined || slug == "")
             return;
         const fetchProductDetail = async () => {
             try {
-                var resp = await getProductDetail(client!, process.env.NEXT_PUBLIC_CHANNEL!, slug as string);
+                var resp = await getProductDetail(client!, channel!, slug as string);
                 setProduct(resp);
                 if (resp.varients.length === 1)
                     setSelectedVarient(0);

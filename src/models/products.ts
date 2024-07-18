@@ -40,7 +40,7 @@ export interface VarientDetail {
 export interface ProductSummary {
     image_url: string[]; // 长度至少为1
     product_name: string;
-    product_id: number;
+    product_id: string;
     product_slug: string;
     detailed_product_name?: string;
     stock?: number;
@@ -49,6 +49,7 @@ export interface ProductSummary {
         min: number;
         max: number;
     };
+    is_shared: boolean;
 }
 
 export interface ProductSummaryProps {

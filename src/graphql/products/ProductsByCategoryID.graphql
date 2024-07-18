@@ -16,6 +16,7 @@ query ProductsByCategoryID($channel: String!, $first: Int!, $categories: [ID!], 
         isAvailable
         availableForPurchase
         availableForPurchaseAt
+        seoDescription
         images {
           id
           url(format: WEBP, size: 256)
@@ -42,6 +43,9 @@ query ProductsByCategoryID($channel: String!, $first: Int!, $categories: [ID!], 
               amount
             }
           }
+        }
+        productType {
+          metafield(key: "channel")
         }
       }
     }

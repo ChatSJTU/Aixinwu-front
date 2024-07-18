@@ -153,17 +153,18 @@ export async function fetchProductsByCategoryID(client: ApolloClient<object>, ch
           throw "获取商品列表失败";
         }
 
-        const productSummaries: ProductSummary[] = resp.data.products.edges.map((edge: { node: any }) => ({
-            image_url: edge.node.images.map((image: { url: string }) => image.url),
+        const productSummaries: ProductSummary[] = resp.data.products.edges.map(edge => ({
+            image_url: edge.node.images?.map((image: { url: string }) => image.url)!,
             product_name: edge.node.name,
             product_id: edge.node.id,
             product_slug: edge.node.slug,
-            detailed_product_name: edge.node.seoDescription,
+            detailed_product_name: edge.node.seoDescription || "",
             price: {
                 min:edge.node.pricing?.priceRangeUndiscounted?.start?.gross?.amount || 0,
                 max:edge.node.pricing?.priceRangeUndiscounted?.stop?.gross?.amount || 0
             },
             stock: edge.node.isAvailable ? 1 : 0,
+            is_shared: edge.node.productType.metafield == process.env.NEXT_PUBLIC_CHANNEL2
         }));
 
         return productSummaries;

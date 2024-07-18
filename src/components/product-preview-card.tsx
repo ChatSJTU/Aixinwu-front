@@ -16,7 +16,7 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
         <div
             className="preview-card-container"
         >
-            <a href={`/products/single/${product_slug}`}>
+            <a href={`/products/single/${product_slug}` + (productSummary.is_shared ? "?shared=true" : "")}>
                 <Card
                     hoverable
                     className="preview-card"

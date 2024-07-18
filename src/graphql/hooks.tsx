@@ -15,19 +15,60 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  /**
+   * The `Date` scalar type represents a Date
+   * value as specified by
+   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+   */
   Date: { input: any; output: any; }
+  /**
+   * The `DateTime` scalar type represents a DateTime
+   * value as specified by
+   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+   */
   DateTime: { input: any; output: any; }
+  /** The `Day` scalar type represents number of days by integer value. */
   Day: { input: any; output: any; }
+  /**
+   * Custom Decimal implementation.
+   *
+   * Returns Decimal as a float in the API,
+   * parses float to the Decimal on the way back.
+   */
   Decimal: { input: any; output: any; }
+  /**
+   * The `GenericScalar` scalar type represents a generic
+   * GraphQL scalar value that could be:
+   * String, Boolean, Int, Float, List or Object.
+   */
   GenericScalar: { input: any; output: any; }
   JSON: { input: any; output: any; }
   JSONString: { input: any; output: any; }
+  /**
+   * Metadata is a map of key-value pairs, both keys and values are `String`.
+   *
+   * Example:
+   * ```
+   * {
+   *     "key1": "value1",
+   *     "key2": "value2"
+   * }
+   * ```
+   */
   Metadata: { input: any; output: any; }
+  /** The `Minute` scalar type represents number of minutes by integer value. */
   Minute: { input: any; output: any; }
+  /**
+   * Nonnegative Decimal scalar implementation.
+   *
+   * Should be used in places where value must be nonnegative (0 or greater).
+   */
   PositiveDecimal: { input: any; output: any; }
   UUID: { input: any; output: any; }
+  /** Variables of this type must be set to null in mutations. They will be replaced with a filename from a following multipart part containing a binary file. See: https://github.com/jaydenseric/graphql-multipart-request-spec. */
   Upload: { input: any; output: any; }
   WeightScalar: { input: any; output: any; }
+  /** _Any value scalar as defined by Federation spec. */
   _Any: { input: any; output: any; }
 };
 
@@ -33189,7 +33230,7 @@ export type ProductsByCategoryIdQueryVariables = Exact<{
 }>;
 
 
-export type ProductsByCategoryIdQuery = { __typename?: 'Query', products?: { __typename?: 'ProductCountableConnection', totalCount?: number | null, edges: Array<{ __typename?: 'ProductCountableEdge', node: { __typename?: 'Product', id: string, name: string, rating?: number | null, slug: string, updatedAt: any, isAvailable?: boolean | null, availableForPurchase?: any | null, availableForPurchaseAt?: any | null, images?: Array<{ __typename?: 'ProductImage', id: string, url: string, alt?: string | null, sortOrder?: number | null }> | null, pricing?: { __typename?: 'ProductPricingInfo', displayGrossPrices: boolean, onSale?: boolean | null, priceRangeUndiscounted?: { __typename?: 'TaxedMoneyRange', start?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null, stop?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null, discount?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } }> } | null };
+export type ProductsByCategoryIdQuery = { __typename?: 'Query', products?: { __typename?: 'ProductCountableConnection', totalCount?: number | null, edges: Array<{ __typename?: 'ProductCountableEdge', node: { __typename?: 'Product', id: string, name: string, rating?: number | null, slug: string, updatedAt: any, isAvailable?: boolean | null, availableForPurchase?: any | null, availableForPurchaseAt?: any | null, seoDescription?: string | null, images?: Array<{ __typename?: 'ProductImage', id: string, url: string, alt?: string | null, sortOrder?: number | null }> | null, pricing?: { __typename?: 'ProductPricingInfo', displayGrossPrices: boolean, onSale?: boolean | null, priceRangeUndiscounted?: { __typename?: 'TaxedMoneyRange', start?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null, stop?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null, discount?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null, productType: { __typename?: 'ProductType', metafield?: string | null } } }> } | null };
 
 export type ProductsByCollectionQueryVariables = Exact<{
   channel: Scalars['String']['input'];
@@ -34705,6 +34746,7 @@ export const ProductsByCategoryIdDocument = gql`
         isAvailable
         availableForPurchase
         availableForPurchaseAt
+        seoDescription
         images {
           id
           url(format: WEBP, size: 256)
@@ -34731,6 +34773,9 @@ export const ProductsByCategoryIdDocument = gql`
               amount
             }
           }
+        }
+        productType {
+          metafield(key: "channel")
         }
       }
     }
