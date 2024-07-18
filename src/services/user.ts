@@ -14,11 +14,13 @@ import {
     UserCheckoutsQuery,
     UserCheckoutsDocument,
     UserAddressSetDefaultMutation,
-    UserAddressSetDefaultDocument
+    UserAddressSetDefaultDocument,
+    UserBalanceEventsQuery,
+    UserBalanceEventsDocument
 } from "@/graphql/hooks";
 
 import { AddressInfo } from "@/models/address";
-import { UserBasicInfo } from "@/models/user";
+import { CoinLogInfo, UserBasicInfo } from "@/models/user";
 import { ApolloClient } from "@apollo/client";
 import { OrderInfo } from "../models/order";
 
@@ -231,6 +233,42 @@ export async function fetchUserCheckouts(client: ApolloClient<object>, channel: 
         return edges as (string[] | null);
     } catch (error) {
         var errmessage = `获取用户购物车失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+}
+
+export async function fetchUserBalanceEvents(client: ApolloClient<object>, first: number, last: number, userName: string) {
+    try {
+        const resp = await client.query<UserBalanceEventsQuery>({
+            query: UserBalanceEventsDocument,
+            variables: {
+                first: first,
+                last: last,
+                user: userName,
+            }
+        });
+        if (!resp.data || !resp.data.balanceEvents){
+            throw "数据为空"
+        }
+        const edges = resp.data.balanceEvents.edges;
+        let coinLogs = edges.map((edge) => {
+            return ({
+                id: edge.node.id,
+                amount: edge.node.balance,
+                created: edge.node.date,
+                type: edge.node.type
+            })
+        }) as CoinLogInfo[]
+        let totalCount = resp.data.balanceEvents.totalCount as number;
+
+        return ({
+            coinLogs,
+            totalCount
+        })
+
+    } catch (error) {
+        var errmessage = `获取用户爱心失败：${error}`
         console.error(errmessage);
         throw errmessage;
     }

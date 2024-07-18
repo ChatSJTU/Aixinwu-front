@@ -15,60 +15,19 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  /**
-   * The `Date` scalar type represents a Date
-   * value as specified by
-   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
-   */
   Date: { input: any; output: any; }
-  /**
-   * The `DateTime` scalar type represents a DateTime
-   * value as specified by
-   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
-   */
   DateTime: { input: any; output: any; }
-  /** The `Day` scalar type represents number of days by integer value. */
   Day: { input: any; output: any; }
-  /**
-   * Custom Decimal implementation.
-   *
-   * Returns Decimal as a float in the API,
-   * parses float to the Decimal on the way back.
-   */
   Decimal: { input: any; output: any; }
-  /**
-   * The `GenericScalar` scalar type represents a generic
-   * GraphQL scalar value that could be:
-   * String, Boolean, Int, Float, List or Object.
-   */
   GenericScalar: { input: any; output: any; }
   JSON: { input: any; output: any; }
   JSONString: { input: any; output: any; }
-  /**
-   * Metadata is a map of key-value pairs, both keys and values are `String`.
-   *
-   * Example:
-   * ```
-   * {
-   *     "key1": "value1",
-   *     "key2": "value2"
-   * }
-   * ```
-   */
   Metadata: { input: any; output: any; }
-  /** The `Minute` scalar type represents number of minutes by integer value. */
   Minute: { input: any; output: any; }
-  /**
-   * Nonnegative Decimal scalar implementation.
-   *
-   * Should be used in places where value must be nonnegative (0 or greater).
-   */
   PositiveDecimal: { input: any; output: any; }
   UUID: { input: any; output: any; }
-  /** Variables of this type must be set to null in mutations. They will be replaced with a filename from a following multipart part containing a binary file. See: https://github.com/jaydenseric/graphql-multipart-request-spec. */
   Upload: { input: any; output: any; }
   WeightScalar: { input: any; output: any; }
-  /** _Any value scalar as defined by Federation spec. */
   _Any: { input: any; output: any; }
 };
 
@@ -852,6 +811,7 @@ export type Allocation = Node & {
  *     within the channel
  *
  *     PRIORITIZE_HIGH_STOCK - allocate stock in a warehouse with the most stock
+ *
  */
 export enum AllocationStrategyEnum {
   PrioritizeHighStock = 'PRIORITIZE_HIGH_STOCK',
@@ -1257,6 +1217,7 @@ export enum AppExtensionMountEnum {
  *
  *     POPUP - app's extension will be mounted as a popup window
  *     APP_PAGE - redirect to app's page
+ *
  */
 export enum AppExtensionTargetEnum {
   AppPage = 'APP_PAGE',
@@ -2910,6 +2871,82 @@ export type AttributeWhereInput = {
   withChoices?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** Represents balance events. */
+export type BalanceEvent = Node & {
+  __typename?: 'BalanceEvent';
+  /** User account of a balance event. */
+  account?: Maybe<Scalars['String']['output']>;
+  /** Balance of a balance event. */
+  balance?: Maybe<Scalars['Float']['output']>;
+  /** Code of the customer. */
+  code?: Maybe<Scalars['String']['output']>;
+  /** Datetime of the event. */
+  date?: Maybe<Scalars['DateTime']['output']>;
+  /** The ID of the balance event. */
+  id: Scalars['ID']['output'];
+  /** User name of a balance event. */
+  name?: Maybe<Scalars['String']['output']>;
+  /** Type of a balance event. */
+  type?: Maybe<Scalars['String']['output']>;
+};
+
+export type BalanceEventCountableConnection = {
+  __typename?: 'BalanceEventCountableConnection';
+  edges: Array<BalanceEventCountableEdge>;
+  /** Pagination data for this connection. */
+  pageInfo: PageInfo;
+  /** A total count of items in the collection. */
+  totalCount?: Maybe<Scalars['Int']['output']>;
+};
+
+export type BalanceEventCountableEdge = {
+  __typename?: 'BalanceEventCountableEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: BalanceEvent;
+};
+
+export type BalanceEventFilterInput = {
+  date?: InputMaybe<DateRangeInput>;
+  metadata?: InputMaybe<Array<MetadataFilter>>;
+  type?: InputMaybe<BalanceEventsEnum>;
+  user?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type BalanceEventSortingInput = {
+  /** Specifies the direction in which to sort balances. */
+  direction: OrderDirection;
+  /** Sort balances by the selected field. */
+  field: EventSortField;
+};
+
+/** An enumeration. */
+export enum BalanceEventsEnum {
+  ConsecutiveLogin = 'CONSECUTIVE_LOGIN',
+  Consumed = 'CONSUMED',
+  DonationGranted = 'DONATION_GRANTED',
+  FirstLogin = 'FIRST_LOGIN',
+  ManuallyUpdated = 'MANUALLY_UPDATED',
+  Refunded = 'REFUNDED'
+}
+
+/**
+ * Update user's balance.
+ *
+ * Requires one of the following permissions: MANAGE_USERS.
+ *
+ * Triggers the following webhook events:
+ * - ADDRESS_CREATED (async): A new address was created.
+ */
+export type BalanceUpdate = {
+  __typename?: 'BalanceUpdate';
+  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  accountErrors: Array<AccountError>;
+  errors: Array<AccountError>;
+  user?: Maybe<User>;
+};
+
 export type BulkAttributeValueInput = {
   /** The boolean value of an attribute to resolve. If the passed value is non-existent, it will be created. */
   boolean?: InputMaybe<Scalars['Boolean']['input']>;
@@ -4368,6 +4405,7 @@ export type CheckoutAddressValidationRules = {
  *     NONE - the funds are not authorized
  *     PARTIAL - the cover funds don't cover fully the checkout's total
  *     FULL - the cover funds covers the checkout's total
+ *
  */
 export enum CheckoutAuthorizeStatusEnum {
   Full = 'FULL',
@@ -4405,6 +4443,7 @@ export type CheckoutBillingAddressUpdate = {
  *     PARTIAL - the funds that are charged don't cover the checkout's total
  *     FULL - the funds that are charged fully cover the checkout's total
  *     OVERCHARGED - the charged funds are bigger than checkout's total
+ *
  */
 export enum CheckoutChargeStatusEnum {
   Full = 'FULL',
@@ -6418,6 +6457,8 @@ export type CustomerFilterInput = {
 };
 
 export type CustomerInput = {
+  /** The balance of a certain user. */
+  balance?: InputMaybe<Scalars['Float']['input']>;
   /** Billing address of the customer. */
   defaultBillingAddress?: InputMaybe<AddressInput>;
   /** Shipping address of the customer. */
@@ -6894,24 +6935,26 @@ export type Domain = {
 /** Represents donation. */
 export type Donation = Node & {
   __typename?: 'Donation';
-  /** Whether this donation is completed or not. */
-  completed?: Maybe<Scalars['Boolean']['output']>;
+  /** Barcode of the donation. */
+  barcode?: Maybe<Scalars['String']['output']>;
   /** The date and time when the donation was created. */
-  createdAt: Scalars['DateTime']['output'];
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
   /** The description of the donation. */
-  description: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   /** The user who made the donation. Requires one of permissions: MANAGE_USERS, MANAGE_DONATIONS, fOWNER */
   donator?: Maybe<User>;
   /** The ID of the donation. */
   id: Scalars['ID']['output'];
   /** The price of the donation. */
-  price: Money;
+  price?: Maybe<Money>;
   /** The quantity of the donation. */
-  quantity: Scalars['Int']['output'];
+  quantity?: Maybe<Scalars['Int']['output']>;
+  /** The status of the donation */
+  status?: Maybe<Scalars['String']['output']>;
   /** The title of the donation. */
-  title: Scalars['String']['output'];
+  title?: Maybe<Scalars['String']['output']>;
   /** The date and time when the donation was last updated. */
-  updatedAt: Scalars['DateTime']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 /**
@@ -6924,6 +6967,11 @@ export type DonationComplete = {
   __typename?: 'DonationComplete';
   donation?: Maybe<Donation>;
   errors: Array<DonationError>;
+};
+
+export type DonationCompleteInput = {
+  /** Whether this donation is accepted or not. */
+  accepted: Scalars['Boolean']['input'];
 };
 
 export type DonationCountableConnection = {
@@ -6956,8 +7004,14 @@ export type DonationCreate = {
 };
 
 export type DonationCreateInput = {
+  /** The barcode of the donation. */
+  barcode: Scalars['String']['input'];
   /** The description of the donation. */
   description: Scalars['String']['input'];
+  /** Student ID of the donator */
+  donator?: InputMaybe<Scalars['String']['input']>;
+  /** The name of the donator */
+  name: Scalars['String']['input'];
   /** The price of the donation. */
   price: MoneyInput;
   /** The quantity of the donation. */
@@ -6999,19 +7053,22 @@ export enum DonationErrorCode {
 }
 
 export type DonationFilterInput = {
-  channels?: InputMaybe<Array<Scalars['ID']['input']>>;
   created?: InputMaybe<DateRangeInput>;
   donator?: InputMaybe<Scalars['String']['input']>;
   metadata?: InputMaybe<Array<MetadataFilter>>;
-  search?: InputMaybe<Scalars['String']['input']>;
   updated?: InputMaybe<DateRangeInput>;
 };
+
+export enum DonationSortField {
+  /** Sort checkouts by creation date. */
+  CreationDate = 'CREATION_DATE'
+}
 
 export type DonationSortingInput = {
   /** Specifies the direction in which to sort donations. */
   direction: OrderDirection;
   /** Sort donations by the selected field. */
-  field: CheckoutSortField;
+  field: DonationSortField;
 };
 
 /**
@@ -7027,10 +7084,12 @@ export type DonationUpdate = {
 };
 
 export type DonationUpdateInput = {
+  /** The barcode of the donation. */
+  barcode?: InputMaybe<Scalars['String']['input']>;
   /** The description of the donation. */
   description?: InputMaybe<Scalars['String']['input']>;
-  /** ID of the donation. */
-  id: Scalars['ID']['input'];
+  /** The Student ID of the donation */
+  donator?: InputMaybe<Scalars['String']['input']>;
   /** The price of the donation. */
   price?: InputMaybe<MoneyInput>;
   /** The quantity of the donation. */
@@ -7398,6 +7457,11 @@ export enum EventDeliveryStatusEnum {
   Failed = 'FAILED',
   Pending = 'PENDING',
   Success = 'SUCCESS'
+}
+
+export enum EventSortField {
+  /** Sort checkouts by creation date. */
+  CreationDate = 'CREATION_DATE'
 }
 
 export type ExportError = {
@@ -10303,6 +10367,8 @@ export type Margin = {
  *
  *     PAYMENT_FLOW - new orders marked as paid will receive a
  *     `Payment` object, that will cover the `order.total`.
+ *
+ *
  */
 export enum MarkAsPaidStrategyEnum {
   PaymentFlow = 'PAYMENT_FLOW',
@@ -11465,6 +11531,15 @@ export type Mutation = {
    */
   attributeValueUpdate?: Maybe<AttributeValueUpdate>;
   /**
+   * Update user's balance.
+   *
+   * Requires one of the following permissions: MANAGE_USERS.
+   *
+   * Triggers the following webhook events:
+   * - ADDRESS_CREATED (async): A new address was created.
+   */
+  balanceUpdate?: Maybe<BalanceUpdate>;
+  /**
    * Updates site domain of the shop.
    *
    * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `PUBLIC_URL` environment variable instead.
@@ -11980,7 +12055,9 @@ export type Mutation = {
    * Trigger sending a notification with the notify plugin method. Serializes nodes provided as ids parameter and includes this data in the notification payload.
    *
    * Added in Saleor 3.1.
-   * @deprecated \n\nDEPRECATED: this mutation will be removed in Saleor 4.0.
+   * @deprecated
+   *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0.
    */
   externalNotificationTrigger?: Maybe<ExternalNotificationTrigger>;
   /** Obtain external access tokens for user by custom plugin. */
@@ -12456,7 +12533,9 @@ export type Mutation = {
    * Update shop order settings across all channels. Returns `orderSettings` for the first `channel` in alphabetical order.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
-   * @deprecated \n\nDEPRECATED: this mutation will be removed in Saleor 4.0. Use `channelUpdate` mutation instead.
+   * @deprecated
+   *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `channelUpdate` mutation instead.
    */
   orderSettingsUpdate?: Maybe<OrderSettingsUpdate>;
   /**
@@ -13235,14 +13314,18 @@ export type Mutation = {
    * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `PUBLIC_URL` environment variable instead.
    *
    * Requires one of the following permissions: MANAGE_SETTINGS.
-   * @deprecated \n\nDEPRECATED: this mutation will be removed in Saleor 4.0. Use `PUBLIC_URL` environment variable instead.
+   * @deprecated
+   *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `PUBLIC_URL` environment variable instead.
    */
   shopDomainUpdate?: Maybe<ShopDomainUpdate>;
   /**
    * Fetch tax rates.
    *
    * Requires one of the following permissions: MANAGE_SETTINGS.
-   * @deprecated \n\nDEPRECATED: this mutation will be removed in Saleor 4.0.
+   * @deprecated
+   *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0.
    */
   shopFetchTaxRates?: Maybe<ShopFetchTaxRates>;
   /**
@@ -13876,6 +13959,12 @@ export type MutationAttributeValueUpdateArgs = {
 };
 
 
+export type MutationBalanceUpdateArgs = {
+  balance: Scalars['Float']['input'];
+  userId: Scalars['ID']['input'];
+};
+
+
 export type MutationCarouselSettingsUpdateArgs = {
   input: CarouselInput;
 };
@@ -14223,6 +14312,7 @@ export type MutationDigitalContentUrlCreateArgs = {
 
 export type MutationDonationCompleteArgs = {
   id: Scalars['ID']['input'];
+  input: DonationCompleteInput;
 };
 
 
@@ -14237,6 +14327,7 @@ export type MutationDonationDeleteArgs = {
 
 
 export type MutationDonationUpdateArgs = {
+  id: Scalars['ID']['input'];
   input: DonationUpdateInput;
 };
 
@@ -16037,6 +16128,7 @@ export type OrderAddNoteInput = {
  *     `order.total`-`order.totalGrantedRefund`
  *     FULL - the funds that are authorized and charged fully cover the
  *     `order.total`-`order.totalGrantedRefund`
+ *
  */
 export enum OrderAuthorizeStatusEnum {
   Full = 'FULL',
@@ -16387,6 +16479,7 @@ export type OrderCapture = {
  *     `order.total`-`order.totalGrantedRefund`
  *     OVERCHARGED - the charged funds are bigger than the
  *     `order.total`-`order.totalGrantedRefund`
+ *
  */
 export enum OrderChargeStatusEnum {
   Full = 'FULL',
@@ -16790,7 +16883,7 @@ export enum OrderEventsEmailsEnum {
   TrackingUpdated = 'TRACKING_UPDATED'
 }
 
-/** The different order event types. */
+/** The different order event types.  */
 export enum OrderEventsEnum {
   AddedProducts = 'ADDED_PRODUCTS',
   Canceled = 'CANCELED',
@@ -17955,6 +18048,7 @@ export enum OrderStatus {
   Draft = 'DRAFT',
   Expired = 'EXPIRED',
   Fulfilled = 'FULFILLED',
+  Leased = 'LEASED',
   PartiallyFulfilled = 'PARTIALLY_FULFILLED',
   PartiallyReturned = 'PARTIALLY_RETURNED',
   Returned = 'RETURNED',
@@ -19308,6 +19402,7 @@ export enum PaymentGatewayInitializeTokenizationErrorCode {
  *     SUCCESSFULLY_INITIALIZED - The payment gateway was successfully initialized.
  *     FAILED_TO_INITIALIZE - The payment gateway was not initialized.
  *     FAILED_TO_DELIVER - The request to initialize payment gateway was not delivered.
+ *
  */
 export enum PaymentGatewayInitializeTokenizationResult {
   FailedToDeliver = 'FAILED_TO_DELIVER',
@@ -19567,6 +19662,7 @@ export type PaymentMethodRequestDeleteError = {
  *     PENDING - The payment method is pending tokenization.
  *     FAILED_TO_TOKENIZE - The payment method was not tokenized.
  *     FAILED_TO_DELIVER - The request to tokenize payment method was not delivered.
+ *
  */
 export enum PaymentMethodTokenizationResult {
   AdditionalActionRequired = 'ADDITIONAL_ACTION_REQUIRED',
@@ -19715,6 +19811,7 @@ export type Permission = {
 
 /** An enumeration. */
 export enum PermissionEnum {
+  AddDonations = 'ADD_DONATIONS',
   HandleCheckouts = 'HANDLE_CHECKOUTS',
   HandlePayments = 'HANDLE_PAYMENTS',
   HandleTaxes = 'HANDLE_TAXES',
@@ -19723,6 +19820,7 @@ export enum PermissionEnum {
   ManageChannels = 'MANAGE_CHANNELS',
   ManageCheckouts = 'MANAGE_CHECKOUTS',
   ManageDiscounts = 'MANAGE_DISCOUNTS',
+  ManageDonations = 'MANAGE_DONATIONS',
   ManageGiftCard = 'MANAGE_GIFT_CARD',
   ManageMenus = 'MANAGE_MENUS',
   ManageObservability = 'MANAGE_OBSERVABILITY',
@@ -20191,6 +20289,8 @@ export type Product = Node & ObjectWithMetadata & {
   isAvailable?: Maybe<Scalars['Boolean']['output']>;
   /** Refers to a state that can be set by admins to control whether a product is available for purchase in storefronts. This does not guarantee the availability of stock. When set to `False`, this product is still visible to customers, but it cannot be purchased. */
   isAvailableForPurchase?: Maybe<Scalars['Boolean']['output']>;
+  /** Product Lending */
+  lending?: Maybe<Scalars['Boolean']['output']>;
   /** List of media for the product. */
   media?: Maybe<Array<ProductMedia>>;
   /** Get a single product media by ID. */
@@ -20502,6 +20602,8 @@ export type ProductBulkCreateInput = {
   description?: InputMaybe<Scalars['JSONString']['input']>;
   /** External ID of this product. */
   externalReference?: InputMaybe<Scalars['String']['input']>;
+  /** Product Lending. */
+  lending?: InputMaybe<Scalars['Boolean']['input']>;
   /** List of media inputs associated with the product. */
   media?: InputMaybe<Array<MediaInput>>;
   /** Fields required to update the product metadata. */
@@ -20806,6 +20908,8 @@ export type ProductCreateInput = {
    * Added in Saleor 3.10.
    */
   externalReference?: InputMaybe<Scalars['String']['input']>;
+  /** Product Lending. */
+  lending?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Fields required to update the product metadata.
    *
@@ -21086,6 +21190,8 @@ export type ProductInput = {
    * Added in Saleor 3.10.
    */
   externalReference?: InputMaybe<Scalars['String']['input']>;
+  /** Product Lending. */
+  lending?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Fields required to update the product metadata.
    *
@@ -22033,6 +22139,8 @@ export type ProductVariant = Node & ObjectWithMetadata & {
   privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** The product to which the variant belongs. */
   product: Product;
+  /** Quantity of a product that a user is allowed to buy. */
+  quantityAllowed?: Maybe<Scalars['Int']['output']>;
   /** Quantity of a product available for sale in one checkout. Field value will be `null` when no `limitQuantityPerCheckout` in global settings has been set, and `productVariant` stocks are not tracked. */
   quantityAvailable?: Maybe<Scalars['Int']['output']>;
   /** The maximum quantity of this variant that a customer can purchase. */
@@ -22049,6 +22157,8 @@ export type ProductVariant = Node & ObjectWithMetadata & {
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
   revenue?: Maybe<TaxedMoney>;
+  /** Total Sales of the product. */
+  sales?: Maybe<Scalars['Int']['output']>;
   /** The SKU (stock keeping unit) of the product variant. */
   sku?: Maybe<Scalars['String']['output']>;
   /** Stocks for the product variant. */
@@ -22215,6 +22325,8 @@ export type ProductVariantBulkCreateInput = {
    * Added in Saleor 3.1.
    */
   quantityLimitPerCustomer?: InputMaybe<Scalars['Int']['input']>;
+  /** Whether or not to return the products on refund. */
+  returnOnCancel?: InputMaybe<Scalars['Boolean']['input']>;
   /** Stock keeping unit. */
   sku?: InputMaybe<Scalars['String']['input']>;
   /** Stocks of a product available for sale. */
@@ -22419,6 +22531,8 @@ export type ProductVariantBulkUpdateInput = {
    * Added in Saleor 3.1.
    */
   quantityLimitPerCustomer?: InputMaybe<Scalars['Int']['input']>;
+  /** Whether or not to return the products on refund. */
+  returnOnCancel?: InputMaybe<Scalars['Boolean']['input']>;
   /** Stock keeping unit. */
   sku?: InputMaybe<Scalars['String']['input']>;
   /**
@@ -22565,6 +22679,8 @@ export type ProductVariantCreateInput = {
    * Added in Saleor 3.1.
    */
   quantityLimitPerCustomer?: InputMaybe<Scalars['Int']['input']>;
+  /** Whether or not to return the products on refund. */
+  returnOnCancel?: InputMaybe<Scalars['Boolean']['input']>;
   /** Stock keeping unit. */
   sku?: InputMaybe<Scalars['String']['input']>;
   /** Stocks of a product available for sale. */
@@ -22689,6 +22805,8 @@ export type ProductVariantInput = {
    * Added in Saleor 3.1.
    */
   quantityLimitPerCustomer?: InputMaybe<Scalars['Int']['input']>;
+  /** Whether or not to return the products on refund. */
+  returnOnCancel?: InputMaybe<Scalars['Boolean']['input']>;
   /** Stock keeping unit. */
   sku?: InputMaybe<Scalars['String']['input']>;
   /** Determines if the inventory of this variant should be tracked. If false, the quantity won't change when customers buy this item. If the field is not provided, `Shop.trackInventoryByDefault` will be used. */
@@ -24184,6 +24302,8 @@ export type Query = {
   attribute?: Maybe<Attribute>;
   /** List of the shop's attributes. */
   attributes?: Maybe<AttributeCountableConnection>;
+  /** User Balance Events */
+  balanceEvents?: Maybe<BalanceEventCountableConnection>;
   /** Return the carousel of the current site. */
   carousel?: Maybe<Carousel>;
   /** List of the shop's categories. */
@@ -24502,7 +24622,11 @@ export type Query = {
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
    */
   taxCountryConfiguration?: Maybe<TaxCountryConfiguration>;
-  /** \n\nRequires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP. */
+  /**
+   *
+   *
+   * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
+   */
   taxCountryConfigurations?: Maybe<Array<TaxCountryConfiguration>>;
   /** List of all tax rates available from tax gateway. */
   taxTypes?: Maybe<Array<TaxType>>;
@@ -24636,6 +24760,16 @@ export type QueryAttributesArgs = {
   search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<AttributeSortingInput>;
   where?: InputMaybe<AttributeWhereInput>;
+};
+
+
+export type QueryBalanceEventsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<BalanceEventFilterInput>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<BalanceEventSortingInput>;
 };
 
 
@@ -27457,6 +27591,8 @@ export type StaffCreate = {
 export type StaffCreateInput = {
   /** List of permission group IDs to which user should be assigned. */
   addGroups?: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** The balance of a certain user. */
+  balance?: InputMaybe<Scalars['Float']['input']>;
   /** The unique email address of the user. */
   email?: InputMaybe<Scalars['String']['input']>;
   /** Given name. */
@@ -27671,6 +27807,8 @@ export type StaffUpdate = {
 export type StaffUpdateInput = {
   /** List of permission group IDs to which user should be assigned. */
   addGroups?: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** The balance of a certain user. */
+  balance?: InputMaybe<Scalars['Float']['input']>;
   /** The unique email address of the user. */
   email?: InputMaybe<Scalars['String']['input']>;
   /** Given name. */
@@ -27939,6 +28077,7 @@ export type StockUpdateInput = {
  *     SKIP - stocks are not checked and not updated.
  *     UPDATE - only do update, if there is enough stock.
  *     FORCE - force update, if there is not enough stock.
+ *
  */
 export enum StockUpdatePolicyEnum {
   Force = 'FORCE',
@@ -28043,6 +28182,7 @@ export enum StoredPaymentMethodRequestDeleteErrorCode {
  *     FAILED_TO_DELETE - The stored payment method was not deleted.
  *     FAILED_TO_DELIVER - The request to delete the stored payment method was not
  *     delivered.
+ *
  */
 export enum StoredPaymentMethodRequestDeleteResult {
   FailedToDelete = 'FAILED_TO_DELETE',
@@ -28805,6 +28945,7 @@ export enum TimePeriodTypeEnum {
  *     The following flows are possible:
  *     INTERACTIVE - Payment method can be used for 1 click checkout - it's prefilled in
  *     checkout form (might require additional authentication from user)
+ *
  */
 export enum TokenizedPaymentFlowEnum {
   Interactive = 'INTERACTIVE'
@@ -28854,6 +28995,7 @@ export type TransactionAction = {
  *     CHARGE - Represents the charge action.
  *     REFUND - Represents a refund action.
  *     CANCEL - Represents a cancel action. Added in Saleor 3.12.
+ *
  */
 export enum TransactionActionEnum {
   Cancel = 'CANCEL',
@@ -29118,6 +29260,7 @@ export enum TransactionEventReportErrorCode {
  *     CANCEL_FAILURE - represents failure cancel.
  *     CANCEL_REQUEST - represents cancel request.
  *     INFO - represents info event.
+ *
  */
 export enum TransactionEventTypeEnum {
   AuthorizationActionRequired = 'AUTHORIZATION_ACTION_REQUIRED',
@@ -29145,6 +29288,7 @@ export enum TransactionEventTypeEnum {
  *
  *     AUTHORIZATION - the processed transaction should be only authorized
  *     CHARGE - the processed transaction should be charged.
+ *
  */
 export enum TransactionFlowStrategyEnum {
   Authorization = 'AUTHORIZATION',
@@ -29880,7 +30024,7 @@ export type User = Node & ObjectWithMetadata & {
   /** The avatar of the user. */
   avatar?: Maybe<Image>;
   /** The balance of the user. */
-  balance: Scalars['Int']['output'];
+  balance: Scalars['Float']['output'];
   /**
    * Returns the last open checkout of this user.
    * @deprecated This field will be removed in Saleor 4.0. Use the `checkoutTokens` field to fetch the user checkouts.
@@ -29899,6 +30043,8 @@ export type User = Node & ObjectWithMetadata & {
    * Added in Saleor 3.8.
    */
   checkouts?: Maybe<CheckoutCountableConnection>;
+  /** The code of a user. */
+  code: Scalars['String']['output'];
   /** The continous login days of the user. */
   continuous: Scalars['Int']['output'];
   /** The data when the user create account. */
@@ -30156,6 +30302,8 @@ export type UserCountableEdge = {
 };
 
 export type UserCreateInput = {
+  /** The balance of a certain user. */
+  balance?: InputMaybe<Scalars['Float']['input']>;
   /** Slug of a channel which will be used for notify user. Optional when only one channel exists. */
   channel?: InputMaybe<Scalars['String']['input']>;
   /** Billing address of the customer. */
@@ -33097,6 +33245,15 @@ export type UserAddressesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type UserAddressesQuery = { __typename?: 'Query', me?: { __typename?: 'User', addresses: Array<{ __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } }> } | null };
 
+export type UserBalanceEventsQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  user?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type UserBalanceEventsQuery = { __typename?: 'Query', balanceEvents?: { __typename?: 'BalanceEventCountableConnection', totalCount?: number | null, edges: Array<{ __typename?: 'BalanceEventCountableEdge', node: { __typename?: 'BalanceEvent', account?: string | null, balance?: number | null, code?: string | null, date?: any | null, id: string, name?: string | null, type?: string | null } }> } | null };
+
 export type UserBasicInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -34992,6 +35149,59 @@ export type UserAddressesQueryHookResult = ReturnType<typeof useUserAddressesQue
 export type UserAddressesLazyQueryHookResult = ReturnType<typeof useUserAddressesLazyQuery>;
 export type UserAddressesSuspenseQueryHookResult = ReturnType<typeof useUserAddressesSuspenseQuery>;
 export type UserAddressesQueryResult = Apollo.QueryResult<UserAddressesQuery, UserAddressesQueryVariables>;
+export const UserBalanceEventsDocument = gql`
+    query UserBalanceEvents($first: Int, $last: Int, $user: String) {
+  balanceEvents(first: $first, last: $last, filter: {user: $user}) {
+    edges {
+      node {
+        account
+        balance
+        code
+        date
+        id
+        name
+        type
+      }
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useUserBalanceEventsQuery__
+ *
+ * To run a query within a React component, call `useUserBalanceEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserBalanceEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserBalanceEventsQuery({
+ *   variables: {
+ *      first: // value for 'first'
+ *      last: // value for 'last'
+ *      user: // value for 'user'
+ *   },
+ * });
+ */
+export function useUserBalanceEventsQuery(baseOptions?: Apollo.QueryHookOptions<UserBalanceEventsQuery, UserBalanceEventsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserBalanceEventsQuery, UserBalanceEventsQueryVariables>(UserBalanceEventsDocument, options);
+      }
+export function useUserBalanceEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserBalanceEventsQuery, UserBalanceEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserBalanceEventsQuery, UserBalanceEventsQueryVariables>(UserBalanceEventsDocument, options);
+        }
+export function useUserBalanceEventsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserBalanceEventsQuery, UserBalanceEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<UserBalanceEventsQuery, UserBalanceEventsQueryVariables>(UserBalanceEventsDocument, options);
+        }
+export type UserBalanceEventsQueryHookResult = ReturnType<typeof useUserBalanceEventsQuery>;
+export type UserBalanceEventsLazyQueryHookResult = ReturnType<typeof useUserBalanceEventsLazyQuery>;
+export type UserBalanceEventsSuspenseQueryHookResult = ReturnType<typeof useUserBalanceEventsSuspenseQuery>;
+export type UserBalanceEventsQueryResult = Apollo.QueryResult<UserBalanceEventsQuery, UserBalanceEventsQueryVariables>;
 export const UserBasicInfoDocument = gql`
     query UserBasicInfo {
   me {
