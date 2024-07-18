@@ -66,7 +66,7 @@ export const OrderLinesTable: React.FC<OrderLinesTableProps> = ({ lines }) => {
             width: '20%',
             key: 'varient',
             render: (_, record: LineItem) => (
-                record.variant.sku ?? "/"
+                record.variant.name ?? "/"
             )
         },
         {

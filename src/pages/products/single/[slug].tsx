@@ -71,10 +71,11 @@ const ProductDetailsPage: React.FC = () => {
             title: '下单确认',
             icon: <InfoCircleFilled />,
             content: (
-                <Space size="small">
-                    {'是否确认购买'}
-                    {product?.varients[selectedVarient].sku ?? product?.name}
-                </Space>
+                <span>
+                    {'是否确认购买 '}
+                    {product?.name}
+                    {product?.varients[selectedVarient] && `（${product?.varients[selectedVarient].name}）`}
+                </span>
             ),
             onOk() {
                 setDirectBuyModalOpen(true);

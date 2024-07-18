@@ -55,6 +55,7 @@ export interface LineItem {
         media: { url: string }[];
         id: string;
         sku?: string | null, 
+        name?: string | null, 
         pricing: {
             price: {
                 gross: Money
