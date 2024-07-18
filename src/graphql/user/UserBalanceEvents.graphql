@@ -1,0 +1,16 @@
+query UserBalanceEvents($first: Int, $last: Int, $user: String) {
+  balanceEvents(first: $first, last: $last, filter: {user: $user}) {
+    edges {
+      node {
+        account
+        balance
+        code
+        date
+        id
+        name
+        type
+      }
+    }
+    totalCount
+  }
+}
