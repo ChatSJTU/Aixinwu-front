@@ -153,7 +153,7 @@ const ProductsPage = () => {
             <Head>
                 <title>商品列表 - 上海交通大学绿色爱心屋</title>
             </Head>
-            <PageHeader title={currentChannel === "axw-shared" ? "租赁专区" : "置换专区"}/>
+            <PageHeader title={currentChannel === process.env.NEXT_PUBLIC_CHANNEL2 ? "租赁专区" : "置换专区"}/>
             <Row>
                 <Col span={screens.md ? 6 : 24}>
                     <div className="container basic-card">

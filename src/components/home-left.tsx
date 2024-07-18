@@ -41,7 +41,7 @@ export const HomeLeftContent = () => {
         fetchArticlesByType(client!, 10, 10, "UGFnZVR5cGU6NQ==")
             .then(res => setNoticeSummaries(res.articleSummaries))
             .catch(err => message.error(err));
-        fetchArticlesByType(client!, 10, 10, "UGFnZVR5cGU6NA==")
+        fetchArticlesByType(client!, 10, 10, "UGFnZVR5cGU6Ng==")
             .then(res => setNewsSummaries(res.articleSummaries))
             .catch(err => message.error(err))
     }, [])

@@ -34717,7 +34717,6 @@ export const ProductsSearchByNameDocument = gql`
     query ProductsSearchByName($first: Int!, $search: String!, $field: ProductOrderField!) {
   products(
     first: $first
-    channel: "axw-store"
     last: 24
     sortBy: {direction: ASC, field: $field}
     search: $search
