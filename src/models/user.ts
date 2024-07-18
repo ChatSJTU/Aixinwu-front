@@ -8,8 +8,7 @@ export interface UserBasicInfo {
 
 export interface CoinLogInfo {
     id: string;
-    number: string
     amount: number;
     created: string;
-    description: string;
+    type: string;
 }

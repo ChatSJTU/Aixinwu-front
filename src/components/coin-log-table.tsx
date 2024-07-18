@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Button, Image, Typography, Tag, Flex } from 'antd';
-import type { TableColumnsType } from 'antd';
+import type { PaginationProps, TableColumnsType } from 'antd';
 import { CoinLogInfo } from '@/models/user';
 import { CalendarOutlined } from '@ant-design/icons'
 import { AxCoin } from './axcoin';
@@ -8,17 +8,20 @@ import { AxCoin } from './axcoin';
 const { Text } = Typography;
 
 interface CoinLogTableProps {
+    current: number,
+    pageSize: number,
+    onChange: PaginationProps['onChange'],
     coinLogs: CoinLogInfo[];
 }
 
-export const CoinLogTable: React.FC<CoinLogTableProps> = ({ coinLogs }) => {
+export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, onChange, coinLogs }) => {
 
     const dataSource = coinLogs.map(coinLog => ({
         key: coinLog.id,
-        logId: coinLog.number,
+        logId: coinLog.id,
         amount: coinLog.amount,
         createTime: coinLog.created.split('T')[0],
-        description: coinLog.description,
+        description: coinLog.type,
     }));
 
     const columns: TableColumnsType<any> = [
@@ -39,7 +42,7 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ coinLogs }) => {
             render: (date) => <Text style={{ fontSize: '16px' }}><CalendarOutlined style={{ marginRight: '4px' }} />{date}</Text>
         },
         {
-            title: <><AxCoin size={14}/>&nbsp;爱心币</>,
+            title: <><AxCoin size={14} />&nbsp;爱心币</>,
             align: 'center',
             dataIndex: 'amount',
             key: 'amount',
@@ -54,5 +57,15 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ coinLogs }) => {
             render: (description: string) => <Text style={{ fontSize: '16px' }}>{description}</Text>
         },
     ];
-    return <Table dataSource={dataSource} columns={columns} pagination={{ hideOnSinglePage: true, pageSize: 4 }} />;
+    return (
+        <Table
+            dataSource={dataSource}
+            columns={columns}
+            pagination={{
+                hideOnSinglePage: true,
+                current: current,
+                pageSize: pageSize,
+                onChange: onChange,
+            }} />
+    );
 };
