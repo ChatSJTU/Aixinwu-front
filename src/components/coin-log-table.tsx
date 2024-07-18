@@ -9,12 +9,13 @@ const { Text } = Typography;
 
 interface CoinLogTableProps {
     current: number,
+    total: number
     pageSize: number,
     onChange: PaginationProps['onChange'],
     coinLogs: CoinLogInfo[];
 }
 
-export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, onChange, coinLogs }) => {
+export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, total, onChange, coinLogs }) => {
 
     const dataSource = coinLogs.map(coinLog => ({
         key: coinLog.id,
@@ -63,6 +64,7 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, o
             columns={columns}
             pagination={{
                 hideOnSinglePage: true,
+                total: total,
                 current: current,
                 pageSize: pageSize,
                 onChange: onChange,
