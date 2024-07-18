@@ -26,14 +26,14 @@ export const HomeRightContent = () => {
         <>
             <BasicCard title="热门置换" divider
                 titleExtra={
-                    <Link href={"/products"+process.env.NEXT_PUBLIC_CHANNEL} >{'全部>>'}</Link>
+                    <Link href={"/products/"+process.env.NEXT_PUBLIC_CHANNEL} >{'全部>>'}</Link>
                 }
                 >
                 <ProductGrid products={hotProducts || []} />
             </BasicCard>
             <BasicCard title="热门租赁" divider
                 titleExtra={
-                    <Link href={"/products"+process.env.NEXT_PUBLIC_CHANNEL2} >{'全部>>'}</Link>
+                    <Link href={"/products/"+process.env.NEXT_PUBLIC_CHANNEL2} >{'全部>>'}</Link>
                 }
                 >
                 <ProductGrid products={hotSharedProducts || []} />
