@@ -9,20 +9,29 @@ const { Text } = Typography;
 
 interface CoinLogTableProps {
     current: number,
-    total: number
     pageSize: number,
+    total: number,
     onChange: PaginationProps['onChange'],
     coinLogs: CoinLogInfo[];
 }
 
+interface DescMap { [key: string]: string[]; }
+
 export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, total, onChange, coinLogs }) => {
 
+    const descMap: DescMap = {
+        "donation_granted": ["已获批捐赠", "geekblue"],
+        "manually_updated": ["手动更新", "purple"], 
+        "first_login": ["首次登录", "magenta"],
+        "consumed": ["已消费", "green"],
+        "refunded": ["已退款", "blue"],
+    }
     const dataSource = coinLogs.map(coinLog => ({
         key: coinLog.id,
         logId: coinLog.id,
         amount: coinLog.amount,
         createTime: coinLog.created.split('T')[0],
-        description: coinLog.type,
+        description: descMap[coinLog.type] || ["未知类型", ""],
     }));
 
     const columns: TableColumnsType<any> = [
@@ -31,7 +40,7 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, t
             align: 'center',
             dataIndex: 'logId',
             key: 'logId',
-            width: '15%',
+            width: '25%',
             render: (ID) => <Text strong style={{ fontSize: '18px' }}>{ID}</Text>
         },
         {
@@ -47,15 +56,15 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, t
             align: 'center',
             dataIndex: 'amount',
             key: 'amount',
-            width: '15%',
-            render: (amount: string) => <Text strong style={{ fontSize: '18px' }}>{amount}</Text>
+            width: '20%',
+            render: (amount: string) => <AxCoin value={Number(amount)} size={20} coloredValue></AxCoin>
         },
         {
             title: '描述',
             align: 'center',
             dataIndex: 'description',
             key: 'description',
-            render: (description: string) => <Text style={{ fontSize: '16px' }}>{description}</Text>
+            render: (desc: string[]) => <Tag color={desc[1]} style={{ fontSize: '14px' }}>{desc[0]}</Tag>
         },
     ];
     return (
@@ -64,9 +73,9 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, t
             columns={columns}
             pagination={{
                 hideOnSinglePage: true,
-                total: total,
                 current: current,
                 pageSize: pageSize,
+                total: total,
                 onChange: onChange,
             }} />
     );

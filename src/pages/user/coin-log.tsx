@@ -10,7 +10,7 @@ import { MessageContext } from '@/contexts/message';
 import { PaginationProps } from 'antd';
 
 const UserCoinLogPage = () => {
-    const pageSize = 4;
+    const pageSize = 16;
     const [coinLogs, setCoinLogs] = useState<CoinLogInfo[]>([]);
     const [shownPage, setShownPage] = useState<number>(1);
     const [totalResultsCount, setTotalResultsCount] = useState<number>(0);
