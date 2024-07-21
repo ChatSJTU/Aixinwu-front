@@ -21,11 +21,11 @@ const UserCenterTabs = [
         key: '/user/donation',
         icon: <GiftOutlined />
     },
-    {
-        label: '义工记录',
-        key: '/user/volunteer',
-        icon: <SolutionOutlined />
-    },
+    // {
+    //     label: '义工记录',
+    //     key: '/user/volunteer',
+    //     icon: <SolutionOutlined />
+    // },
     {
         label: '爱心币明细',
         key: '/user/coin-log',
@@ -36,11 +36,11 @@ const UserCenterTabs = [
         key: '/user/consignee',
         icon: <IdcardOutlined />
     },
-    {
-        label: '偏好设置',
-        key: '/user/settings',
-        icon: <SettingOutlined />
-    }
+    // {
+    //     label: '偏好设置',
+    //     key: '/user/settings',
+    //     icon: <SettingOutlined />
+    // }
 ]
 
 const UserLayout: React.FC<LayoutProps> = ({ children }) => {
