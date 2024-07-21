@@ -14,7 +14,7 @@ const GlobalFooter = () => {
                         <Link href={"/products/"+process.env.NEXT_PUBLIC_CHANNEL} className="footer-map-item">置换</Link>
                         <Link href={"/products/"+process.env.NEXT_PUBLIC_CHANNEL2} className="footer-map-item">租赁</Link>
                         {/* <Link href="/" className="footer-map-item">失物招领</Link> */}
-                        <Link href="/pre-donate" className="footer-map-item">预捐赠</Link>
+                        {/* <Link href="/pre-donate" className="footer-map-item">预捐赠</Link> */}
                     </Space>
                 </Col>
                 <Col span={5}>
@@ -30,7 +30,7 @@ const GlobalFooter = () => {
                         <div className="footer-map-title">关于</div>
                         <Link href="/" className="footer-map-item">通知公告</Link>
                         <Link href="/about" className="footer-map-item">SJTU 绿色爱心屋</Link>
-                        <Link href="https://aixinwu.info/" target="_blank" className="footer-map-item">爱心屋联盟</Link>
+                        {/* <Link href="https://aixinwu.info/" target="_blank" className="footer-map-item">爱心屋联盟</Link> */}
                     </Space>
                 </Col>
             </Row>
@@ -59,7 +59,7 @@ const GlobalFooter = () => {
                         <div>Copyright ©{new Date().getFullYear()} 上海交通大学绿色爱心屋 | 沪交ICP备XXXXXXXX</div>
                     </Space>
                 </Space>
-                <div>Supported by Chat SJTU Team</div>
+                <div>Supported by 上海交通大学绿色爱心屋学生开发团队</div>
             </div>
         </>
     )
