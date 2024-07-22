@@ -33,6 +33,7 @@ query ProductDetail($channel: String, $slug: String) {
         id
         quantity
       }
+      sales
       quantityLimitPerCustomer
     }
     media {

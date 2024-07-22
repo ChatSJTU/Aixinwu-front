@@ -32,9 +32,10 @@ export interface VarientDetail {
     sku: string;
     stock: number;
     update_time: string;
-    price: number
+    price: number;
     [propName: string]: any;
     quantityLimit: number;
+    sold: number;
 }
 
 export interface ProductSummary {
@@ -49,6 +50,7 @@ export interface ProductSummary {
         min: number;
         max: number;
     };
+    sold: number;
     is_shared: boolean;
 }
 

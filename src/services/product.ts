@@ -113,12 +113,13 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
                 stock: x.quantityAvailable || 0,
                 update_time: x.updatedAt,
                 price: x.pricing?.priceUndiscounted?.gross.amount,
-                quantityLimit: x.quantityLimitPerCustomer || 50
+                quantityLimit: x.quantityLimitPerCustomer || 50,
+                sold: x.sales || 0
             } as VarientDetail)),
             price: {
                 min: data.pricing?.priceRangeUndiscounted?.start?.gross?.amount || 0,
                 max: data.pricing?.priceRangeUndiscounted?.stop?.gross?.amount || 0
-            }
+            },
         } as ProductDetail;
         return res;
     } catch (error) {
@@ -167,6 +168,7 @@ export async function fetchProductsByCategoryID(client: ApolloClient<object>, ch
                 max:edge.node.pricing?.priceRangeUndiscounted?.stop?.gross?.amount || 0
             },
             stock: edge.node.isAvailable ? 1 : 0,
+            sold: edge.node.variants ? edge.node.variants.reduce((acc: number, variant: { sales: number }) => acc + variant.sales, 0) : 0,
             is_shared: edge.node.productType.metafield == process.env.NEXT_PUBLIC_CHANNEL2
         }));
 
@@ -207,6 +209,7 @@ export async function fetchProductsByCollection(client: ApolloClient<object>, ch
                     min:edge.node.pricing?.priceRangeUndiscounted?.start?.gross?.amount || 0,
                     max:edge.node.pricing?.priceRangeUndiscounted?.stop?.gross?.amount || 0
                 },
+                sold: edge.node.variants.reduce((acc: number, variant: { sales: number }) => acc + variant.sales, 0),
                 stock: edge.node.isAvailable ? 1 : 0,
             }))
         );
@@ -258,6 +261,7 @@ export async function searchProducts(client: ApolloClient<object>, first:number,
                 min:edge.node.pricing?.priceRangeUndiscounted?.start?.gross?.amount || 0,
                 max:edge.node.pricing?.priceRangeUndiscounted?.stop?.gross?.amount || 0
             },
+            sold: edge.node.variants.reduce((acc: number, variant: { sales: number }) => acc + variant.sales, 0),
             stock: edge.node.isAvailable ? 1 : 0,
         }));
 

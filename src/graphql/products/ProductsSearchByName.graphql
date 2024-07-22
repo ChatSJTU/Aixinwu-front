@@ -43,6 +43,9 @@ query ProductsSearchByName($first: Int!, $search: String!, $field: ProductOrderF
             }
           }
         }
+        variants {
+          sales
+        }
       }
     }
     totalCount

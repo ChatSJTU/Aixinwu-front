@@ -53,6 +53,9 @@ query ProductsByCollection($channel: String!, $first: Int!, $slugs: [String!]) {
                   }
                 }
               }
+              variants {
+                sales
+              }
             }
           }
           totalCount

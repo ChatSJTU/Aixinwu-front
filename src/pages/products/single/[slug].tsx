@@ -170,7 +170,10 @@ const ProductDetailsPage: React.FC = () => {
                                         ? <AxCoin size={24} value={product?.price.min} coloredValue={true} />
                                         : <AxCoin size={24} value={product?.price.min} maxValue={product?.price.max} shownRange={true} coloredValue={true} />
                                 }
-                            </div>  
+                            </div>
+                            {selectedVarient >= 0 &&
+                                <Text type='secondary'>{`已售出 ${product.varients[selectedVarient].sold} 件`}</Text>
+                            }
                             {
                                 product.varients.length > 1 && (
                                     <Space wrap>

@@ -8,7 +8,7 @@ import { AxCoin } from "./axcoin";
 const { Text } = Typography;
 
 export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSummary }) => {
-    const { image_url, product_id, product_slug, product_name, detailed_product_name, price, stock } = productSummary;
+    const { image_url, product_id, product_slug, product_name, detailed_product_name, price, stock, sold } = productSummary;
     const minPrice = price?.min || 0;
     const maxPrice = price?.max || 0;
 
@@ -27,7 +27,7 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
                         <Flex justify="space-between" align="center">
                             <div style={{whiteSpace: 'nowrap'}}>
                                 <ShoppingCartOutlined />
-                                <Text style={{marginLeft:'2px'}}>{stock}</Text>
+                                <Text style={{marginLeft:'2px'}}>{sold}</Text>
                             </div>
                             <div style={{whiteSpace: 'nowrap'}}>
                                 <AxCoin coloredValue size={15} 

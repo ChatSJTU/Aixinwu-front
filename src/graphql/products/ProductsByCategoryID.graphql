@@ -44,6 +44,9 @@ query ProductsByCategoryID($channel: String!, $first: Int!, $categories: [ID!], 
             }
           }
         }
+        variants {
+          sales
+        }
         productType {
           metafield(key: "channel")
         }
