@@ -223,11 +223,11 @@ export async function fetchProductsByCollection(client: ApolloClient<object>, ch
 // 按名称搜索商品
 export async function searchProducts(client: ApolloClient<object>, first:number, keyword:string, sort:string) {
     try {
-        const sortOptions: { [key: string]: ProductOrderField } = {
-            'time': ProductOrderField.LastModifiedAt,
-            'price-up': ProductOrderField.Price,
-            'price-down': ProductOrderField.MinimalPrice,
-            'default': ProductOrderField.Name
+        const sortOptions: { [key: string]: { field: ProductOrderField, direction:OrderDirection } } = {
+            'time': {field: ProductOrderField.LastModifiedAt, direction: OrderDirection.Asc},
+            'price-up': {field: ProductOrderField.Price, direction: OrderDirection.Asc},
+            'price-down': {field: ProductOrderField.Price, direction: OrderDirection.Desc},
+            'default': {field: ProductOrderField.Name, direction: OrderDirection.Asc}
         };
         
         let sortField = sortOptions[sort as keyof typeof sortOptions] || ProductOrderField.Name;
@@ -236,7 +236,8 @@ export async function searchProducts(client: ApolloClient<object>, first:number,
             variables: {
                 first: first,
                 search: keyword,
-                field: sortField
+                field: sortField.field,
+                direction: sortField.direction
             }
         }); 
         if (!resp.data || 

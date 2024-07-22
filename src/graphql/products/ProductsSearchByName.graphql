@@ -1,8 +1,8 @@
-query ProductsSearchByName($first: Int!, $search: String!, $field: ProductOrderField!) {
+query ProductsSearchByName($first: Int!, $search: String!, $field: ProductOrderField!, $direction: OrderDirection!) {
   products(
     first: $first
     last: 24
-    sortBy: {direction: ASC, field: $field}
+    sortBy: {direction: $direction, field: $field}
     search: $search
   ) {
     edges {
