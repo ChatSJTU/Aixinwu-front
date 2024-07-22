@@ -2,7 +2,7 @@ query ArticleByType($first: Int = 10, $last: Int = 10, $type: [ID!], $fetchConte
   pages(
     first: $first
     last: $last
-    sortBy: {direction: ASC, field: TITLE}
+    sortBy: {direction: DESC, field: PUBLISHED_AT}
     filter: {pageTypes: $type}
   ) {
     edges {

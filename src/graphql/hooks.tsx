@@ -33765,7 +33765,7 @@ export const ArticleByTypeDocument = gql`
   pages(
     first: $first
     last: $last
-    sortBy: {direction: ASC, field: TITLE}
+    sortBy: {direction: DESC, field: PUBLISHED_AT}
     filter: {pageTypes: $type}
   ) {
     edges {
