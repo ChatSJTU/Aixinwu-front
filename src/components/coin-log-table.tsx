@@ -41,7 +41,7 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, t
             dataIndex: 'logId',
             key: 'logId',
             width: '25%',
-            render: (ID) => <Text strong style={{ fontSize: '18px' }}>{ID}</Text>
+            render: (ID) => <Text style={{ fontSize: '16px' }}>{ID}</Text>
         },
         {
             title: '时间',
@@ -57,7 +57,7 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, t
             dataIndex: 'amount',
             key: 'amount',
             width: '20%',
-            render: (amount: string) => <AxCoin value={Number(amount)} size={20} coloredValue></AxCoin>
+            render: (amount: string) => <AxCoin value={Number(amount)} size={18} coloredValue></AxCoin>
         },
         {
             title: '描述',
