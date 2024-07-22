@@ -72,7 +72,7 @@ const NavBar = () => {
         .catch(err => message.error(err));
     }
   }, [authCtx.isLoggedIn]);
-  
+
   const doExternalLogin = () => {
     oidcRedirectJaccount(client!, window.location.origin + router.basePath + "/oauth/redirectback")
       .then((data) => {
@@ -160,12 +160,12 @@ const NavBar = () => {
                   onClick={() => {themeCtx.changeTheme(themeCtx.userTheme === 'light' ? 'dark' : 'light')}}
                   icon = {themeCtx.userTheme === 'light' ? <MoonOutlined /> : <SunOutlined />}
               />
-              <Badge count={cartCtx.totalQuantity} size="small">
+              {authCtx.isLoggedIn && <Badge count={cartCtx.totalQuantity} size="small">
                 <Button type="text"
                     onClick={()=>{router.push("/cart")}}
                     icon = {<ShoppingCartOutlined />}
                 />
-              </Badge>
+              </Badge>}
               
               {
                 authCtx.isLoggedIn ? 

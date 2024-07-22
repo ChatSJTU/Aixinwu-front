@@ -1,4 +1,4 @@
-import { Image, Spin, Divider, Row, Col, Button, Typography, Carousel, Breadcrumb, Space, InputNumber, Tooltip, Grid, Radio, Modal, ConfigProvider } from 'antd'
+import { Image, Spin, Divider, Row, Col, Button, Typography, Carousel, Breadcrumb, Space, InputNumber, Tooltip, Grid, Radio, Modal, ConfigProvider, Alert } from 'antd'
 import { ShoppingCartOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import Head from "next/head";
@@ -237,39 +237,50 @@ const ProductDetailsPage: React.FC = () => {
                                     : <Text type='secondary'>已售罄</Text>
                                 }
                             </Space>}
-                            <Space size="middle">
-                                <ConfigProvider
-                                    theme={{
-                                        components: {
-                                            Button: {
-                                                colorPrimary: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882",
-                                                colorPrimaryHover: getHoverColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
-                                                colorPrimaryActive: getActiveColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
-                                                lineWidth: 0,
-                                            },
-                                        },
-                                    }}
-                                    >
-                                    <Button
-                                        size="large"
-                                        type='primary'
-                                        // style={{ backgroundColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
-                                        onClick={handleBuyClick}
-                                        disabled={selectedVarient < 0 || overQuantity}
-                                    >
-                                        立即购买
-                                    </Button>
-                                </ConfigProvider>
-                                <Button
-                                    size="large"
-                                    type='default'
-                                    icon={<ShoppingCartOutlined />}
-                                    disabled={selectedVarient < 0 || overQuantity}
-                                    style={{ borderColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
-                                    onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, queryQuantity) }}
-                                >
-                                    添加到爱心篮
-                                </Button>
+                            <Space size="middle" style={{width: "100%"}}>
+                                {
+                                    authCtx.isLoggedIn && 
+                                        <ConfigProvider
+                                            theme={{
+                                                components: {
+                                                    Button: {
+                                                        colorPrimary: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882",
+                                                        colorPrimaryHover: getHoverColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
+                                                        colorPrimaryActive: getActiveColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
+                                                        lineWidth: 0,
+                                                    },
+                                                },
+                                            }}
+                                            >
+                                            <Button
+                                                size="large"
+                                                type='primary'
+                                                // style={{ backgroundColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
+                                                onClick={handleBuyClick}
+                                                disabled={selectedVarient < 0 || overQuantity}
+                                            >
+                                                立即购买
+                                            </Button>
+                                        </ConfigProvider>
+                                }
+                                {
+                                    authCtx.isLoggedIn && 
+                                        <Button
+                                            size="large"
+                                            type='default'
+                                            icon={<ShoppingCartOutlined />}
+                                            disabled={selectedVarient < 0 || overQuantity}
+                                            style={{ borderColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
+                                            onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, queryQuantity) }}
+                                        >
+                                            添加到爱心篮
+                                        </Button>
+                                }
+                                {   
+                                    !authCtx.isLoggedIn &&
+                                        <Alert message="您尚未登录，请登录以进行购买或添加至爱心篮"
+                                            type="warning" showIcon/>
+                                }
                             </Space>
                         </Space>
                     </Col>
