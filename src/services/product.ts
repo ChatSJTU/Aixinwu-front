@@ -221,7 +221,7 @@ export async function fetchProductsByCollection(client: ApolloClient<object>, ch
 };
 
 // 按名称搜索商品
-export async function searchProducts(client: ApolloClient<object>, first:number, keyword:string, sort:string) {
+export async function searchProducts(client: ApolloClient<object>, first:number, keyword:string, sort:string, domain:string) {
     try {
         const sortOptions: { [key: string]: { field: ProductOrderField, direction:OrderDirection } } = {
             'time': {field: ProductOrderField.LastModifiedAt, direction: OrderDirection.Asc},
@@ -237,7 +237,8 @@ export async function searchProducts(client: ApolloClient<object>, first:number,
                 first: first,
                 search: keyword,
                 field: sortField.field,
-                direction: sortField.direction
+                direction: sortField.direction,
+                channel: domain === "products" ? process.env.NEXT_PUBLIC_CHANNEL : process.env.NEXT_PUBLIC_CHANNEL2
             }
         }); 
         if (!resp.data || 

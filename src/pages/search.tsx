@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Head from "next/head";
 import { Typography, Flex, Divider, Segmented, Pagination, Input, List, Select} from "antd";
 import type { PaginationProps } from 'antd';
-import { ArrowUpOutlined, ArrowDownOutlined, ShoppingOutlined, FileTextOutlined, CalendarOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, ArrowDownOutlined, ShoppingOutlined, FileTextOutlined, CalendarOutlined, HourglassOutlined } from "@ant-design/icons";
 
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
@@ -14,6 +14,7 @@ import { ArticleSummary } from "@/models/article";
 
 import { searchProducts } from "@/services/product";
 import { searchArticles } from "@/services/article";
+import { channel } from "diagnostics_channel";
 
 const { Search } = Input;
 const { Text, Link } = Typography;
@@ -52,13 +53,13 @@ const SearchResultPage = () => {
     // 搜索
     const handleSearch = (page: number = 1, keyword: string, domain: string = "products", sort: string = "default") => {
         if (keyword === "") {
-            message.error('搜索结果不能为空');
+            message.error('搜索结关键词不能为空');
             return;
         }
         // console.log(first, keyword, domain, sort)
-        if (domain === 'products') {
+        if (domain === 'products' || domain === 'rent') {
             if (page <= 0) { page = 1; }
-            searchProducts(client!, page * 24, keyword.trim(), sort)
+            searchProducts(client!, page * 24, keyword.trim(), sort, domain)
                 .then(({totalCount, productSummaries}) => {
                     setTotalResultsCount(totalCount || 0);
                     setResultList(productSummaries);
@@ -154,8 +155,11 @@ const SearchResultPage = () => {
 
     const handleSearchInput = (value: string) => {
         if (value === undefined || value.trim() === ""){
-            message.error('搜索结果不能为空');
-            return;
+            if (query.keyword === undefined || query.keyword === "") {
+                message.error('搜索关键词不能为空');
+                return;
+            }
+            else value = query.keyword as string;
         }
         router.push({
             pathname: router.pathname,
@@ -188,7 +192,8 @@ const SearchResultPage = () => {
                         style={{ width: 180 }} 
                         size="large"
                         options={[
-                            { label: <><ShoppingOutlined /> 商品</>, value: 'products' },
+                            { label: <><ShoppingOutlined /> 置换</>, value: 'products' },
+                            { label: <><HourglassOutlined /> 租赁</>, value: 'rent' },
                             { label: <><FileTextOutlined /> 文章</>, value: 'articles' }
                         ]}
                         onChange={handleDomainChange}
@@ -203,7 +208,7 @@ const SearchResultPage = () => {
                 </Flex>
             </div>
             <div className="container basic-card" style={{overflowY: 'visible'}}>
-                {searchDomain === "products" && 
+                {(searchDomain === "products" || searchDomain === "rent") && 
                     <>
                         <Flex align="flex-start" justify="space-between" style={{marginTop: '-8px'}}>
                             <Segmented

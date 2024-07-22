@@ -1,9 +1,10 @@
-query ProductsSearchByName($first: Int!, $search: String!, $field: ProductOrderField!, $direction: OrderDirection!) {
+query ProductsSearchByName($first: Int!, $search: String!, $field: ProductOrderField!, $direction: OrderDirection!, $channel: String!) {
   products(
     first: $first
     last: 24
     sortBy: {direction: $direction, field: $field}
     search: $search
+    channel: $channel
   ) {
     edges {
       node {

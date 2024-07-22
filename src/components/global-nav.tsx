@@ -137,8 +137,14 @@ const NavBar = () => {
                       <Menu.Item style={{ marginInline: "unset", marginBlock: "unset", width: "100%" }} key={`关于${searchText}的物品`} onClick={() => handleSearch(searchText, 'products')}>
                         <Space>
                           <SearchOutlined/>
-                          <Text>{`搜索关于 ${searchText} 的物品`}</Text>
+                          <Text>{`搜索关于 ${searchText} 的闲置物品`}</Text>
                           <Text keyboard>Enter</Text>
+                        </Space>
+                      </Menu.Item>
+                      <Menu.Item style={{ marginInline: "unset", marginBlock: "unset", width: "100%" }} key={`关于${searchText}的租赁`} onClick={() => handleSearch(searchText, 'rent')}>
+                        <Space>
+                          <SearchOutlined/>
+                          <Text>{`搜索关于 ${searchText} 的租赁服务`}</Text>
                         </Space>
                       </Menu.Item>
                       <Menu.Item style={{ marginInline: "unset", marginBlock: "unset", width: "100%" }} key={`关于${searchText}的文章`} onClick={() => handleSearch(searchText, 'articles')}>

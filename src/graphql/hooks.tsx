@@ -33247,6 +33247,7 @@ export type ProductsSearchByNameQueryVariables = Exact<{
   search: Scalars['String']['input'];
   field: ProductOrderField;
   direction: OrderDirection;
+  channel: Scalars['String']['input'];
 }>;
 
 
@@ -34919,12 +34920,13 @@ export type ProductsByCollectionLazyQueryHookResult = ReturnType<typeof useProdu
 export type ProductsByCollectionSuspenseQueryHookResult = ReturnType<typeof useProductsByCollectionSuspenseQuery>;
 export type ProductsByCollectionQueryResult = Apollo.QueryResult<ProductsByCollectionQuery, ProductsByCollectionQueryVariables>;
 export const ProductsSearchByNameDocument = gql`
-    query ProductsSearchByName($first: Int!, $search: String!, $field: ProductOrderField!, $direction: OrderDirection!) {
+    query ProductsSearchByName($first: Int!, $search: String!, $field: ProductOrderField!, $direction: OrderDirection!, $channel: String!) {
   products(
     first: $first
     last: 24
     sortBy: {direction: $direction, field: $field}
     search: $search
+    channel: $channel
   ) {
     edges {
       node {
@@ -34986,6 +34988,7 @@ export const ProductsSearchByNameDocument = gql`
  *      search: // value for 'search'
  *      field: // value for 'field'
  *      direction: // value for 'direction'
+ *      channel: // value for 'channel'
  *   },
  * });
  */

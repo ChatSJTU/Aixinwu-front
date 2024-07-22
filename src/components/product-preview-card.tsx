@@ -20,7 +20,7 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
                 <Card
                     hoverable
                     className="preview-card"
-                    cover={<Image className='preview-card-cover' alt={product_name} src={image_url[0]} preview={false} />}
+                    cover={<Image className='preview-card-cover' alt={product_name} src={image_url && image_url[0]} preview={false} />}
                 >
                     <Space direction="vertical" size="small" style={{ display: 'flex' }}>
                         <span className='preview-card-title'>{product_name}</span>
