@@ -9,7 +9,8 @@ import {
     ProductsByCollectionDocument,
     ProductsByCollectionQuery,
     ProductsSearchByNameDocument,
-    ProductsSearchByNameQuery
+    ProductsSearchByNameQuery,
+    OrderDirection
 } from "@/graphql/hooks";
 import { Category, ProductDetail, VarientDetail, ProductSummary } from "@/models/products";
 import { ApolloClient } from "@apollo/client";
@@ -130,14 +131,15 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
 // 按分类 ID 获取商品列表
 export async function fetchProductsByCategoryID(client: ApolloClient<object>, channel: string, first:number, categoryID: string[], sort: string) {
     try {
-        const sortOptions: { [key: string]: ProductOrderField } = {
-            'time': ProductOrderField.LastModifiedAt,
-            'price-up': ProductOrderField.Price,
-            'price-down': ProductOrderField.MinimalPrice,
-            'default': ProductOrderField.Name
+        const sortOptions: { [key: string]: { field: ProductOrderField, direction:OrderDirection } } = {
+            'time': {field: ProductOrderField.LastModifiedAt, direction: OrderDirection.Asc},
+            'price-up': {field: ProductOrderField.Price, direction: OrderDirection.Asc},
+            'price-down': {field: ProductOrderField.Price, direction: OrderDirection.Desc},
+            'default': {field: ProductOrderField.Name, direction: OrderDirection.Asc}
         };
+
         
-        let sortField = sortOptions[sort as keyof typeof sortOptions] || ProductOrderField.Name;
+        let sortField = sortOptions[sort as keyof typeof sortOptions] || sortOptions['default'];
         // console.log(sortField);
         const resp = await client.query<ProductsByCategoryIdQuery>({
             query: ProductsByCategoryIdDocument,
@@ -145,7 +147,8 @@ export async function fetchProductsByCategoryID(client: ApolloClient<object>, ch
                 channel: channel,
                 first: first,
                 categories: categoryID,
-                field: sortField
+                field: sortField.field,
+                direction: sortField.direction
             }
         }); 
         if (!resp.data || 
