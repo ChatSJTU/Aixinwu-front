@@ -33429,6 +33429,14 @@ export type UserCheckoutsQueryVariables = Exact<{
 
 export type UserCheckoutsQuery = { __typename?: 'Query', me?: { __typename?: 'User', checkoutIds?: Array<string> | null } | null };
 
+export type UserDonationsQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type UserDonationsQuery = { __typename?: 'Query', donations?: { __typename?: 'DonationCountableConnection', totalCount?: number | null, edges: Array<{ __typename?: 'DonationCountableEdge', node: { __typename?: 'Donation', createdAt?: any | null, barcode?: string | null, id: string, number?: string | null, description?: string | null, quantity?: number | null, status?: string | null, title?: string | null, updatedAt?: any | null, price?: { __typename?: 'Money', amount: number } | null } }> } | null };
+
 export type UserOrdersQueryVariables = Exact<{
   maxFetch?: InputMaybe<Scalars['Int']['input']>;
 }>;
@@ -35477,6 +35485,67 @@ export type UserCheckoutsQueryHookResult = ReturnType<typeof useUserCheckoutsQue
 export type UserCheckoutsLazyQueryHookResult = ReturnType<typeof useUserCheckoutsLazyQuery>;
 export type UserCheckoutsSuspenseQueryHookResult = ReturnType<typeof useUserCheckoutsSuspenseQuery>;
 export type UserCheckoutsQueryResult = Apollo.QueryResult<UserCheckoutsQuery, UserCheckoutsQueryVariables>;
+export const UserDonationsDocument = gql`
+    query UserDonations($first: Int, $last: Int) {
+  donations(
+    first: $first
+    last: $last
+    sortBy: {direction: DESC, field: CREATION_DATE}
+  ) {
+    edges {
+      node {
+        createdAt
+        barcode
+        id
+        number
+        description
+        quantity
+        status
+        title
+        updatedAt
+        price {
+          amount
+        }
+      }
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useUserDonationsQuery__
+ *
+ * To run a query within a React component, call `useUserDonationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserDonationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserDonationsQuery({
+ *   variables: {
+ *      first: // value for 'first'
+ *      last: // value for 'last'
+ *   },
+ * });
+ */
+export function useUserDonationsQuery(baseOptions?: Apollo.QueryHookOptions<UserDonationsQuery, UserDonationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserDonationsQuery, UserDonationsQueryVariables>(UserDonationsDocument, options);
+      }
+export function useUserDonationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserDonationsQuery, UserDonationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserDonationsQuery, UserDonationsQueryVariables>(UserDonationsDocument, options);
+        }
+export function useUserDonationsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserDonationsQuery, UserDonationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<UserDonationsQuery, UserDonationsQueryVariables>(UserDonationsDocument, options);
+        }
+export type UserDonationsQueryHookResult = ReturnType<typeof useUserDonationsQuery>;
+export type UserDonationsLazyQueryHookResult = ReturnType<typeof useUserDonationsLazyQuery>;
+export type UserDonationsSuspenseQueryHookResult = ReturnType<typeof useUserDonationsSuspenseQuery>;
+export type UserDonationsQueryResult = Apollo.QueryResult<UserDonationsQuery, UserDonationsQueryVariables>;
 export const UserOrdersDocument = gql`
     query UserOrders($maxFetch: Int = 50) {
   me {

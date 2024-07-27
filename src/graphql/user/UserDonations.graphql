@@ -1,0 +1,25 @@
+query UserDonations($first: Int, $last: Int) {
+  donations(
+    first: $first,
+    last: $last,
+    sortBy: {direction: DESC, field: CREATION_DATE},
+  ) {
+    edges {
+      node {
+        createdAt
+        barcode
+        id
+        number
+        description
+        quantity
+        status
+        title
+        updatedAt
+        price {
+          amount
+        }
+      }
+    }
+    totalCount
+  }
+}
