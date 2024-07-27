@@ -16,11 +16,13 @@ import {
     UserAddressSetDefaultMutation,
     UserAddressSetDefaultDocument,
     UserBalanceEventsQuery,
-    UserBalanceEventsDocument
+    UserBalanceEventsDocument,
+    UserDonationsQuery,
+    UserDonationsDocument
 } from "@/graphql/hooks";
 
 import { AddressInfo } from "@/models/address";
-import { CoinLogInfo, UserBasicInfo } from "@/models/user";
+import { CoinLogInfo, DonationInfo, UserBasicInfo } from "@/models/user";
 import { ApolloClient } from "@apollo/client";
 import { OrderInfo } from "../models/order";
 
@@ -270,6 +272,47 @@ export async function fetchUserBalanceEvents(client: ApolloClient<object>, first
 
     } catch (error) {
         var errmessage = `获取用户爱心币日志失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+}
+
+export async function fetchUserDonations(client: ApolloClient<object>, first: number, last: number) {
+    try {
+        const resp = await client.query<UserDonationsQuery>({
+            query: UserDonationsDocument,
+            variables: {
+                first: first,
+                last: last,
+            }
+        });
+        if (!resp.data || !resp.data.donations){
+            throw "数据为空"
+        }
+        const edges = resp.data.donations.edges;
+        let donations = edges.map((edge) => {
+            return ({
+                id: edge.node.id,
+                number: Number(edge.node.number),
+                quantity: Number(edge.node.quantity),
+                title: edge.node.title,
+                price: edge.node.price,
+                createdAt: edge.node.createdAt,
+                status: edge.node.status,
+                barcode: edge.node.barcode,
+                updatedAt: edge.node.updatedAt,
+                description: edge.node.description,
+            })
+        }) as DonationInfo[]
+        let totalCount = resp.data.donations.totalCount as number;
+
+        return ({
+            donations,
+            totalCount
+        })
+
+    } catch (error) {
+        var errmessage = `获取用户捐赠记录失败：${error}`
         console.error(errmessage);
         throw errmessage;
     }

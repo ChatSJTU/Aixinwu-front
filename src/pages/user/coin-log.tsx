@@ -29,7 +29,7 @@ const UserCoinLogPage = () => {
         }
     }
 
-    const handlePageinationChange: PaginationProps['onChange'] = (page: number) => {
+    const handlePaginationChange: PaginationProps['onChange'] = (page: number) => {
         setShownPage(page);
         handleFetchLog(page);
     };
@@ -49,7 +49,7 @@ const UserCoinLogPage = () => {
                     <CoinLogTable
                         current={shownPage}
                         total={totalResultsCount}
-                        onChange={handlePageinationChange}
+                        onChange={handlePaginationChange}
                         pageSize={pageSize}
                         coinLogs={coinLogs}
                     />

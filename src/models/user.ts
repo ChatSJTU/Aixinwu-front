@@ -13,3 +13,16 @@ export interface CoinLogInfo {
     created: string;
     type: string;
 }
+
+export interface DonationInfo {
+    id: string;
+    number: number;
+    quantity: number;
+    createdAt: string;
+    updatedAt: string;
+    barcode: string;
+    description: string;
+    status: string;
+    title: string;
+    price: {amount: number};
+}
