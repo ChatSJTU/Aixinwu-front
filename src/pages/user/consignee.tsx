@@ -8,7 +8,6 @@ import AuthContext from "@/contexts/auth";
 import { MessageContext } from '@/contexts/message';
 import { AddressInfo } from "@/models/address";
 import { PageHeader } from "@/components/page-header";
-import { splitConsigneeName, joinConsigneeName } from "@/utils/process-consignee-name";
 
 const UserConsigneePage = () => {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -68,7 +67,7 @@ const UserConsigneePage = () => {
     const showModal = (addr?: AddressInfo) => {
         if (addr) {
             let formValue: any = addr;
-            formValue.fullname = joinConsigneeName(addr.firstName, addr.lastName);
+            formValue.fullname = addr.firstName;
             setModalTitle("编辑收货地址");
             setEditingAddr(addr);
             form.setFieldsValue(addr);
@@ -86,7 +85,8 @@ const UserConsigneePage = () => {
 
     const handleSubmit = (values: any) => {
         let modifiedValues: any = values;
-        let [lastName, firstName] = splitConsigneeName(values.fullname);
+        let firstName = values.fullname;
+        let lastName = "";
         delete modifiedValues.fullname;
         modifiedValues.country = "CN";
         modifiedValues.firstName = firstName;
@@ -130,7 +130,7 @@ const UserConsigneePage = () => {
                                             title={
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                                                     <div>
-                                                        <span>{`${item.lastName} ${item.firstName}`}</span>
+                                                        <span>{`${item.firstName}`}</span>
                                                         {item.isDefaultShippingAddress &&
                                                             <Tag color="blue" style={{ marginLeft: '12px' }}>默认</Tag>
                                                         }
