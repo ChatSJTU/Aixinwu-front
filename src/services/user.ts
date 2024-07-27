@@ -255,6 +255,7 @@ export async function fetchUserBalanceEvents(client: ApolloClient<object>, first
         let coinLogs = edges.map((edge) => {
             return ({
                 id: edge.node.id,
+                number: edge.node.number,
                 amount: edge.node.balance,
                 created: edge.node.date,
                 type: edge.node.type
@@ -268,7 +269,7 @@ export async function fetchUserBalanceEvents(client: ApolloClient<object>, first
         })
 
     } catch (error) {
-        var errmessage = `获取用户爱心失败：${error}`
+        var errmessage = `获取用户爱心币日志失败：${error}`
         console.error(errmessage);
         throw errmessage;
     }

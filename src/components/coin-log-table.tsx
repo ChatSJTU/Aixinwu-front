@@ -23,12 +23,13 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, t
         "donation_granted": ["已获批捐赠", "geekblue"],
         "manually_updated": ["手动更新", "purple"], 
         "first_login": ["首次登录", "magenta"],
+        "consecutive_login": ["连续登录", "magenta"],
         "consumed": ["已消费", "green"],
         "refunded": ["已退款", "blue"],
     }
     const dataSource = coinLogs.map(coinLog => ({
         key: coinLog.id,
-        logId: coinLog.id,
+        logId: coinLog.number,
         amount: coinLog.amount,
         createTime: coinLog.created.split('T')[0],
         description: descMap[coinLog.type] || ["未知类型", ""],

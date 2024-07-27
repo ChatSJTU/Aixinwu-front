@@ -1,7 +1,8 @@
 query UserBalanceEvents($first: Int, $last: Int, $user: String) {
-  balanceEvents(first: $first, last: $last, filter: {user: $user}) {
+  balanceEvents(first: $first, last: $last, filter: {user: $user}, sortBy: {direction: DESC, field: CREATION_DATE}) {
     edges {
       node {
+        number
         account
         balance
         code
