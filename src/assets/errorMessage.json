@@ -1,0 +1,6 @@
+{
+    "ExampleAPIName": {
+        "title": "示例错误",
+        "CODE_EXAMPLE": "示例原因, 使用et(\"Example.CODE_EXAMPLE\")获得文本\"示例错误: 示例原因\""
+    }
+}
