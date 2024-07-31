@@ -15,7 +15,7 @@ const useErrorMessage = () => {
       if (message && typeof message !== 'string' && key in message) {
         message = message[key] as string | ErrorMessages;
       } else {
-        message = null;
+        message = "未知错误";
         break;
       }
     }
@@ -36,6 +36,7 @@ const useErrorMessage = () => {
         title = titleMessage;
       }
 
+      console.log("111", path);
       return title ? `${title}: ${message}` : message;
     }
 

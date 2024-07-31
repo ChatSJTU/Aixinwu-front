@@ -12,17 +12,14 @@ export async function orderPay(client: ApolloClient<object>, id: string) {
             }
         }); 
         if (!resp.data || !resp.data.orderConfirm){
-            throw "数据为空"
-        }
-        if (resp.data.orderConfirm.errors.length != 0)
-        {
-          throw resp.data.orderConfirm.errors[0].message;
+            throw {code: "NO_DATA"}
         }
         return resp.data.orderConfirm.order as OrderInfo;
-    } catch (error) {
-        var errmessage = `订单支付失败：${error}`
-        console.error(errmessage);
-        throw errmessage;
+    } catch (error: any) {
+        if (error.code) throw error;
+        if (error.message === 'Expected a value of type "OrderErrorCode" but received: balance_check_error')
+            throw {code: "NO_BALANCE"}
+        throw error
     }
 }
 

@@ -5,6 +5,7 @@ import AuthContext from "./auth"
 import { checkoutAddLine, checkoutCreate, checkoutGetQuantity } from "@/services/checkout"
 import { MessageContext } from "./message"
 import { fetchUserCheckouts } from "@/services/user"
+import useErrorMessage from "@/hooks/useErrorMessage";
 
 interface CartContextType {
     totalQuantity: number,
@@ -31,6 +32,7 @@ export const CartContextProvider = (props : LayoutProps) => {
     const authCtx = useContext(AuthContext);
     const client = authCtx.client;
     const message = useContext(MessageContext);
+    const { et } = useErrorMessage();
 
     useEffect(()=>{
         if (checkoutId === undefined || checkoutId === "" || checkoutErrorCounter >= 3)
@@ -95,7 +97,7 @@ export const CartContextProvider = (props : LayoutProps) => {
             .then(data => {
                 setTotalQuantity(data.quantity)
             })
-            .catch(err => message.error(err));
+            .catch(err => message.error(et(`checkoutAddLine.${err.code}`)));
 
         return true;//留着，万一之后要把错误处理交给caller
     }, []);

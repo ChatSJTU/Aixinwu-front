@@ -1,6 +1,16 @@
 {
-    "ExampleAPIName": {
+    "exampleAPIName": {
         "title": "示例错误",
         "CODE_EXAMPLE": "示例原因, 使用et(\"Example.CODE_EXAMPLE\")获得文本\"示例错误: 示例原因\""
+    },
+    "checkoutAddLine": {
+        "title": "添加商品失败",
+        "NO_DATA": "数据为空",
+        "QUANTITY_GREATER_THAN_LIMIT": "当前用户已达限购上限"
+    },
+    "orderPay": {
+        "title": "订单支付失败",
+        "NO_DATA": "数据为空",
+        "NO_BALANCE": "余额不足"
     }
 }

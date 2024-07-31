@@ -103,18 +103,16 @@ export async function checkoutAddLine(client: ApolloClient<object>, checkoutId: 
         }); 
         if (!resp.data || 
             !resp.data.checkoutLinesAdd) {
-          throw "添加商品失败";
+          throw {code: "NO_DATA"};
         }
         if (resp.data.checkoutLinesAdd.errors.length != 0)
         {
-          throw resp.data.checkoutLinesAdd.errors[0].message;
+          throw {code: resp.data.checkoutLinesAdd.errors[0].code};
         }
         var data = resp.data?.checkoutLinesAdd.checkout as CheckoutCreateResult;
         return data;
     } catch (error) {
-        var errmessage = `请求失败：${error}`
-        console.error(errmessage);
-        throw errmessage;
+        throw error;
     }
 };
 

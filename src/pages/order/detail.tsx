@@ -18,6 +18,7 @@ import {
 } from '@ant-design/icons';
 import { OrderLinesTable } from "@/components/order-lines-table";
 import { AxCoin } from "@/components/axcoin";
+import useErrorMessage from "@/hooks/useErrorMessage";
 import dayjs from 'dayjs'
 
 const { confirm } = Modal;
@@ -30,6 +31,7 @@ export default function OrderDetailPage() {
     const message = useContext(MessageContext);
     const client = authCtx.client;
     const { id, autopay } = router.query;
+    const { et } = useErrorMessage();
     const [orderDetail, setOrderDetail] = useState<OrderDetailedInfo | null>(null);
     const [softRefresh, setSoftRefresh] = useState<Boolean>(false);
     const [checkAutoPay, setCheckAutoPay] = useState<Boolean>(false);
@@ -77,7 +79,7 @@ export default function OrderDetailPage() {
                         setSoftRefresh(true);
                     })
                     .catch(err => {
-                        message.error(`支付失败：${err}`);
+                        message.error(et(`orderPay.${err.code}`));
                     });
             },
             onCancel() {

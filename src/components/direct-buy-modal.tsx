@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { Space, Typography } from 'antd';
 import { useRouter } from "next/router";
 import { ProductDetail, VarientDetail } from "@/models/products";
+import useErrorMessage from "@/hooks/useErrorMessage";
 import { fetchUserAddresses } from "@/services/user";
 const { Text, Link } = Typography;
 
@@ -26,7 +27,8 @@ export const DirectBuyModal: React.FC<DirectBuyModalProps> = (props) => {
     const client = authCtx.client;
     const message = useContext(MessageContext);
     const router = useRouter();
-    
+    const { et } = useErrorMessage();
+
     const [process, setProcess] = React.useState<number>(0);
     const [processStatus, setProcessStatus] = React.useState<"exception" | undefined>(undefined);
     const [processInfo, setProcessInfo] = React.useState<string>("");
@@ -68,11 +70,12 @@ export const DirectBuyModal: React.FC<DirectBuyModalProps> = (props) => {
                 props.count
             );
         }
-        catch(err)
+        catch(err: any)
         {
             setProcessStatus("exception");
             setProcessInfo("添加商品失败");
-            console.log(err)
+            message.error(et(`checkoutAddLine.${err.code}`));
+            console.log(err.code)
             return;
         }
         setProcess(28);
