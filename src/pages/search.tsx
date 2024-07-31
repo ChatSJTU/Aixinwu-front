@@ -53,7 +53,7 @@ const SearchResultPage = () => {
     // 搜索
     const handleSearch = (page: number = 1, keyword: string, domain: string = "products", sort: string = "default") => {
         if (keyword === "") {
-            message.error('搜索结关键词不能为空');
+            message.error('搜索关键词不能为空');
             return;
         }
         // console.log(first, keyword, domain, sort)
