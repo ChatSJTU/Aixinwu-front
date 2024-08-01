@@ -102,17 +102,21 @@ const NavBar = () => {
 
   return (
       <>
-          <Space size={screens.md ? "large" : "small"} className="navbar">
+          <Space size="large" className="navbar">
               <Link href="/" className="title">SJTU 爱心屋</Link>
-              <div style={{display: 'flex'}}>
-              <Menu className="menu" style={{ minWidth: 0, flex: "auto" }}
-                  selectedKeys={[router.asPath]}
-                  mode="horizontal"
-                  items={menuItems.map((item) => ({
-                      key: item.value,
-                      label: <Link href={item.value}>{item.label}</Link>,
-                  }))}>
-              </Menu></div>
+              {
+                !(!screens.md && router.asPath=="/") &&
+                <div style={{display: 'flex'}}>
+                  <Menu className="menu" style={{ minWidth: 0, flex: "auto" }}
+                      selectedKeys={[router.asPath]}
+                      mode="horizontal"
+                      items={menuItems.map((item) => ({
+                          key: item.value,
+                          label: <Link href={item.value}>{item.label}</Link>,
+                      }))}>
+                  </Menu>
+                </div>
+              }
           </Space>
           <Space size={screens.md ? "middle" : "small"} className="navbar">
               <Button type="text" onClick={()=>{setSearchModalOpen(true);}} icon={<SearchOutlined />} />

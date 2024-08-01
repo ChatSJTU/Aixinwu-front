@@ -14,7 +14,6 @@ import { ArticleSummary } from "@/models/article";
 
 import { searchProducts } from "@/services/product";
 import { searchArticles } from "@/services/article";
-import { channel } from "diagnostics_channel";
 
 const { Search } = Input;
 const { Text, Link } = Typography;
