@@ -1,5 +1,5 @@
-import { Space, Menu, Button, MenuProps, Dropdown, Modal, Input, Typography, Badge } from 'antd';
-import { SunOutlined, MoonOutlined, UserOutlined, SearchOutlined, LogoutOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { Space, Menu, Button, MenuProps, Dropdown, Modal, Input, Typography, Badge, Grid } from 'antd';
+import { SunOutlined, MoonOutlined, UserOutlined, SearchOutlined, LogoutOutlined, ShoppingCartOutlined, LoginOutlined } from '@ant-design/icons';
 import ThemeContext from '@/contexts/theme';
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -23,6 +23,7 @@ const NavBar = () => {
   const message = useContext(MessageContext);
   const [ searchModalOpen, setSearchModalOpen ] = useState(false);
   const [ searchText, setSearchText ] = useState<string>('');
+  const screens = Grid.useBreakpoint();
 
   const items : MenuProps['items'] = [
     {
@@ -101,7 +102,7 @@ const NavBar = () => {
 
   return (
       <>
-          <Space size="large" className="navbar">
+          <Space size={screens.md ? "large" : "small"} className="navbar">
               <Link href="/" className="title">SJTU 爱心屋</Link>
               <div style={{display: 'flex'}}>
               <Menu className="menu" style={{ minWidth: 0, flex: "auto" }}
@@ -113,7 +114,7 @@ const NavBar = () => {
                   }))}>
               </Menu></div>
           </Space>
-          <Space size="middle" className="navbar">
+          <Space size={screens.md ? "middle" : "small"} className="navbar">
               <Button type="text" onClick={()=>{setSearchModalOpen(true);}} icon={<SearchOutlined />} />
               <Modal open={searchModalOpen} style={{ top: 4 }} className="search-modal"
                 closeIcon={null}
@@ -156,25 +157,37 @@ const NavBar = () => {
                     </Menu>}
                 </div>
               </Modal>
-              <Button type="text"
+              {
+                screens.md &&
+                <Button type="text"
                   onClick={() => {themeCtx.changeTheme(themeCtx.userTheme === 'light' ? 'dark' : 'light')}}
                   icon = {themeCtx.userTheme === 'light' ? <MoonOutlined /> : <SunOutlined />}
-              />
-              {authCtx.isLoggedIn && <Badge count={cartCtx.totalQuantity} size="small">
-                <Button type="text"
-                    onClick={()=>{router.push("/cart")}}
-                    icon = {<ShoppingCartOutlined />}
                 />
-              </Badge>}
+              }
+              {
+                authCtx.isLoggedIn && 
+                <Badge count={cartCtx.totalQuantity} size="small">
+                  <Button type="text"
+                      onClick={()=>{router.push("/cart")}}
+                      icon = {<ShoppingCartOutlined />}
+                  />
+                </Badge>
+              }
               
               {
-                authCtx.isLoggedIn ? 
+                authCtx.isLoggedIn &&
                 <Dropdown menu={{ items }} placement="bottom">
                   <Button type="text" icon={<UserOutlined />} onClick={()=>{router.push("/user")}}></Button>
                 </Dropdown>
                 // <Button type="text" icon={<UserOutlined />} onClick={()=>{router.push("/user")}}></Button>
-                :
+              }
+              {
+                !authCtx.isLoggedIn && screens.md &&
                 <Button type="primary" onClick={doExternalLogin}>jAccount 登录</Button>
+              }
+              {
+                !authCtx.isLoggedIn && !screens.md &&
+                <Button type="primary" onClick={doExternalLogin} icon={<LoginOutlined />}/>
               }
               
           </Space>
