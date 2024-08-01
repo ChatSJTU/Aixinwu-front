@@ -125,6 +125,7 @@ export const OrderLinesTable: React.FC<OrderLinesTableProps> = ({ lines }) => {
     return <Table 
                 dataSource={lines} 
                 columns={columns} 
+                scroll={{ x: 'max-content' }}
                 pagination={{ hideOnSinglePage: true, pageSize: 10 }} 
                 rowKey="id"/>;
 };

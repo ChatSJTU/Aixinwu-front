@@ -28,7 +28,7 @@ const ProductDetailsPage: React.FC = () => {
     const client = authCtx.client;
     const message = useContext(MessageContext);
     
-    const isMobile = !screens.lg;
+    const isMobile = !screens.md;
     const { slug, shared } = router.query;
     const [product, setProduct] = useState<ProductDetail | undefined>(undefined);
     const [selectedVarient, setSelectedVarient] = useState<number>(-Infinity);
@@ -147,7 +147,7 @@ const ProductDetailsPage: React.FC = () => {
                         <Divider />
                     }
                     <Col span={isMobile ? 24 : 15}
-                        style={isMobile ? { textAlign: 'center' } : { paddingLeft: '150px' }}
+                        style={isMobile ? { justifyContent: 'center' } : { paddingLeft: '150px' }}
                     >
                         <Space direction='vertical' size={'large'}>
                             <Title level={3}

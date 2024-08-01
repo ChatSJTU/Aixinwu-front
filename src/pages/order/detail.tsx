@@ -76,6 +76,7 @@ export default function OrderDetailPage() {
                 orderPay(client!, orderDetail?.id!)
                     .then(data => {
                         message.success("支付成功");
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
                         setSoftRefresh(true);
                     })
                     .catch(err => {
@@ -206,7 +207,7 @@ export default function OrderDetailPage() {
                 renderItem={(item) => (
                     <List.Item>
                         <div>{item.key}</div>
-                        <div>{item.value}</div>
+                        <div style={{wordBreak: "break-all", overflowWrap: "break-word"}}>{item.value}</div>
                     </List.Item>
                 )}
                 />
