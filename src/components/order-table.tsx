@@ -126,5 +126,12 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
             },
         },
     ];
-    return <Table dataSource={orders} columns={columns} pagination={{ hideOnSinglePage: true, pageSize: 10 }} />;
+    return (
+      <Table 
+        dataSource={orders} 
+        columns={columns} 
+        pagination={{ hideOnSinglePage: true, pageSize: 10 }}
+        scroll={{ x: 'max-content'}}
+      />
+    );
 };

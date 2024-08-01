@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Tabs } from 'antd';
+import { Tabs, Grid } from 'antd';
 import { ContainerOutlined, GiftOutlined, InteractionOutlined, SolutionOutlined, IdcardOutlined, SettingOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import { LayoutProps } from '@/models/layout';
@@ -49,6 +49,7 @@ const UserLayout: React.FC<LayoutProps> = ({ children }) => {
     const authCtx = useContext(AuthContext);
     const client = authCtx.client;
     const message = useContext(MessageContext);
+    const screens = Grid.useBreakpoint();
     
     const handleTabChange = (key : string) => {
         router.push(key);
@@ -67,8 +68,8 @@ const UserLayout: React.FC<LayoutProps> = ({ children }) => {
             </div>
             <div className="container basic-card">
                 <Tabs 
-                    tabPosition="left" 
-                    size="large" 
+                    tabPosition={screens.md ? "left" : "top"}
+                    size={screens.md ? "large" : "middle"}
                     activeKey={router.pathname}
                     onChange={handleTabChange}
                     items={UserCenterTabs.map(item => {

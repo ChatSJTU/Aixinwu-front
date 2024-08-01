@@ -72,6 +72,7 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, t
         <Table
             dataSource={dataSource}
             columns={columns}
+            scroll={{ x: 'max-content'}}
             pagination={{
                 hideOnSinglePage: true,
                 current: current,

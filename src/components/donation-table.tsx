@@ -86,6 +86,7 @@ export const DonationTable: React.FC<DonationTableProps> = ({ current, pageSize,
         <Table
             dataSource={dataSource}
             columns={columns}
+            scroll={{ x: 'max-content'}}
             pagination={{
                 hideOnSinglePage: true,
                 current: current,

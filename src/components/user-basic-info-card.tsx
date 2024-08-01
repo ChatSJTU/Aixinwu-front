@@ -1,4 +1,4 @@
-import { Avatar, Button, Col, Row, Space, Typography, Tag } from 'antd';
+import { Avatar, Button, Col, Row, Space, Typography, Tag, Grid } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { AxCoin } from '@/components/axcoin';
 import { UserBasicInfo } from '@/models/user';
@@ -36,6 +36,7 @@ const tagStyle : { [key: string]: { text: string; color: string }; } = {
 
 export const UserBasicInfoCard: React.FC<{ userInfo: UserBasicInfo }> = ({ userInfo }) => {
     const { name, email, type, balance, continuous_login_days } = userInfo;
+    const screens = Grid.useBreakpoint();
     
     const tag = tagStyle[type] || { text: '未知', color: 'default' };
 
@@ -64,13 +65,17 @@ export const UserBasicInfoCard: React.FC<{ userInfo: UserBasicInfo }> = ({ userI
                 </Space>
             </Col>
             <Col>
-                <Space direction="vertical">
-                    <span>已连续登录 {continuous_login_days} 天</span>
+                <Space 
+                  direction={screens.md?"vertical":"horizontal"} 
+                  style={!screens.md?{marginTop: '16px'}:{}}
+                >
+                    {screens.md && <span>已连续登录 {continuous_login_days} 天</span>}
                     <Space>
                         <DayButton day="1" value="0.5" filled={continuous_login_days===1}/>
                         <DayButton day="2" value="1" filled={continuous_login_days===2}/>
                         <DayButton day="3+" value="2" filled={continuous_login_days>=3}/>
                     </Space>
+                    {!screens.md && <span>已连续登录 {continuous_login_days} 天</span>}
                 </Space>
             </Col>
         </Row>
