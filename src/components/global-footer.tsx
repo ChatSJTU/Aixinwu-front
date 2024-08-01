@@ -1,13 +1,14 @@
-import { Divider, Space, Typography, QRCode, Row, Col } from "antd"
+import { Divider, Space, Grid, QRCode, Row, Col } from "antd"
 import { PhoneOutlined, MailOutlined, ShopOutlined, ClockCircleOutlined } from "@ant-design/icons"
 import Link from "next/link";
 
 const GlobalFooter = () => {
+  const screens = Grid.useBreakpoint();
     return (
         <>
             <Divider/>
             <Row>
-                <Col span={5}>
+                <Col span={screens.md ? 5 : 8}>
                     <Space direction="vertical">
                         <div className="footer-map-title">服务</div>
                         {/* TODO: change route */}
@@ -17,7 +18,7 @@ const GlobalFooter = () => {
                         {/* <Link href="/pre-donate" className="footer-map-item">预捐赠</Link> */}
                     </Space>
                 </Col>
-                <Col span={5}>
+                <Col span={screens.md ? 5 : 8}>
                     <Space direction="vertical">
                         <div className="footer-map-title">特色活动</div>
                         <Link href="/" className="footer-map-item">寒假路补</Link>
@@ -25,10 +26,10 @@ const GlobalFooter = () => {
                         <Link href="/" className="footer-map-item">合作项目展示</Link>
                     </Space>
                 </Col>
-                <Col span={5}>
+                <Col span={screens.md ? 5 : 8}>
                     <Space direction="vertical">
                         <div className="footer-map-title">关于</div>
-                        <Link href="/" className="footer-map-item">通知公告</Link>
+                        <Link href="/articles" className="footer-map-item">通知公告</Link>
                         <Link href="/about" className="footer-map-item">SJTU 绿色爱心屋</Link>
                         {/* <Link href="https://aixinwu.info/" target="_blank" className="footer-map-item">爱心屋联盟</Link> */}
                     </Space>
@@ -51,15 +52,16 @@ const GlobalFooter = () => {
                     />
                     <Space direction="vertical">
                         <div><ShopOutlined /> 闵行校区学生服务中心一楼</div>
-                        <div>
+                        <div style={{wordBreak: "break-all", overflowWrap: "break-word"}}>
                             <ClockCircleOutlined /> 8:20-19:50&nbsp;&nbsp;&nbsp;
                             <PhoneOutlined style={{transform: "scaleX(-1)"}}/> 021-54745672&nbsp;&nbsp;&nbsp;
                             <MailOutlined /> <Link className="footer-link" href="mailto:aixinwu@sjtu.edu.cn">aixinwu@sjtu.edu.cn</Link>
                         </div>
+                        {!screens.md && <div>Supported by 上海交通大学绿色爱心屋学生开发团队</div>}
                         <div>Copyright ©{new Date().getFullYear()} 上海交通大学绿色爱心屋 | 沪交ICP备XXXXXXXX</div>
                     </Space>
                 </Space>
-                <div>Supported by 上海交通大学绿色爱心屋学生开发团队</div>
+                {screens.md && <div>Supported by 上海交通大学绿色爱心屋学生开发团队</div>}
             </div>
         </>
     )
