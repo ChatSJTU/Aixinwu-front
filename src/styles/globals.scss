@@ -334,7 +334,7 @@ code {
     }
 }
 
-/* Product Image */
+/* Product Detail Page */
 .toolbar-wrapper {
     position: fixed;
     bottom: 32px;
@@ -359,6 +359,22 @@ code {
 
 .toolbar-wrapper .anticon:hover {
     opacity: 0.3;
+}
+
+.price-container {
+    @include themify {
+        background-color: themed('tertiary-bg-color') !important;
+    }
+
+    border-radius: 4px;
+    padding: 8px 12px;
+    min-height: 90px;
+}
+
+.price-container-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 /* others */

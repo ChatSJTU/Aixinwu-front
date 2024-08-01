@@ -1,7 +1,8 @@
 import {
   Image, Spin, Divider, Row, Col, Button,
   Typography, Carousel, Breadcrumb, Space, InputNumber,
-  Tooltip, Grid, Radio, Modal, ConfigProvider, Alert
+  Tooltip, Grid, Radio, Modal, ConfigProvider, Alert,
+  Flex
 } from 'antd'
 import {
   ShoppingCartOutlined,
@@ -10,14 +11,15 @@ import {
   RotateRightOutlined,
   SwapOutlined,
   ZoomInOutlined,
-  ZoomOutOutlined
+  ZoomOutOutlined,
+  PayCircleOutlined
 } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import Head from "next/head";
 import { useEffect, useState, useContext } from 'react';
 import { TinyColor } from '@ctrl/tinycolor';
 import { AxCoin } from '@/components/axcoin';
-import { ProductDetail, VarientDetail } from '@/models/products'
+import { ProductDetail } from '@/models/products'
 import MarkdownRenderer from '@/components/markdown-renderer';
 import { getProductDetail } from '@/services/product';
 import AuthContext from '@/contexts/auth';
@@ -62,23 +64,21 @@ const ProductDetailsPage: React.FC = () => {
     || queryQuantity > 50
   );
 
-  const previewProps = isMobile
-    ? false
-    : {
-      toolbarRender: (
-        _: any,
-        { transform: { scale }, actions }: { transform: { scale: number }; actions: ImageActions },
-      ) => (
-        <Space size={20} className="toolbar-wrapper">
-          <SwapOutlined rotate={90} onClick={actions.onFlipY} />
-          <SwapOutlined onClick={actions.onFlipX} />
-          <RotateLeftOutlined onClick={actions.onRotateLeft} />
-          <RotateRightOutlined onClick={actions.onRotateRight} />
-          <ZoomOutOutlined disabled={scale === 1} onClick={actions.onZoomOut} />
-          <ZoomInOutlined disabled={scale === 50} onClick={actions.onZoomIn} />
-        </Space>
-      ),
-    };
+  const previewProps = {
+    toolbarRender: (
+      _: any,
+      { transform: { scale }, actions }: { transform: { scale: number }; actions: ImageActions },
+    ) => (
+      <Space size={20} className="toolbar-wrapper">
+        <SwapOutlined rotate={90} onClick={actions.onFlipY} />
+        <SwapOutlined onClick={actions.onFlipX} />
+        <RotateLeftOutlined onClick={actions.onRotateLeft} />
+        <RotateRightOutlined onClick={actions.onRotateRight} />
+        <ZoomOutOutlined disabled={scale === 1} onClick={actions.onZoomOut} />
+        <ZoomInOutlined disabled={scale === 50} onClick={actions.onZoomIn} />
+      </Space>
+    ),
+  };
 
   const channel = shared == "true" ? process.env.NEXT_PUBLIC_CHANNEL2 : process.env.NEXT_PUBLIC_CHANNEL;
 
@@ -131,7 +131,7 @@ const ProductDetailsPage: React.FC = () => {
       <center>
         <Spin size="large" style={{ marginTop: '200px' }} />
       </center>
-    ); // 可以显示加载状态指示器
+    );
   }
 
   const getHoverColor = (color: string) =>
@@ -184,9 +184,9 @@ const ProductDetailsPage: React.FC = () => {
             <Divider />
           }
           <Col span={isMobile ? 24 : 15}
-            style={isMobile ? { justifyContent: 'center' } : { paddingLeft: '150px' }}
+            style={isMobile ? { justifyContent: 'center' } : { paddingLeft: '150px', paddingRight: '60px' }}
           >
-            <Space direction='vertical' size={'large'}>
+            <Space direction='vertical' size={'large'} style={{ width: '100%' }}>
               <Title level={3}
                 style={{ marginTop: '0px', marginBottom: '-4px' }}>
                 {product.name}
@@ -200,17 +200,21 @@ const ProductDetailsPage: React.FC = () => {
                   </Title>
                 )
               }
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                {selectedVarient >= 0
-                  ? <AxCoin size={24} value={product?.varients[selectedVarient]?.price} coloredValue={true} />
-                  : (product?.price.min === product?.price.max)
-                    ? <AxCoin size={24} value={product?.price.min} coloredValue={true} />
-                    : <AxCoin size={24} value={product?.price.min} maxValue={product?.price.max} shownRange={true} coloredValue={true} />
-                }
+              <div className='price-container'>
+                {/* May place other components later */}
+                <br/>
+                <div className='price-container-inner'>
+                  {selectedVarient >= 0
+                    ? <AxCoin size={24} value={product?.varients[selectedVarient]?.price} coloredValue={true} />
+                    : (product?.price.min === product?.price.max)
+                      ? <AxCoin size={24} value={product?.price.min} coloredValue={true} />
+                      : <AxCoin size={24} value={product?.price.min} maxValue={product?.price.max} shownRange={true} coloredValue={true} />
+                  }
+                  {selectedVarient >= 0 &&
+                    <Text type='secondary'>{`已售出 ${product.varients[selectedVarient].sold} 件`}</Text>
+                  }
+                </div>
               </div>
-              {selectedVarient >= 0 &&
-                <Text type='secondary'>{`已售出 ${product.varients[selectedVarient].sold} 件`}</Text>
-              }
               {
                 product.varients.length > 1 && (
                   <Space wrap>
@@ -278,51 +282,52 @@ const ProductDetailsPage: React.FC = () => {
                   : <Text type='secondary'>已售罄</Text>
                 }
               </Space>}
-              <Space size="middle" style={{ width: "100%" }}>
+              <Flex justify={'space-around'} style={{ marginTop: '20px' }}>
                 {
                   authCtx.isLoggedIn &&
-                  <ConfigProvider
-                    theme={{
-                      components: {
-                        Button: {
-                          colorPrimary: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882",
-                          colorPrimaryHover: getHoverColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
-                          colorPrimaryActive: getActiveColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
-                          lineWidth: 0,
+                  <>
+                    <ConfigProvider
+                      theme={{
+                        components: {
+                          Button: {
+                            colorPrimary: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882",
+                            colorPrimaryHover: getHoverColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
+                            colorPrimaryActive: getActiveColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
+                            lineWidth: 0,
+                          },
                         },
-                      },
-                    }}
-                  >
+                      }}
+                    >
+                      <Button
+                        size="large"
+                        type='primary'
+                        icon={<PayCircleOutlined />}
+                        // style={{ backgroundColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
+                        style={{ width: '150px' }}
+                        onClick={handleBuyClick}
+                        disabled={selectedVarient < 0 || overQuantity}
+                      >
+                        立即购买
+                      </Button>
+                    </ConfigProvider>
                     <Button
                       size="large"
-                      type='primary'
-                      // style={{ backgroundColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
-                      onClick={handleBuyClick}
+                      type='default'
+                      icon={<ShoppingCartOutlined />}
                       disabled={selectedVarient < 0 || overQuantity}
+                      style={{ borderColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882", width: '150px' }}
+                      onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, queryQuantity) }}
                     >
-                      立即购买
+                      添加到爱心篮
                     </Button>
-                  </ConfigProvider>
-                }
-                {
-                  authCtx.isLoggedIn &&
-                  <Button
-                    size="large"
-                    type='default'
-                    icon={<ShoppingCartOutlined />}
-                    disabled={selectedVarient < 0 || overQuantity}
-                    style={{ borderColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
-                    onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, queryQuantity) }}
-                  >
-                    添加到爱心篮
-                  </Button>
+                  </>
                 }
                 {
                   !authCtx.isLoggedIn &&
                   <Alert message="您尚未登录，请登录以进行购买或添加至爱心篮"
                     type="warning" showIcon />
                 }
-              </Space>
+              </Flex>
             </Space>
           </Col>
         </Row>

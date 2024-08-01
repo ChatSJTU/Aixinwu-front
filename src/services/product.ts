@@ -97,7 +97,7 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
         var data = resp.data?.product;
         const textBlocks = JSON.parse(data.description).blocks.map((block: any) => (block.data.text));
         const textJoined = textBlocks.join('<br />')
-        console.log(data);
+
         var res = {
             id: data.id,
             slug: data.slug,
