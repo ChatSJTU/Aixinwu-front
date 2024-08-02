@@ -24,7 +24,7 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, t
         "manually_updated": ["手动更新", "purple"], 
         "first_login": ["首次登录", "magenta"],
         "consecutive_login": ["连续登录", "magenta"],
-        "consumed": ["已消费", "green"],
+        "consumed": ["已支付", "green"],
         "refunded": ["已退款", "blue"],
     }
     const dataSource = coinLogs.map(coinLog => ({
