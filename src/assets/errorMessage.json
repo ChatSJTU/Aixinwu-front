@@ -6,7 +6,8 @@
     "checkoutAddLine": {
         "title": "添加商品失败",
         "NO_DATA": "数据为空",
-        "QUANTITY_GREATER_THAN_LIMIT": "当前用户已达限购上限"
+        "QUANTITY_GREATER_THAN_LIMIT": "当前用户已达限购上限",
+        "INSUFFICIENT_STOCK": "库存不足"
     },
     "orderPay": {
         "title": "订单支付失败",
