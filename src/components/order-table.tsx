@@ -49,7 +49,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
             key: 'imageUrl',
             render: (_, record: OrderInfo) => (
                 <a href={`/order/detail?id=${record.id}`}>
-                    <Image src={record.lines[0].variant.media[0]?.url ?? record.lines[0].thumbnail?.url} preview={false} />
+                    <Image src={record.lines[0]?.variant?.media[0]?.url ?? record.lines[0]?.thumbnail?.url} preview={false} />
                 </a>
             ),
         },
