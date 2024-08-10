@@ -28,6 +28,8 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
     const handlePayClick = (orderId: string) => {
         router.push(`/order/detail?id=${orderId}&autopay=true`)
     }
+
+    console.log(orders)
     
     const columns: TableColumnsType<any> = [
         {
@@ -61,7 +63,12 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
             render: (_, record: OrderInfo) => (
                 <a href={`/order/detail?id=${record.id}`}>
                     <Text style={{ fontSize: '16px' }}>
-                        {record.lines.length > 1 ? `${record.lines[0].productName}...等${record.lines.length}件商品` : record.lines[0].productName}
+                        {
+                            record.lines.length > 1 ? 
+                                `${record.lines[0].productName}...等${record.lines.length}件商品` 
+                                : (record.lines.length > 0 ? 
+                                    record.lines[0].productName
+                                    : "无商品")}
                     </Text>
                 </a>
             )

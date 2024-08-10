@@ -103,7 +103,7 @@ export default function OrderDetailPage() {
             return undefined;
         return [
             {key: "小计", value: orderDetail.subtotal.gross.amount},
-            {key: "运费", value: orderDetail.shippingMethod.price.amount},
+            {key: "运费", value: orderDetail.shippingMethod?.price?.amount},
             {key: "总计", value: orderDetail.total.gross.amount},
             {key: "已支付", value: orderDetail.totalBalance.amount + orderDetail.total.gross.amount},
         ]
