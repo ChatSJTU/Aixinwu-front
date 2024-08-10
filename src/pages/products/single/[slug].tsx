@@ -154,32 +154,21 @@ const ProductDetailsPage: React.FC = () => {
       <div className='container'>
         <Row>
           <Col span={isMobile ? 24 : 9}>
-            <Carousel autoplay draggable style={{ textAlign: 'center' }}>
+            <Carousel autoplay draggable={isMobile} style={{ textAlign: 'center' }}>
               {/* Todo: images 可能为 null */}
               {product.images?.map((url, index) => (
-                (product.images!.length > 1 && (
-                  <Tooltip title="拖拽以切换图片" key={index}>
-                    <Image
-                      src={url}
-                      alt={`图片预览 ${index + 1}`}
-                      width={468}
-                      height={468}
-                      preview={previewProps}
-                    />
-                  </Tooltip>
-                )) || (
-                  <Image
-                    key={index}
-                    src={url}
-                    alt={`图片预览 ${index + 1}`}
-                    width={468}
-                    height={468}
-                    preview={previewProps}
-                  />
-                )
+                <Image
+                  key={index}
+                  src={url}
+                  alt={`图片预览 ${index + 1}`}
+                  width={isMobile ? 408 : 468}
+                  height={isMobile ? 408 : 468}
+                  preview={isMobile ? false : previewProps}
+                  draggable={false}
+                />
               ))}
             </Carousel>
-          </Col>
+          </Col> 
           {isMobile &&
             <Divider />
           }
@@ -202,7 +191,7 @@ const ProductDetailsPage: React.FC = () => {
               }
               <div className='price-container'>
                 {/* May place other components later */}
-                <br/>
+                <br />
                 <div className='price-container-inner'>
                   {selectedVarient >= 0
                     ? <AxCoin size={24} value={product?.varients[selectedVarient]?.price} coloredValue={true} />
