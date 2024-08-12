@@ -215,7 +215,7 @@ export default function OrderDetailPage() {
     );
 
     const OrderPayInfoBlock = () => (
-        <div className="block-item">
+        <div className="block-item" style={{borderTop: "unset"}}>
             <Flex className="block-item-title" align="center" style={{marginBottom: "4px"}}>
                 <PayCircleOutlined style={{fontSize: "20px"}} />
                 <Text style={{marginTop: "4px", marginBottom: "6px", fontSize: "20px", marginLeft: "8px"}}>支付信息</Text>
