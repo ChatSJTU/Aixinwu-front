@@ -1,0 +1,17 @@
+mutation OrderCancel($id: ID!) {
+  orderCancel(id: $id) {
+    errors {
+      variants
+      orderLines
+      message
+      field
+      code
+      addressType
+    }
+    order {
+      id
+      status
+      statusDisplay
+    }
+  }
+}

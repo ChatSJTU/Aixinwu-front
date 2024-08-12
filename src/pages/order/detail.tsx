@@ -6,7 +6,7 @@ import AuthContext from "@/contexts/auth";
 import { MessageContext } from "@/contexts/message";
 import { OrderDetailedInfo } from "@/models/order";
 import Link from "next/link";
-import { orderDetailed, orderPay } from "@/services/order";
+import { orderCancel, orderDetailed, orderPay } from "@/services/order";
 import {
     SettingOutlined,
     ProductOutlined,
@@ -30,11 +30,12 @@ export default function OrderDetailPage() {
     const authCtx = useContext(AuthContext);
     const message = useContext(MessageContext);
     const client = authCtx.client;
-    const { id, autopay } = router.query;
+    const { id, autopay, autocancel } = router.query;
     const { et } = useErrorMessage();
     const [orderDetail, setOrderDetail] = useState<OrderDetailedInfo | null>(null);
     const [softRefresh, setSoftRefresh] = useState<Boolean>(false);
     const [checkAutoPay, setCheckAutoPay] = useState<Boolean>(false);
+    const [checkAutoCancel, setCheckAutoCancel] = useState<Boolean>(false);
 
     useEffect(() => {
         if (id == undefined || id == "") {
@@ -50,6 +51,7 @@ export default function OrderDetailPage() {
             .then((data) => {
                 setOrderDetail(data);
                 setCheckAutoPay(true);
+                setCheckAutoCancel(true);
             })
             .catch((err) => {message.error(err);})
     }, [id, softRefresh]);
@@ -60,7 +62,12 @@ export default function OrderDetailPage() {
             setCheckAutoPay(false);
             router.replace(router.basePath + "?id=" + id)
         }
-    }, [checkAutoPay]);
+        if (checkAutoCancel && autocancel == "true") {
+            handleCancelClick();
+            setCheckAutoCancel(false);
+            router.replace(router.basePath + "?id=" + id)
+        }
+    }, [checkAutoPay, checkAutoCancel]);
 
     const handlePayClick = () => {
         confirm({
@@ -88,11 +95,36 @@ export default function OrderDetailPage() {
         });
     }
 
+    const handleCancelClick = () => {
+        confirm({
+            title: '取消确认',
+            icon: <InfoCircleFilled />,
+            content: (
+                <Space size="small">
+                    {'是否取消订单'}
+                </Space>
+            ),
+            onOk() {
+                orderCancel(client!, orderDetail?.id!)
+                    .then(data => {
+                        message.success("取消成功");
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        setSoftRefresh(true);
+                    })
+                    .catch(err => {
+                        message.error(et(`orderCancel.${err.code}`));
+                    });
+            },
+            onCancel() {
+            },
+        });
+    }
+
     const otherInfoList = useMemo(() => {
         if (orderDetail == null)
             return undefined;
         return [
-            {key: "订单编号", value: orderDetail.id},
+            {key: "订单编号", value: orderDetail.number},
             {key: "创建时间", value: dayjs(orderDetail.created).format("YYYY-MM-DD HH:mm:ss")},
             {key: "支付时间", value: dayjs(orderDetail.payments[0].created).format("YYYY-MM-DD HH:mm:ss")},
         ]
@@ -122,6 +154,9 @@ export default function OrderDetailPage() {
             case "REFUSED": text = "支付已拒绝"; color = "error"; break;
             case "CANCELLED": text = "支付已取消"; color = "default"; break;
             default: text = "未支付"; color = "magenta"; break;
+        }
+        if (orderDetail?.status == "CANCELED") {
+            text = "已取消"; color = "error";
         }
 
         return (<Tag color={color} style={{
@@ -165,7 +200,7 @@ export default function OrderDetailPage() {
                 <ProductOutlined style={{fontSize: "20px"}} />
                 <Text style={{marginTop: "4px", marginBottom: "6px", fontSize: "20px", marginLeft: "8px"}}>商品列表</Text>
             </Flex>
-            <OrderLinesTable lines={orderDetail?.lines!}/>
+            <OrderLinesTable lines={orderDetail?.lines!} canceled={orderDetail?.status == "CANCELED"}/>
         </div>
     );
 
@@ -232,10 +267,10 @@ export default function OrderDetailPage() {
                     </List.Item>
                 )}
                 />
-            { !orderDetail?.isPaid &&
+            { (!orderDetail?.isPaid && orderDetail?.status != "CANCELED") &&
                 <Flex justify="flex-end" style={{marginTop: "8px"}}>
                     <Space size="small" direction="horizontal">
-                        <Button>取消订单</Button>
+                        <Button onClick={handleCancelClick}>取消订单</Button>
                         <Button type="primary" onClick={handlePayClick}>立即支付</Button>
                     </Space>
                 </Flex>

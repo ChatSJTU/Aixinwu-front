@@ -70,6 +70,7 @@ export interface OrderInfo {
     id: string,
     isPaid: boolean,
     number: string,
+    status: string,
     paymentStatus: string,
     checkoutId: string,
     total:{

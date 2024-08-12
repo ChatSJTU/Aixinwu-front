@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Table, Button, Image, Typography, Tag, Flex } from 'antd';
+import { Table, Button, Image, Typography, Tag, Flex, Alert } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { ExportOutlined, CalendarOutlined, PayCircleOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import { LineItem } from '@/models/order';
@@ -13,9 +13,10 @@ const { Text } = Typography;
 
 interface OrderLinesTableProps {
     lines: LineItem[];
+    canceled: boolean;
 }
 
-export const OrderLinesTable: React.FC<OrderLinesTableProps> = ({ lines }) => {
+export const OrderLinesTable: React.FC<OrderLinesTableProps> = ({ lines, canceled }) => {
     const router = useRouter();
     const authCtx = useContext(AuthContext);
     const client = authCtx.client;
@@ -42,7 +43,7 @@ export const OrderLinesTable: React.FC<OrderLinesTableProps> = ({ lines }) => {
             key: 'image',
             width: '10%',
             render: (_, record: LineItem) => (
-                <Image width={48} height={48}  src={record.thumbnail.url} preview={false}/>
+                <Image width={48} height={48}  src={record.thumbnail?.url} preview={false}/>
             )
         },
         {
@@ -66,7 +67,7 @@ export const OrderLinesTable: React.FC<OrderLinesTableProps> = ({ lines }) => {
             width: '20%',
             key: 'varient',
             render: (_, record: LineItem) => (
-                record.variant.name ?? "/"
+                record.variant?.name ?? <Alert message="商品不存在或已下架" type="error" />
             )
         },
         {
@@ -92,7 +93,16 @@ export const OrderLinesTable: React.FC<OrderLinesTableProps> = ({ lines }) => {
             align: 'left',
             width: '16%',
             key: 'status',
-            render: (_, record: LineItem) =>{
+            render: (_, record: LineItem) => {
+                if (canceled)
+                    return (
+                        <Tag color="error" style={{
+                            fontSize: "14px", 
+                            lineHeight: "auto",
+                        }}>
+                           已取消
+                        </Tag>
+                    );
                 if (record.quantityFulfilled == 0)
                     return (
                         <Tag color="error" style={{

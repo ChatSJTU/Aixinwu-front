@@ -3,6 +3,7 @@ fragment OrderBriefFragment on Order {
   id
   isPaid
   number
+  status
   paymentStatus
   checkoutId
   total {

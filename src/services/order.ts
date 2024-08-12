@@ -1,4 +1,4 @@
-import { OrderDetailedDocument, OrderDetailedQuery, OrderPayDocument, OrderPayMutation } from "@/graphql/hooks";
+import { OrderCancelDocument, OrderCancelMutation, OrderDetailedDocument, OrderDetailedQuery, OrderPayDocument, OrderPayMutation } from "@/graphql/hooks";
 import { OrderDetailedInfo, OrderInfo } from "@/models/order";
 import { ApolloClient } from "@apollo/client";
 
@@ -39,6 +39,25 @@ export async function orderDetailed(client: ApolloClient<object>, id: string) {
     } catch (error) {
         var errmessage = `查询订单详情失败：${error}`
         console.error(errmessage);
+        throw errmessage;
+    }
+}
+
+//取消订单
+export async function orderCancel(client: ApolloClient<object>, id: string) {
+    try {
+        const resp = await client.mutate<OrderCancelMutation>({
+            mutation: OrderCancelDocument,
+            variables: {
+              id: id
+            }
+        }); 
+        if (!resp.data || !resp.data.orderCancel){
+            throw {code: "NO_DATA"}
+        }
+        return resp.data.orderCancel.order?.status
+    } catch (error: any) {
+        var errmessage = `取消订单失败：${error}`
         throw errmessage;
     }
 }

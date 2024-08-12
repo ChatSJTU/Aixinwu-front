@@ -29,6 +29,10 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
         router.push(`/order/detail?id=${orderId}&autopay=true`)
     }
 
+    const handleCancelClick = (orderId: string) => {
+        router.push(`/order/detail?id=${orderId}&autocancel=true`)
+    }
+
     console.log(orders)
     
     const columns: TableColumnsType<any> = [
@@ -99,15 +103,21 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
             align: 'center',
             dataIndex: 'paymentStatus',
             key: 'paymentStatus',
-            render: (_, record: OrderInfo) => (
-                record.paymentStatus === "FULLY_CHARGED" ? <Tag style={{ marginInlineEnd: '0px' }} color='green'>已支付</Tag>
-                    :
-                    record.paymentStatus === "NOT_CHARGED" ? <Tag style={{ marginInlineEnd: '0px' }} color='blue'>未支付</Tag>
-                        :
-                        record.paymentStatus === "FULLY_REFUNDED" ? <Tag style={{ marginInlineEnd: '0px' }} color='purple'>已退款</Tag>
-                            :
-                            <Tag style={{ marginInlineEnd: '0px' }}>已取消</Tag>
-            )
+            render: (_, record: OrderInfo) => {
+                if (record.status == "CANCELED") {
+                    return <Tag style={{ marginInlineEnd: '0px' }} color='error'>已取消</Tag>
+                }
+                if (record.paymentStatus == "FULLY_CHARGED") {
+                    return <Tag style={{ marginInlineEnd: '0px' }} color='green'>已支付</Tag>
+                }
+                if (record.paymentStatus == "NOT_CHARGED") {
+                    return <Tag style={{ marginInlineEnd: '0px' }} color='blue'>未支付</Tag>
+                }
+                if (record.paymentStatus == "FULLY_REFUNDED") {
+                    return <Tag style={{ marginInlineEnd: '0px' }} color='purple'>已退款</Tag>
+                }
+                return <Tag style={{ marginInlineEnd: '0px' }} color="grey">未知状态</Tag>
+            }
         },
         {
             title: '操作',
@@ -116,11 +126,11 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
             key: 'operation',
             render: (_, record: OrderInfo) => {
 
-                if (record.paymentStatus === "NOT_CHARGED") {
+                if (record.paymentStatus === "NOT_CHARGED" && record.status != "CANCELED") {
                     return (
                         <Flex vertical justify='center' align='center' >
                             <Button type='primary' size='small' icon={<PayCircleOutlined />} style={{ marginBottom: '10px' }} onClick={() => {handlePayClick(record.id);}}>支付</Button>
-                            <Button type='default' size='small' icon={<CloseCircleOutlined />} >取消</Button>
+                            <Button type='default' size='small' icon={<CloseCircleOutlined />} onClick={() => {handleCancelClick(record.id);}}>取消</Button>
                         </Flex>
                     )
                 }

@@ -33308,7 +33308,14 @@ export type StatisticsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type StatisticsQuery = { __typename?: 'Query', statistics?: { __typename?: 'Statistics', circulatedCurrency?: number | null, circulatedItems?: number | null, users?: number | null, views?: number | null } | null };
 
-export type OrderBriefFragmentFragment = { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, thumbnail?: { __typename?: 'Image', alt?: string | null, url: string } | null, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null };
+export type OrderBriefFragmentFragment = { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, status: OrderStatus, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, thumbnail?: { __typename?: 'Image', alt?: string | null, url: string } | null, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null };
+
+export type OrderCancelMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type OrderCancelMutation = { __typename?: 'Mutation', orderCancel?: { __typename?: 'OrderCancel', errors: Array<{ __typename?: 'OrderError', variants?: Array<string> | null, orderLines?: Array<string> | null, message?: string | null, field?: string | null, code: OrderErrorCode, addressType?: AddressTypeEnum | null }>, order?: { __typename?: 'Order', id: string, status: OrderStatus, statusDisplay: string } | null } | null };
 
 export type OrderDetailedQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -33324,7 +33331,7 @@ export type OrderPayMutationVariables = Exact<{
 }>;
 
 
-export type OrderPayMutation = { __typename?: 'Mutation', orderConfirm?: { __typename?: 'OrderConfirm', order?: { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, thumbnail?: { __typename?: 'Image', alt?: string | null, url: string } | null, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } | null, errors: Array<{ __typename?: 'OrderError', code: OrderErrorCode, field?: string | null, message?: string | null }> } | null };
+export type OrderPayMutation = { __typename?: 'Mutation', orderConfirm?: { __typename?: 'OrderConfirm', order?: { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, status: OrderStatus, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, thumbnail?: { __typename?: 'Image', alt?: string | null, url: string } | null, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } | null, errors: Array<{ __typename?: 'OrderError', code: OrderErrorCode, field?: string | null, message?: string | null }> } | null };
 
 export type CategoriesQueryVariables = Exact<{
   channel: Scalars['String']['input'];
@@ -33442,7 +33449,7 @@ export type UserOrdersQueryVariables = Exact<{
 }>;
 
 
-export type UserOrdersQuery = { __typename?: 'Query', me?: { __typename?: 'User', orders?: { __typename?: 'OrderCountableConnection', edges: Array<{ __typename?: 'OrderCountableEdge', node: { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, thumbnail?: { __typename?: 'Image', alt?: string | null, url: string } | null, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } }> } | null } | null };
+export type UserOrdersQuery = { __typename?: 'Query', me?: { __typename?: 'User', orders?: { __typename?: 'OrderCountableConnection', edges: Array<{ __typename?: 'OrderCountableEdge', node: { __typename?: 'Order', created: any, id: string, isPaid: boolean, number: string, status: OrderStatus, paymentStatus: PaymentChargeStatusEnum, checkoutId?: string | null, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } }, lines: Array<{ __typename?: 'OrderLine', productName: string, quantity: number, thumbnail?: { __typename?: 'Image', alt?: string | null, url: string } | null, variant?: { __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', url: string }> | null, pricing?: { __typename?: 'VariantPricingInfo', price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number } } | null } | null } | null }>, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } }> } | null } | null };
 
 export const UserAddressFragmentFragmentDoc = gql`
     fragment UserAddressFragment on Address {
@@ -33533,6 +33540,7 @@ export const OrderBriefFragmentFragmentDoc = gql`
   id
   isPaid
   number
+  status
   paymentStatus
   checkoutId
   total {
@@ -34625,6 +34633,51 @@ export type StatisticsQueryHookResult = ReturnType<typeof useStatisticsQuery>;
 export type StatisticsLazyQueryHookResult = ReturnType<typeof useStatisticsLazyQuery>;
 export type StatisticsSuspenseQueryHookResult = ReturnType<typeof useStatisticsSuspenseQuery>;
 export type StatisticsQueryResult = Apollo.QueryResult<StatisticsQuery, StatisticsQueryVariables>;
+export const OrderCancelDocument = gql`
+    mutation OrderCancel($id: ID!) {
+  orderCancel(id: $id) {
+    errors {
+      variants
+      orderLines
+      message
+      field
+      code
+      addressType
+    }
+    order {
+      id
+      status
+      statusDisplay
+    }
+  }
+}
+    `;
+export type OrderCancelMutationFn = Apollo.MutationFunction<OrderCancelMutation, OrderCancelMutationVariables>;
+
+/**
+ * __useOrderCancelMutation__
+ *
+ * To run a mutation, you first call `useOrderCancelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOrderCancelMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [orderCancelMutation, { data, loading, error }] = useOrderCancelMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useOrderCancelMutation(baseOptions?: Apollo.MutationHookOptions<OrderCancelMutation, OrderCancelMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<OrderCancelMutation, OrderCancelMutationVariables>(OrderCancelDocument, options);
+      }
+export type OrderCancelMutationHookResult = ReturnType<typeof useOrderCancelMutation>;
+export type OrderCancelMutationResult = Apollo.MutationResult<OrderCancelMutation>;
+export type OrderCancelMutationOptions = Apollo.BaseMutationOptions<OrderCancelMutation, OrderCancelMutationVariables>;
 export const OrderDetailedDocument = gql`
     query OrderDetailed($id: ID!) {
   order(id: $id) {
