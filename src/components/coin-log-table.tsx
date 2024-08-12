@@ -21,6 +21,7 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, t
 
     const descMap: DescMap = {
         "donation_granted": ["已获批捐赠", "geekblue"],
+        "donation_rejected": ["已拒绝捐赠", "geekblue"],
         "manually_updated": ["手动更新", "purple"], 
         "first_login": ["首次登录", "magenta"],
         "consecutive_login": ["连续登录", "magenta"],
