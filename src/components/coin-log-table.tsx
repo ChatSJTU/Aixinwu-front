@@ -4,6 +4,7 @@ import type { PaginationProps, TableColumnsType } from 'antd';
 import { CoinLogInfo } from '@/models/user';
 import { CalendarOutlined } from '@ant-design/icons'
 import { AxCoin } from './axcoin';
+import dayjs from 'dayjs'
 
 const { Text } = Typography;
 
@@ -31,8 +32,9 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, t
     const dataSource = coinLogs.map(coinLog => ({
         key: coinLog.id,
         logId: coinLog.number,
-        amount: coinLog.amount,
-        createTime: coinLog.created.split('T')[0],
+        amount: coinLog.balance,
+        delta: coinLog.delta,
+        createTime: dayjs(coinLog.date).format("YYYY-MM-DD HH:mm:ss"),
         description: descMap[coinLog.type] || ["未知类型", ""],
     }));
 
@@ -42,7 +44,7 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, t
             align: 'center',
             dataIndex: 'logId',
             key: 'logId',
-            width: '25%',
+            width: '18%',
             render: (ID) => <Text style={{ fontSize: '16px' }}>{ID}</Text>
         },
         {
@@ -50,11 +52,19 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, t
             align: 'center',
             dataIndex: 'createTime',
             key: 'createTime',
-            width: '20%',
+            width: '240px',
             render: (date) => <Text style={{ fontSize: '16px' }}><CalendarOutlined style={{ marginRight: '4px' }} />{date}</Text>
         },
         {
-            title: <><AxCoin size={14} />&nbsp;爱心币</>,
+            title: <><AxCoin size={14} />&nbsp;爱心币变动</>,
+            align: 'center',
+            dataIndex: 'delta',
+            key: 'delta',
+            width: '20%',
+            render: (delta: string) => <AxCoin value={Number(delta)} size={18} coloredValue></AxCoin>
+        },
+        {
+            title: <><AxCoin size={14} />&nbsp;爱心币余额</>,
             align: 'center',
             dataIndex: 'amount',
             key: 'amount',

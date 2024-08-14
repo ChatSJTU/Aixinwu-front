@@ -254,15 +254,7 @@ export async function fetchUserBalanceEvents(client: ApolloClient<object>, first
             throw "数据为空"
         }
         const edges = resp.data.balanceEvents.edges;
-        let coinLogs = edges.map((edge) => {
-            return ({
-                id: edge.node.id,
-                number: edge.node.number,
-                amount: edge.node.balance,
-                created: edge.node.date,
-                type: edge.node.type
-            })
-        }) as CoinLogInfo[]
+        let coinLogs = edges.map(x => x.node as CoinLogInfo) as CoinLogInfo[]
         let totalCount = resp.data.balanceEvents.totalCount as number;
 
         return ({
