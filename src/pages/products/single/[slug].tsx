@@ -27,6 +27,7 @@ import CartContext from '@/contexts/cart';
 import { DirectBuyModal } from '@/components/direct-buy-modal';
 import { MessageContext } from '@/contexts/message';
 import ThemeContext from "@/contexts/theme";
+import { DirectBuyConfirmModal } from '@/components/direct-buy-confirm-modal';
 
 const { confirm } = Modal;
 const { Title, Text, Link } = Typography;
@@ -56,7 +57,9 @@ const ProductDetailsPage: React.FC = () => {
   const [selectedVarient, setSelectedVarient] = useState<number>(-Infinity);
   const [queryQuantity, setQueryQuantity] = useState<number>(1);
 
+  const [isDirectBuyConfirmModalOpen, setDirectBuyConfirmModalOpen] = useState<boolean>(false);
   const [isDirectBuyModalOpen, setDirectBuyModalOpen] = useState<boolean>(false);
+  const [checkoutId, setCheckoutId] = useState<string | undefined>(undefined);
 
   const overQuantity = (
     queryQuantity > product?.varients[selectedVarient]?.quantityLimit!
@@ -104,26 +107,17 @@ const ProductDetailsPage: React.FC = () => {
       message.error("操作失败：未选择商品分类或分类不存在。");
       return;
     }
-    confirm({
-      title: '下单确认',
-      icon: <InfoCircleFilled />,
-      content: (
-        <span>
-          {'是否确认购买 '}
-          {product?.name}
-          {product?.varients[selectedVarient] && `（${product?.varients[selectedVarient].name}）`}
-        </span>
-      ),
-      onOk() {
-        setDirectBuyModalOpen(true);
-      },
-      onCancel() {
-      },
-    });
+    setDirectBuyConfirmModalOpen(true);
   }
 
-  const handleDirectBuyModalClose = () => {
-    setDirectBuyModalOpen(false);
+  const handleDirectBuyConfirmModalCancel = () => {
+    setDirectBuyConfirmModalOpen(false);
+  }
+
+  const handleDirectBuyConfirmModalOk = (checkoutId: string) => {
+    setDirectBuyConfirmModalOpen(false);
+    setCheckoutId(checkoutId);
+    setDirectBuyModalOpen(true);
   }
 
   if (!product) {
@@ -325,12 +319,17 @@ const ProductDetailsPage: React.FC = () => {
           <MarkdownRenderer content={product.desc} />
         </div>
       </div>
-      <DirectBuyModal
-        isopen={isDirectBuyModalOpen}
+      <DirectBuyConfirmModal
+        isopen={isDirectBuyConfirmModalOpen}
         varient={product?.varients[selectedVarient!]}
         product={product!}
         count={queryQuantity}
-        onClose={handleDirectBuyModalClose} />
+        onCancel={handleDirectBuyConfirmModalCancel}
+        onOk={handleDirectBuyConfirmModalOk} />
+      <DirectBuyModal
+        checkoutId={checkoutId!}
+        isopen={isDirectBuyModalOpen}
+        onClose={() => {setDirectBuyModalOpen(false)}}/>
     </>
   );
 };

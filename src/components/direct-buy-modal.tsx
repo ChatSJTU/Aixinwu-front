@@ -2,7 +2,7 @@ import AuthContext from "@/contexts/auth";
 import CartContext from "@/contexts/cart";
 import { MessageContext } from "@/contexts/message";
 import { CheckoutDetail } from "@/models/checkout";
-import { checkoutAddLine, checkoutAddressUpdate, checkoutBillingAddressUpdate, checkoutComplete, checkoutCreate, checkoutShippingMethodUpdate } from "@/services/checkout";
+import { checkoutAddLine, checkoutAddressUpdate, checkoutBillingAddressUpdate, checkoutComplete, checkoutCreate, checkoutFind, checkoutShippingMethodUpdate } from "@/services/checkout";
 import { Button, Flex, Modal, Progress } from "antd";
 import React, { useContext } from "react";
 import { useEffect } from "react";
@@ -14,10 +14,8 @@ import { fetchUserAddresses } from "@/services/user";
 const { Text, Link } = Typography;
 
 interface DirectBuyModalProps {
+    checkoutId: string;
     isopen: boolean;
-    product: ProductDetail;
-    varient: VarientDetail;
-    count: number;
     onClose: () => void;
 }
 
@@ -48,70 +46,19 @@ export const DirectBuyModal: React.FC<DirectBuyModalProps> = (props) => {
         setProcessInfo("正在处理中……");
         try
         {
-            var checkout = await checkoutCreate(
-                client!, 
-                props.product.channel
-            );
-        }
-        catch(err)
-        {
-            setProcessStatus("exception");
-            setProcessInfo("创建购物车失败");
-            console.log(err)
-            return;
-        }
-        setProcess(14);
-        try
-        {
-            var res2 = await checkoutAddLine(
-                client!, 
-                checkout.id,
-                props.varient.id,
-                props.count
-            );
-        }
-        catch(err: any)
-        {
-            setProcessStatus("exception");
-            setProcessInfo("添加商品失败");
-            message.error(et(`checkoutAddLine.${err.code}`));
-            console.log(err.code)
-            return;
-        }
-        setProcess(28);
-        try
-        {
-            var addresses = await fetchUserAddresses(
-                client!
-            );
-            var defaultaddr = addresses.find(x=>x.isDefaultShippingAddress);
-            if (defaultaddr == undefined)
-                throw "";
-        }
-        catch(err)
-        {
-            setProcessStatus("exception");
-            setProcessInfo("未找到默认收货地址");
-            console.log(err)
-            return;
-        }
-        setProcess(42);
-        try
-        {
-            var checkoutDetail = await checkoutAddressUpdate(
+            var checkoutDetail = await checkoutFind(
                 client!,
-                checkout.id,
-                defaultaddr
+                props.checkoutId
             );
         }
         catch(err)
         {
             setProcessStatus("exception");
-            setProcessInfo("设置收货地址失败");
+            setProcessInfo("订单不存在");
             console.log(err)
             return;
         }
-        setProcess(56);
+        setProcess(25);
         try
         {
             if (!checkoutDetail.availableShippingMethods) {
@@ -132,7 +79,7 @@ export const DirectBuyModal: React.FC<DirectBuyModalProps> = (props) => {
             console.log(err)
             return;
         }
-        setProcess(70);
+        setProcess(50);
         try
         {
             if (!checkoutDetail.shippingAddress) {
@@ -153,7 +100,7 @@ export const DirectBuyModal: React.FC<DirectBuyModalProps> = (props) => {
             console.log(err)
             return;
         }
-        setProcess(84);
+        setProcess(75);
         try
         {
             var res7 = await checkoutComplete(

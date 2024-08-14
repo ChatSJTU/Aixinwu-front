@@ -1,15 +1,19 @@
 import { TableRowSelection } from "antd/es/table/interface";
 import { AddressInfo } from "./address";
+import { Money } from "./common";
 
 export interface CheckoutCreateResult {
     id: string;
     quantity: number;
+    isShippingRequired: boolean;
+    totalPrice: { gross: Money };
+    shippingAddress: AddressInfo;
 }
 
 export interface CheckoutDetail {
     id: string;
     lines: CheckoutLineDetail[] | null;
-    totalPrice: number;
+    totalPrice: { gross: Money };
     quantity: number;
     shippingAddress: AddressInfo;
     isShippingRequired: boolean;

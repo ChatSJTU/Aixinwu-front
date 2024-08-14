@@ -3,6 +3,16 @@ mutation CheckoutCreate($channel: String!) {
     checkout {
       id
       quantity
+      totalPrice {
+        gross {
+          amount
+          currency
+        }
+      }
+      isShippingRequired
+      shippingAddress {
+        ...UserAddressFragment
+      }
     }
     errors {
       field

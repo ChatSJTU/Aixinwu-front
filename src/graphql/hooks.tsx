@@ -33217,7 +33217,7 @@ export type CheckoutAddLineMutationVariables = Exact<{
 }>;
 
 
-export type CheckoutAddLineMutation = { __typename?: 'Mutation', checkoutLinesAdd?: { __typename?: 'CheckoutLinesAdd', checkout?: { __typename?: 'Checkout', id: string, quantity: number, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, variant: { __typename?: 'ProductVariant', name: string, product: { __typename?: 'Product', name: string } } }> } | null, errors: Array<{ __typename?: 'CheckoutError', field?: string | null, code: CheckoutErrorCode, message?: string | null }> } | null };
+export type CheckoutAddLineMutation = { __typename?: 'Mutation', checkoutLinesAdd?: { __typename?: 'CheckoutLinesAdd', checkout?: { __typename?: 'Checkout', id: string, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, variant: { __typename?: 'ProductVariant', name: string, product: { __typename?: 'Product', name: string } } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } | null, errors: Array<{ __typename?: 'CheckoutError', field?: string | null, code: CheckoutErrorCode, message?: string | null }> } | null };
 
 export type CheckoutBillingAddressUpdateMutationVariables = Exact<{
   billingAddress: AddressInput;
@@ -33239,7 +33239,7 @@ export type CheckoutCreateMutationVariables = Exact<{
 }>;
 
 
-export type CheckoutCreateMutation = { __typename?: 'Mutation', checkoutCreate?: { __typename?: 'CheckoutCreate', checkout?: { __typename?: 'Checkout', id: string, quantity: number } | null, errors: Array<{ __typename?: 'CheckoutError', field?: string | null, code: CheckoutErrorCode, message?: string | null }> } | null };
+export type CheckoutCreateMutation = { __typename?: 'Mutation', checkoutCreate?: { __typename?: 'CheckoutCreate', checkout?: { __typename?: 'Checkout', id: string, quantity: number, isShippingRequired: boolean, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null } | null, errors: Array<{ __typename?: 'CheckoutError', field?: string | null, code: CheckoutErrorCode, message?: string | null }> } | null };
 
 export type CheckoutEmailUpdateMutationVariables = Exact<{
   email?: InputMaybe<Scalars['String']['input']>;
@@ -34076,6 +34076,16 @@ export const CheckoutAddLineDocument = gql`
           }
         }
       }
+      totalPrice {
+        gross {
+          amount
+          currency
+        }
+      }
+      isShippingRequired
+      shippingAddress {
+        ...UserAddressFragment
+      }
     }
     errors {
       field
@@ -34084,7 +34094,7 @@ export const CheckoutAddLineDocument = gql`
     }
   }
 }
-    `;
+    ${UserAddressFragmentFragmentDoc}`;
 export type CheckoutAddLineMutationFn = Apollo.MutationFunction<CheckoutAddLineMutation, CheckoutAddLineMutationVariables>;
 
 /**
@@ -34224,6 +34234,16 @@ export const CheckoutCreateDocument = gql`
     checkout {
       id
       quantity
+      totalPrice {
+        gross {
+          amount
+          currency
+        }
+      }
+      isShippingRequired
+      shippingAddress {
+        ...UserAddressFragment
+      }
     }
     errors {
       field
@@ -34232,7 +34252,7 @@ export const CheckoutCreateDocument = gql`
     }
   }
 }
-    `;
+    ${UserAddressFragmentFragmentDoc}`;
 export type CheckoutCreateMutationFn = Apollo.MutationFunction<CheckoutCreateMutation, CheckoutCreateMutationVariables>;
 
 /**

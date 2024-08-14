@@ -13,6 +13,16 @@ mutation CheckoutAddLine($id: ID!, $productVariantId: ID!, $quantity: Int!) {
           }
         }
       }
+      totalPrice {
+        gross {
+          amount
+          currency
+        }
+      }
+      isShippingRequired
+      shippingAddress {
+        ...UserAddressFragment
+      }
     }
     errors {
       field

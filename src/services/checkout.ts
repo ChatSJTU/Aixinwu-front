@@ -34,7 +34,7 @@ import { AddressInfo } from "@/models/address";
 function mapCheckoutForCart(data: Checkout) : CheckoutDetail {
     return {
         id: data.id,
-        totalPrice: data.totalPrice.gross.amount,
+        totalPrice: data.totalPrice,
         quantity: data.quantity,
         shippingAddress: data.shippingAddress == undefined ? undefined : mapAddressInfo(data.shippingAddress as Address),
         isShippingRequired: data.isShippingRequired,

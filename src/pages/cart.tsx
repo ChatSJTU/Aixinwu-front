@@ -273,7 +273,7 @@ export const OrderPageView = () => {
                 <Space align='center' style={{width: '100%', display: 'flex', justifyContent: 'flex-end'}}>
                     <Text style={{display: 'flex', alignItems: "center"}}>
                     {/* 总计： <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{totalCost}</span> */}
-                    总计： <AxCoin value={checkout.totalPrice} coloredValue/>
+                    总计： <AxCoin value={checkout.totalPrice.gross.amount} coloredValue/>
                     </Text>
                     <Button type="primary" onClick={handleSubmitClick}>提交订单</Button>
                 </Space>
@@ -371,7 +371,7 @@ export const OrderPageView = () => {
                     <div style={{ position: 'fixed', bottom: 0, width: '100%', background: '#fff', padding: '20px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }}>
                         <Space align='center' style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
                             <Text style={{ display: 'flex', alignItems: "center" }}>
-                                总计： <AxCoin value={checkout.totalPrice} coloredValue/>
+                                总计： <AxCoin value={checkout.totalPrice.gross.amount} coloredValue/>
                             </Text>
                             <Button type="primary">提交订单</Button>
                         </Space>
