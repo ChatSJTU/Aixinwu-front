@@ -45,7 +45,7 @@ export const AxCoin: React.FC<AxCoinProps> = ({
                 component={themeCtx.userTheme == 'light' ? AxCoinLight : AxCoinDark} 
                 style={iconStyle}
             />
-            {value >= 0 &&             
+            { (value != -Infinity) &&
                 <div style={{ alignItems: 'baseline', display: 'inline-flex' }}>
                     <p
                         className={coloredValue ? '' : 'primary-text'}
