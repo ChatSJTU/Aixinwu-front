@@ -5,6 +5,7 @@ query UserBalanceEvents($first: Int, $last: Int, $user: String) {
         number
         account
         balance
+        delta
         code
         date
         id

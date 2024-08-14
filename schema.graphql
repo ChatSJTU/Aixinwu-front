@@ -881,6 +881,23 @@ type Query {
     token: UUID!
   ): Order @doc(category: "Orders") @deprecated(reason: "This field will be removed in Saleor 4.0.")
 
+  """
+  Order Report
+  
+  Requires one of the following permissions: MANAGE_ORDERS.
+  """
+  orderReports(date: DateTimeRangeInput!, granularity: Granularity!): [BaseReport!] @doc(category: "Reports")
+
+  "\\n\\nRequires one of the following permissions: MANAGE_USERS."
+  customerReports(date: DateTimeRangeInput!, granularity: Granularity!): [Int!]
+
+  """
+  Donation Report
+  
+  Requires one of the following permissions: MANAGE_DONATIONS.
+  """
+  donationReports(date: DateTimeRangeInput!, granularity: Granularity!): [BaseReport!] @doc(category: "Reports")
+
   """Look up a navigation menu by ID or name."""
   menu(
     """Slug of a channel for which the data should be returned."""
@@ -1121,6 +1138,56 @@ type Query {
     """
     last: Int
   ): BalanceEventCountableConnection @doc(category: "Events")
+
+  """Order Events"""
+  orderEvents(
+    """Filter the order events"""
+    filter: OrderEventFilterInput
+
+    """Sorting the order events"""
+    sortBy: OrderEventSortingInput
+
+    """Return the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Return the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Retrieve the first n elements from the list. Note that the system only allows fetching a maximum of 10000 objects in a single query.
+    """
+    first: Int
+
+    """
+    Retrieve the last n elements from the list. Note that the system only allows fetching a maximum of 10000 objects in a single query.
+    """
+    last: Int
+  ): OrderEventCountableConnection @doc(category: "Events")
+
+  """Customer Events"""
+  customerEvents(
+    """Filter the customer events"""
+    filter: CustomerEventFilterInput
+
+    """Sorting the customer events"""
+    sortBy: CustomerEventSortingInput
+
+    """Return the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Return the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Retrieve the first n elements from the list. Note that the system only allows fetching a maximum of 10000 objects in a single query.
+    """
+    first: Int
+
+    """
+    Retrieve the last n elements from the list. Note that the system only allows fetching a maximum of 10000 objects in a single query.
+    """
+    last: Int
+  ): CustomerEventCountableConnection @doc(category: "Events")
 
   """
   Donations made by the user or collected by users if requested by staff.
@@ -13879,6 +13946,23 @@ input OrderDraftFilterInput @doc(category: "Orders") {
   channels: [ID!]
 }
 
+type BaseReport {
+  """The total collection in the current range."""
+  collectionTotal: Int
+
+  """The items total in the range."""
+  quantitiesTotal: Int
+
+  """The amount total in the range"""
+  amountTotal: Float
+}
+
+enum Granularity {
+  DAILY
+  MONTHLY
+  YEARLY
+}
+
 type MenuCountableConnection @doc(category: "Menu") {
   """Pagination data for this connection."""
   pageInfo: PageInfo!
@@ -14143,13 +14227,16 @@ type BalanceEvent implements Node {
   id: ID!
 
   """The number of the balance event."""
-  number: Int
+  number: String
 
   """User account of a balance event."""
   account: String
 
   """Balance of a balance event."""
   balance: Float
+
+  """Delta of a balance event."""
+  delta: Float
 
   """Type of a balance event."""
   type: String
@@ -14174,6 +14261,7 @@ input BalanceEventFilterInput @doc(category: "Events") {
 """An enumeration."""
 enum BalanceEventsEnum @doc(category: "Events") {
   DONATION_GRANTED
+  DONATION_REJECTED
   FIRST_LOGIN
   MANUALLY_UPDATED
   CONSECUTIVE_LOGIN
@@ -14192,6 +14280,53 @@ input BalanceEventSortingInput @doc(category: "Events") {
 enum EventSortField @doc(category: "Events") {
   """Sort checkouts by creation date."""
   CREATION_DATE
+}
+
+input OrderEventFilterInput @doc(category: "Events") {
+  user: String
+  date: DateRangeInput
+  type: OrderEventsEnum
+  metadata: [MetadataFilter!]
+}
+
+input OrderEventSortingInput @doc(category: "Events") {
+  """Specifies the direction in which to sort orders."""
+  direction: OrderDirection!
+
+  """Sort orders by the selected field."""
+  field: EventSortField!
+}
+
+type CustomerEventCountableConnection @doc(category: "Events") {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+  edges: [CustomerEventCountableEdge!]!
+
+  """A total count of items in the collection."""
+  totalCount: Int
+}
+
+type CustomerEventCountableEdge @doc(category: "Events") {
+  """The item at the end of the edge."""
+  node: CustomerEvent!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+input CustomerEventFilterInput @doc(category: "Events") {
+  user: String
+  date: DateRangeInput
+  type: CustomerEventsEnum
+  metadata: [MetadataFilter!]
+}
+
+input CustomerEventSortingInput @doc(category: "Events") {
+  """Specifies the direction in which to sort customers."""
+  direction: OrderDirection!
+
+  """Sort customers by the selected field."""
+  field: EventSortField!
 }
 
 type DonationCountableConnection @doc(category: "Donations") {
@@ -14264,6 +14399,8 @@ enum DonationSortField @doc(category: "Donations") {
 
 input DonationFilterInput @doc(category: "Orders") {
   donator: String
+  title: String
+  number: String
   created: DateRangeInput
   updated: DateRangeInput
   metadata: [MetadataFilter!]
@@ -27895,7 +28032,7 @@ input DonationCreateInput @doc(category: "Donations") {
   name: String!
 
   """Student ID of the donator"""
-  donator: String
+  donator: String!
 
   """The barcode of the donation."""
   barcode: String!
@@ -32030,6 +32167,9 @@ input StaffCreateInput @doc(category: "Users") {
   URL of a view where users should be redirected to set the password. URL in RFC 1808 format.
   """
   redirectUrl: String
+
+  """Password of the staff"""
+  password: String
 }
 
 """

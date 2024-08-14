@@ -2921,12 +2921,14 @@ export type BalanceEvent = Node & {
   code?: Maybe<Scalars['String']['output']>;
   /** Datetime of the event. */
   date?: Maybe<Scalars['DateTime']['output']>;
+  /** Delta of a balance event. */
+  delta?: Maybe<Scalars['Float']['output']>;
   /** The ID of the balance event. */
   id: Scalars['ID']['output'];
   /** User name of a balance event. */
   name?: Maybe<Scalars['String']['output']>;
   /** The number of the balance event. */
-  number?: Maybe<Scalars['Int']['output']>;
+  number?: Maybe<Scalars['String']['output']>;
   /** Type of a balance event. */
   type?: Maybe<Scalars['String']['output']>;
 };
@@ -2967,6 +2969,7 @@ export enum BalanceEventsEnum {
   ConsecutiveLogin = 'CONSECUTIVE_LOGIN',
   Consumed = 'CONSUMED',
   DonationGranted = 'DONATION_GRANTED',
+  DonationRejected = 'DONATION_REJECTED',
   FirstLogin = 'FIRST_LOGIN',
   ManuallyUpdated = 'MANUALLY_UPDATED',
   Refunded = 'REFUNDED'
@@ -3080,6 +3083,16 @@ export type BarcodeSortingInput = {
   direction: OrderDirection;
   /** Sort barcodes by the selected field. */
   field: BarcodeSortField;
+};
+
+export type BaseReport = {
+  __typename?: 'BaseReport';
+  /** The amount total in the range */
+  amountTotal?: Maybe<Scalars['Float']['output']>;
+  /** The total collection in the current range. */
+  collectionTotal?: Maybe<Scalars['Int']['output']>;
+  /** The items total in the range. */
+  quantitiesTotal?: Maybe<Scalars['Int']['output']>;
 };
 
 export type BulkAttributeValueInput = {
@@ -6555,6 +6568,37 @@ export type CustomerEvent = Node & {
   user?: Maybe<User>;
 };
 
+export type CustomerEventCountableConnection = {
+  __typename?: 'CustomerEventCountableConnection';
+  edges: Array<CustomerEventCountableEdge>;
+  /** Pagination data for this connection. */
+  pageInfo: PageInfo;
+  /** A total count of items in the collection. */
+  totalCount?: Maybe<Scalars['Int']['output']>;
+};
+
+export type CustomerEventCountableEdge = {
+  __typename?: 'CustomerEventCountableEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: CustomerEvent;
+};
+
+export type CustomerEventFilterInput = {
+  date?: InputMaybe<DateRangeInput>;
+  metadata?: InputMaybe<Array<MetadataFilter>>;
+  type?: InputMaybe<CustomerEventsEnum>;
+  user?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CustomerEventSortingInput = {
+  /** Specifies the direction in which to sort customers. */
+  direction: OrderDirection;
+  /** Sort customers by the selected field. */
+  field: EventSortField;
+};
+
 /** An enumeration. */
 export enum CustomerEventsEnum {
   AccountActivated = 'ACCOUNT_ACTIVATED',
@@ -7146,7 +7190,7 @@ export type DonationCreateInput = {
   /** The description of the donation. */
   description: Scalars['String']['input'];
   /** Student ID of the donator */
-  donator?: InputMaybe<Scalars['String']['input']>;
+  donator: Scalars['String']['input'];
   /** The name of the donator */
   name: Scalars['String']['input'];
   /** The price of the donation. */
@@ -7193,6 +7237,8 @@ export type DonationFilterInput = {
   created?: InputMaybe<DateRangeInput>;
   donator?: InputMaybe<Scalars['String']['input']>;
   metadata?: InputMaybe<Array<MetadataFilter>>;
+  number?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   updated?: InputMaybe<DateRangeInput>;
 };
 
@@ -9145,6 +9191,12 @@ export type GlobalIdFilterInput = {
   /** The value included in. */
   oneOf?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
+
+export enum Granularity {
+  Daily = 'DAILY',
+  Monthly = 'MONTHLY',
+  Yearly = 'YEARLY'
+}
 
 /** Represents permission group data. */
 export type Group = Node & {
@@ -17005,6 +17057,13 @@ export type OrderEventDiscountObject = {
   valueType: DiscountValueTypeEnum;
 };
 
+export type OrderEventFilterInput = {
+  date?: InputMaybe<DateRangeInput>;
+  metadata?: InputMaybe<Array<MetadataFilter>>;
+  type?: InputMaybe<OrderEventsEnum>;
+  user?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type OrderEventOrderLineObject = {
   __typename?: 'OrderEventOrderLineObject';
   /** The discount applied to the order line. */
@@ -17015,6 +17074,13 @@ export type OrderEventOrderLineObject = {
   orderLine?: Maybe<OrderLine>;
   /** The variant quantity. */
   quantity?: Maybe<Scalars['Int']['output']>;
+};
+
+export type OrderEventSortingInput = {
+  /** Specifies the direction in which to sort orders. */
+  direction: OrderDirection;
+  /** Sort orders by the selected field. */
+  field: EventSortField;
 };
 
 /** An enumeration. */
@@ -24487,6 +24553,10 @@ export type Query = {
   collection?: Maybe<Collection>;
   /** List of the shop's collections. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
   collections?: Maybe<CollectionCountableConnection>;
+  /** Customer Events */
+  customerEvents?: Maybe<CustomerEventCountableConnection>;
+  /** \n\nRequires one of the following permissions: MANAGE_USERS. */
+  customerReports?: Maybe<Array<Scalars['Int']['output']>>;
   /**
    * List of the shop's customers.
    *
@@ -24506,6 +24576,12 @@ export type Query = {
    */
   digitalContents?: Maybe<DigitalContentCountableConnection>;
   donation?: Maybe<Donation>;
+  /**
+   * Donation Report
+   *
+   * Requires one of the following permissions: MANAGE_DONATIONS.
+   */
+  donationReports?: Maybe<Array<BaseReport>>;
   /** Donations made by the user or collected by users if requested by staff. */
   donations?: Maybe<DonationCountableConnection>;
   /**
@@ -24583,6 +24659,14 @@ export type Query = {
    * @deprecated This field will be removed in Saleor 4.0.
    */
   orderByToken?: Maybe<Order>;
+  /** Order Events */
+  orderEvents?: Maybe<OrderEventCountableConnection>;
+  /**
+   * Order Report
+   *
+   * Requires one of the following permissions: MANAGE_ORDERS.
+   */
+  orderReports?: Maybe<Array<BaseReport>>;
   /**
    * Order related settings from site settings. Returns `orderSettings` for the first `channel` in alphabetical order.
    *
@@ -24996,6 +25080,22 @@ export type QueryCollectionsArgs = {
 };
 
 
+export type QueryCustomerEventsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<CustomerEventFilterInput>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<CustomerEventSortingInput>;
+};
+
+
+export type QueryCustomerReportsArgs = {
+  date: DateTimeRangeInput;
+  granularity: Granularity;
+};
+
+
 export type QueryCustomersArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -25021,6 +25121,12 @@ export type QueryDigitalContentsArgs = {
 
 export type QueryDonationArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type QueryDonationReportsArgs = {
+  date: DateTimeRangeInput;
+  granularity: Granularity;
 };
 
 
@@ -25137,6 +25243,22 @@ export type QueryOrderArgs = {
 
 export type QueryOrderByTokenArgs = {
   token: Scalars['UUID']['input'];
+};
+
+
+export type QueryOrderEventsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<OrderEventFilterInput>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<OrderEventSortingInput>;
+};
+
+
+export type QueryOrderReportsArgs = {
+  date: DateTimeRangeInput;
+  granularity: Granularity;
 };
 
 
@@ -27771,6 +27893,8 @@ export type StaffCreateInput = {
   metadata?: InputMaybe<Array<MetadataInput>>;
   /** A note about the user. */
   note?: InputMaybe<Scalars['String']['input']>;
+  /** Password of the staff */
+  password?: InputMaybe<Scalars['String']['input']>;
   /**
    * Fields required to update the user private metadata.
    *
@@ -33422,7 +33546,7 @@ export type UserBalanceEventsQueryVariables = Exact<{
 }>;
 
 
-export type UserBalanceEventsQuery = { __typename?: 'Query', balanceEvents?: { __typename?: 'BalanceEventCountableConnection', totalCount?: number | null, edges: Array<{ __typename?: 'BalanceEventCountableEdge', node: { __typename?: 'BalanceEvent', number?: number | null, account?: string | null, balance?: number | null, code?: string | null, date?: any | null, id: string, name?: string | null, type?: string | null } }> } | null };
+export type UserBalanceEventsQuery = { __typename?: 'Query', balanceEvents?: { __typename?: 'BalanceEventCountableConnection', totalCount?: number | null, edges: Array<{ __typename?: 'BalanceEventCountableEdge', node: { __typename?: 'BalanceEvent', number?: string | null, account?: string | null, balance?: number | null, delta?: number | null, code?: string | null, date?: any | null, id: string, name?: string | null, type?: string | null } }> } | null };
 
 export type UserBasicInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -35424,6 +35548,7 @@ export const UserBalanceEventsDocument = gql`
         number
         account
         balance
+        delta
         code
         date
         id
