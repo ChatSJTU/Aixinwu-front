@@ -290,10 +290,10 @@ const ProductDetailsPage: React.FC = () => {
                         onClick={handleBuyClick}
                         disabled={selectedVarient < 0 || overQuantity}
                       >
-                        立即购买
+                        {shared ? "立即租赁" : "立即购买"}
                       </Button>
                     </ConfigProvider>
-                    <Button
+                    {!shared && <Button
                       size="large"
                       type='default'
                       icon={<ShoppingCartOutlined />}
@@ -302,7 +302,7 @@ const ProductDetailsPage: React.FC = () => {
                       onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, queryQuantity) }}
                     >
                       添加到爱心篮
-                    </Button>
+                    </Button>}
                   </>
                 }
                 {
