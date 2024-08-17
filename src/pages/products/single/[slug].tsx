@@ -265,7 +265,7 @@ const ProductDetailsPage: React.FC = () => {
                   : <Text type='secondary'>已售罄</Text>
                 }
               </Space>}
-              <Flex justify={'space-around'} style={{ marginTop: '20px' }}>
+              <Space size="middle" style={{ width: "100%" }}>
                 {
                   authCtx.isLoggedIn &&
                   <>
@@ -310,7 +310,7 @@ const ProductDetailsPage: React.FC = () => {
                   <Alert message="您尚未登录，请登录以进行购买或添加至爱心篮"
                     type="warning" showIcon />
                 }
-              </Flex>
+              </Space>
             </Space>
           </Col>
         </Row>
