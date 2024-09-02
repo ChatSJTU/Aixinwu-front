@@ -1,0 +1,110 @@
+/*  设置行高选择框样式 */
+.ql-snow .ql-picker.ql-lineheight .ql-picker-label[data-value='1']::before,
+.ql-snow .ql-picker.ql-lineheight .ql-picker-item[data-value='1']::before {
+  content: '1';
+}
+
+.ql-snow .ql-picker.ql-lineheight .ql-picker-label[data-value='1.5']::before,
+.ql-snow .ql-picker.ql-lineheight .ql-picker-item[data-value='1.5']::before {
+  content: '1.5';
+}
+
+.ql-snow .ql-picker.ql-lineheight .ql-picker-label[data-value='1.75']::before,
+.ql-snow .ql-picker.ql-lineheight .ql-picker-item[data-value='1.75']::before {
+  content: '1.75';
+}
+
+.ql-snow .ql-picker.ql-lineheight .ql-picker-label[data-value='2']::before,
+.ql-snow .ql-picker.ql-lineheight .ql-picker-item[data-value='2']::before {
+  content: '2';
+}
+
+.ql-snow .ql-picker.ql-lineheight .ql-picker-label[data-value='3']::before,
+.ql-snow .ql-picker.ql-lineheight .ql-picker-item[data-value='3']::before {
+  content: '3';
+}
+
+.ql-snow .ql-picker.ql-lineheight .ql-picker-label[data-value='4']::before,
+.ql-snow .ql-picker.ql-lineheight .ql-picker-item[data-value='4']::before {
+  content: '4';
+}
+
+.ql-snow .ql-picker.ql-lineheight .ql-picker-label[data-value='5']::before,
+.ql-snow .ql-picker.ql-lineheight .ql-picker-item[data-value='5']::before {
+  content: '5';
+}
+
+.ql-snow .ql-picker.ql-lineheight {
+  width: 70px;
+}
+
+/* 定义字体选择框样式 */
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='SimSun']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='SimSun']::before {
+  font-family: 'SimSun' !important;
+  content: '宋体';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='SimHei']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='SimHei']::before {
+  font-family: 'SimHei';
+  content: '黑体';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='Microsoft-YaHei']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='Microsoft-YaHei']::before {
+  font-family: '微软雅黑';
+  content: '微软雅黑';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='KaiTi']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='KaiTi']::before {
+  font-family: 'KaiTi' !important;
+  content: '楷体';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='FangSong']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='FangSong']::before {
+  font-family: 'FangSong';
+  content: '仿宋';
+}
+
+/*  设置每个字体的css字体样式 */
+.ql-font-SimSun {
+  font-family: 'SimSun';
+}
+
+.ql-font-SimHei {
+  font-family: 'SimHei';
+}
+
+.ql-font-Microsoft-YaHei {
+  font-family: '微软雅黑';
+}
+
+.ql-font-KaiTi {
+  font-family: 'KaiTi';
+}
+
+.ql-font-FangSong {
+  font-family: 'FangSong';
+}
+
+
+/* 自定义编辑器样式 */
+.ql-toolbar {
+  display: none;
+}
+
+.ql-editor {
+  font-size: medium;
+}
+
+.ql-editor img {
+  margin: 0 auto !important;
+  display: block !important;
+}
+
+.ql-disabled {
+  border: none !important;
+}

@@ -1,16 +1,20 @@
 import Head from "next/head";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useState, useContext, useEffect } from 'react';
 import { Breadcrumb, Button, Divider, Skeleton, Space, Typography } from "antd";
 import { CalendarOutlined, EyeOutlined, UserOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons"
-
-
-import MarkdownRenderer from "@/components/markdown-renderer";
+// import MarkdownRenderer from "@/components/markdown-renderer";
 import { ArticleDetails } from "@/models/article";
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
 import { fetchArticlesById } from "@/services/article";
+
+const QuillRenderer = dynamic(
+    () => import("@/components/quill-renderer").then(mod => mod.default),
+    { ssr: false }
+);
 
 const { Title } = Typography
 
@@ -28,7 +32,8 @@ const ArticlePage = () => {
                 .then(res => setArticleDetails(res))
                 .catch(err => message.error(err));
         }
-    }, [id])
+        console.log(articleDetails?.content)
+    }, [id, articleDetails?.content])
 
     return (
         <>
@@ -53,7 +58,8 @@ const ArticlePage = () => {
                             </div>
                         </Space>
                         <Divider />
-                        <MarkdownRenderer content={articleDetails?.content} />
+                        {/* <MarkdownRenderer content={articleDetails?.content} /> */}
+                        <QuillRenderer HTMLContent={articleDetails?.content} />
                         {(articleDetails.next || articleDetails.previous) &&
                             <>
                                 <Divider />
