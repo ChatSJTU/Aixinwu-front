@@ -172,7 +172,12 @@ export const AuthContextProvider = (props : LayoutProps) => {
     setToken("")
     setExp(1)
     setUserInfo({} as UserBasicInfo)
-    location.reload();
+    if (navigator.userAgent.includes("TaskCenterApp")) {
+      location.reload();
+    }
+    else {
+      router.push(`http://jaccount.sjtu.edu.cn/oauth2/logout?client_id=${process.env.NEXT_PUBLIC_JACCOUNT_CLIENT_ID}&post_logout_redirect_uri=${window.location.origin + router.basePath}`);
+    }
   }, [])
 
   const loggedInOr403 = () => {
