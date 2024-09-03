@@ -18,9 +18,9 @@ interface DonationTableProps {
 export const DonationTable: React.FC<DonationTableProps> = ({ current, pageSize, total, onChange, donations }) => {
 
     const statusMap: any = {
-        "unreviewd": ["未审批", "blue"],
+        "unreviewed": ["未确认", "blue"],
         "completed": ["已完成", "green"],
-        "rejected": ["被退回", "red"],
+        "rejected": ["已拒绝", "red"],
     }
 
     const dataSource = donations.map(donation => ({
