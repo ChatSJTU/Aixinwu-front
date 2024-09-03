@@ -46,27 +46,23 @@ export const CartContextProvider = (props : LayoutProps) => {
                         checkoutGetQuantity(client!, data[0])
                             .then(data => {
                                 setTotalQuantity(data);
-                            })
-                            .catch(err => message.error(err));
+                            });
                     }
                     else {
                         checkoutCreate(client!, process.env.NEXT_PUBLIC_CHANNEL!)
                             .then(data => {
                                 setCheckoutId(data.id);
                                 setTotalQuantity(data.quantity)
-                            })
-                            .catch(err => message.error(err));
+                            });
                     }
-                })
-                .catch(err => message.error(err));
+                });
             }
             else {
                 checkoutCreate(client!, process.env.NEXT_PUBLIC_CHANNEL!)
                     .then(data => {
                         setCheckoutId(data.id);
                         setTotalQuantity(data.quantity)
-                    })
-                    .catch(err => message.error(err));
+                    });
             }
         }
         else
@@ -76,14 +72,14 @@ export const CartContextProvider = (props : LayoutProps) => {
                     setTotalQuantity(data);
                 })
                 .catch(err => {
-                    message.error(err);
+                    // message.error(err);
                     incrCartError();
                 });
         }
     }, [checkoutId, checkoutErrorCounter]);
 
     const incrCartError = () => {
-        setCheckoutErrorCounter(checkoutErrorCounter+1);
+        setCheckoutErrorCounter(checkoutErrorCounter + 1);
     }
   
     const addLines = useCallback((variantId : string, quantity : number) => {
