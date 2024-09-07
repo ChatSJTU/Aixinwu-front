@@ -4,7 +4,11 @@ import { useRouter } from "next/router";
 import { fetchCarouselUrls } from "@/services/homepage";
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
-import { UserOutlined, ShoppingOutlined, FileTextOutlined, HourglassOutlined } from "@ant-design/icons";
+import Icon, { UserOutlined, ShoppingOutlined, FileTextOutlined, HourglassOutlined } from "@ant-design/icons";
+import icon_page from '../../assets/icons/page.svg'
+import icon_share from '../../assets/icons/share.svg'
+import icon_store from '../../assets/icons/store.svg'
+import icon_user from '../../assets/icons/user.svg'
 
 const HomeBannerMobile = () => {
     const [carouselUrls, setCarouselUrls] = useState<string[]>([]);
@@ -53,41 +57,41 @@ const HomeBannerMobile = () => {
 
     return (
       <div>
-        <div className="container homebanner" style={{padding: '12px 12px 0px 12px', marginBottom: '24px'}} >
+        <div className="container homebanner" style={{padding: '12px 12px 12px 12px', marginBottom: '24px'}} >
           <Flex align="center" justify="space-between">
             <Button 
-              type="text" style={{height: "auto"}} size="middle"
+              type="text" style={{height: "auto"}} size="large"
               onClick={()=>{router.push("/products/"+process.env.NEXT_PUBLIC_CHANNEL)}}
             >
               <Space direction="vertical">
-                <ShoppingOutlined style={{fontSize: "36px"}} className="thin-icon"/>
+                <Icon component={icon_store} style={{fontSize: "48px"}} className="thin-icon"/>
                 置换
               </Space>
             </Button>
             <Button 
-              type="text" style={{height: "auto"}} size="middle"
+              type="text" style={{height: "auto"}} size="large"
               onClick={()=>{router.push("/products/"+process.env.NEXT_PUBLIC_CHANNEL2)}}
             >
               <Space direction="vertical">
-                <HourglassOutlined style={{fontSize: "36px"}}/>
+                <Icon component={icon_share} style={{fontSize: "48px"}} className="thin-icon"/>
                 租赁
               </Space>
             </Button>
             <Button 
-              type="text" style={{height: "auto"}} size="middle"
+              type="text" style={{height: "auto"}} size="large"
               onClick={()=>{router.push("/articles/")}}
             >
               <Space direction="vertical">
-                <FileTextOutlined style={{fontSize: "36px"}}/>
+                <Icon component={icon_page} style={{fontSize: "48px"}} className="thin-icon"/>
                 通知
               </Space>
             </Button>
             <Button 
-              type="text" style={{height: "auto"}} size="middle"
+              type="text" style={{height: "auto"}} size="large"
               onClick={()=>{router.push("/user/")}}
             >
               <Space direction="vertical">
-                <UserOutlined style={{fontSize: "36px"}}/>
+                <Icon component={icon_user} style={{fontSize: "48px"}} className="thin-icon"/>
                 我的
               </Space>
             </Button>

@@ -191,7 +191,7 @@ const NavBar = () => {
               }
               {
                 !authCtx.isLoggedIn && !screens.md &&
-                <Button type="primary" onClick={doExternalLogin} icon={<LoginOutlined />}/>
+                <Button type="primary" onClick={doExternalLogin} icon={<LoginOutlined />}>登录</Button>
               }
               
           </Space>
