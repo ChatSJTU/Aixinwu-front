@@ -373,7 +373,7 @@ export const OrderPageView = () => {
                             <Text style={{ display: 'flex', alignItems: "center" }}>
                                 总计： <AxCoin value={checkout.totalPrice.gross.amount} coloredValue/>
                             </Text>
-                            <Button type="primary">提交订单</Button>
+                            <Button type="primary" onClick={handleSubmitClick}>提交订单</Button>
                         </Space>
                     </div>
                 </Row>
