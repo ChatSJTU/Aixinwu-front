@@ -14,15 +14,17 @@ interface CartContextType {
     setCheckoutId: (checkoutId: string | undefined) => void,
     checkoutId: string | undefined,
     incrCartError: () => void,
+    doRefresh: () => void,
 }
 
 const CartContext = React.createContext<CartContextType>({
     totalQuantity: 0,
     addLines: (variantId : string, quantity : number) => false,
-    setTotalQuantity: (quantity: number) => false,
-    setCheckoutId: (checkoutId: string | undefined) => false,
+    setTotalQuantity: (quantity: number) => {},
+    setCheckoutId: (checkoutId: string | undefined) => {},
     checkoutId: undefined,
-    incrCartError: () => false,
+    incrCartError: () => {},
+    doRefresh: () => {},
 })
 
 export const CartContextProvider = (props : LayoutProps) => {
@@ -34,7 +36,7 @@ export const CartContextProvider = (props : LayoutProps) => {
     const message = useContext(MessageContext);
     const { et } = useErrorMessage();
 
-    useEffect(()=>{
+    const doRefresh = () => {
         if (checkoutId === undefined || checkoutId === "" || checkoutErrorCounter >= 3)
         {
             setCheckoutErrorCounter(0);
@@ -76,6 +78,10 @@ export const CartContextProvider = (props : LayoutProps) => {
                     incrCartError();
                 });
         }
+    }
+
+    useEffect(()=>{
+        doRefresh();
     }, [checkoutId, checkoutErrorCounter]);
 
     const incrCartError = () => {
@@ -102,7 +108,7 @@ export const CartContextProvider = (props : LayoutProps) => {
         setTotalQuantity(quantity);
     }
 
-    const setCheckoutIdOut = function(checkoutId: string) {
+    const setCheckoutIdOut = function(checkoutId: string | undefined) {
         setCheckoutId(checkoutId);
     }
 
@@ -112,7 +118,8 @@ export const CartContextProvider = (props : LayoutProps) => {
         addLines: addLines,
         checkoutId: checkoutId,
         setCheckoutId: setCheckoutIdOut,
-        incrCartError: incrCartError
+        incrCartError: incrCartError,
+        doRefresh: doRefresh
     }
 
   return (

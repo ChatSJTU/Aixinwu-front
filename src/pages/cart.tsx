@@ -157,6 +157,11 @@ export const OrderPageView = () => {
     }
 
     useEffect(() => {
+        if (cartCtx.checkoutId == undefined)
+            cartCtx.doRefresh();
+    });
+
+    useEffect(() => {
         if (cartCtx.checkoutId != undefined)
         {
             checkoutFind(client!, cartCtx.checkoutId)
@@ -169,6 +174,8 @@ export const OrderPageView = () => {
     }, [cartCtx.checkoutId, router]);
 
     useEffect(() => {
+        if (!authCtx.isLoggedIn)
+            router.push("/403")
         fetchUserAddresses(client!)
             .then(data => setAddresses(data))
             .catch(err => message.error(err));
