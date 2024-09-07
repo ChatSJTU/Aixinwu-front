@@ -57,13 +57,13 @@ export const CartContextProvider = (props : LayoutProps) => {
                     }
                 });
             }
-            else {
-                checkoutCreate(client!, process.env.NEXT_PUBLIC_CHANNEL!)
-                    .then(data => {
-                        setCheckoutId(data.id);
-                        setTotalQuantity(data.quantity)
-                    });
-            }
+            // else {
+            //     checkoutCreate(client!, process.env.NEXT_PUBLIC_CHANNEL!)
+            //         .then(data => {
+            //             setCheckoutId(data.id);
+            //             setTotalQuantity(data.quantity)
+            //         });
+            // }
         }
         else
         {
