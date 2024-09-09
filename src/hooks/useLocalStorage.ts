@@ -36,7 +36,7 @@ export default function useLocalStorage<T>(
 
     const item = localStorage.getItem(key);
     if (item === null) {
-      return getValue(null, initialValue);
+      return getValue(null as T, initialValue);
     }
 
     try {
@@ -53,7 +53,7 @@ export default function useLocalStorage<T>(
       result = item as unknown as T;
     }
 
-    return getValue(result, initialValue);
+    return getValue(result as T, initialValue);
   });
 
   const setValue = (value: SetStateAction<T>) => {

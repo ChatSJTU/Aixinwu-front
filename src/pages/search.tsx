@@ -176,7 +176,7 @@ const SearchResultPage = () => {
             <Head>
                 {(query.keyword === undefined || query.keyword === "") 
                     ? <title>搜索 - 上海交通大学绿色爱心屋</title>
-                    : <title>"{query.keyword}"的搜索结果 - 上海交通大学绿色爱心屋</title>
+                    : <title>“{query.keyword}”的搜索结果 - 上海交通大学绿色爱心屋</title>
                 }
             </Head>
             {(query.keyword === undefined || query.keyword === "") 
@@ -198,7 +198,7 @@ const SearchResultPage = () => {
                         onChange={handleDomainChange}
                     />
                     <Search 
-                        placeholder={(query.keyword === undefined || query.keyword === "") ? "请输入关键词" : query.keyword}
+                        placeholder={(query.keyword === undefined || query.keyword === "") ? "请输入关键词" : query.keyword as string}
                         enterButton 
                         size="large" 
                         style={{ marginLeft: '18px'}}

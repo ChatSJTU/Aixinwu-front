@@ -1,14 +1,14 @@
 export interface Category {
     id: string;
     level: number;
-    description: string | null;
+    description?: string | null;
     name: string;
-    seoDescription: string | null;
-    seoTitle: string | null;
+    seoDescription?: string | null | undefined;
+    seoTitle?: string | null | undefined;
     slug: string;
-    parent: {id: string} | null;
-    children: Category[] | null;
-    products: {totalCount: number} | null;
+    parent?: {id: string} | null | undefined;
+    children: Category[] | null | undefined;
+    products?: {totalCount?: number | null | undefined} | null | undefined;
 }
   
 export interface ProductDetail {

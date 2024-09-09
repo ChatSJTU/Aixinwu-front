@@ -28,7 +28,7 @@ export async function fetchCategories(client: ApolloClient<object>, channel: str
             throw "数据为空";
         }
         const { edges } = resp.data.categories;
-        const flatList: Category[] = edges.map((edge: { node: Category }) => ({ ...edge.node, children: [] }));
+        const flatList: Category[] = edges.map((edge) => ({ ...edge.node, children: [] }));
 
         // 映射
         const idToCategoryMap: { [key: string]: Category } = {};
@@ -168,7 +168,7 @@ export async function fetchProductsByCategoryID(client: ApolloClient<object>, ch
                 max:edge.node.pricing?.priceRangeUndiscounted?.stop?.gross?.amount || 0
             },
             stock: edge.node.isAvailable ? 1 : 0,
-            sold: edge.node.variants ? edge.node.variants.reduce((acc: number, variant: { sales: number }) => acc + variant.sales, 0) : 0,
+            sold: edge.node.variants ? edge.node.variants.reduce((acc: number, variant: { sales?: number | null | undefined }, index: number) => acc + (variant?.sales ?? 0), 0) : 0,
             is_shared: edge.node.productType.metafield == process.env.NEXT_PUBLIC_CHANNEL2
         }));
 
@@ -263,6 +263,7 @@ export async function searchProducts(client: ApolloClient<object>, first:number,
             },
             sold: edge.node.variants.reduce((acc: number, variant: { sales: number }) => acc + variant.sales, 0),
             stock: edge.node.isAvailable ? 1 : 0,
+            is_shared: edge.node.productType.metafield == process.env.NEXT_PUBLIC_CHANNEL2
         }));
 
         return {totalCount, productSummaries};
