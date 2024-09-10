@@ -57,7 +57,7 @@ const createGraphqlClient = (token: string | null, useToken: boolean, refreshTok
     const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
       if (graphQLErrors) {
         for (let err of graphQLErrors) {
-          switch ((err.extensions.exception as any).code) {
+          switch ((err.extensions?.exception as any).code) {
             // Apollo Server sets code to UNAUTHENTICATED
             // when an AuthenticationError is thrown in a resolver
             case "ExpiredSignatureError":
