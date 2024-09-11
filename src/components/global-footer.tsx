@@ -2,6 +2,10 @@ import { Divider, Space, Grid, QRCode, Row, Col } from "antd"
 import { PhoneOutlined, MailOutlined, ShopOutlined, ClockCircleOutlined } from "@ant-design/icons"
 import Link from "next/link";
 
+const Developer = () => (
+    <div>Supported by <Link target="_blank" href="https://github.com/ChatSJTU" style={{color: "inherit", textDecoration: "none"}} >上海交通大学绿色爱心屋学生开发团队</Link></div>
+);
+
 const GlobalFooter = () => {
   const screens = Grid.useBreakpoint();
     return (
@@ -57,11 +61,11 @@ const GlobalFooter = () => {
                             <PhoneOutlined style={{transform: "scaleX(-1)"}}/> 021-54745672&nbsp;&nbsp;&nbsp;
                             <MailOutlined /> <Link className="footer-link" href="mailto:aixinwu@sjtu.edu.cn">aixinwu@sjtu.edu.cn</Link>
                         </div>
-                        {!screens.md && <div>Supported by 上海交通大学绿色爱心屋学生开发团队</div>}
+                        {!screens.md && <Developer/>}
                         <div>Copyright ©{new Date().getFullYear()} 上海交通大学绿色爱心屋 | 沪交ICP备XXXXXXXX</div>
                     </Space>
                 </Space>
-                {screens.md && <div>Supported by 上海交通大学绿色爱心屋学生开发团队</div>}
+                {screens.md && <Developer/>}
             </div>
         </>
     )
