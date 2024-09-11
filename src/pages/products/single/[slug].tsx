@@ -315,9 +315,13 @@ const ProductDetailsPage: React.FC = () => {
           </Col>
         </Row>
         <Divider />
-        <div className="container article-content">
-          <MarkdownRenderer content={product.desc} />
-        </div>
+        {
+            product.desc ? 
+            <div className="container article-content">
+              <MarkdownRenderer content={product.desc} />
+            </div>
+            : <Alert message="该商品暂无描述。" type="info" showIcon />
+        }
       </div>
       <DirectBuyConfirmModal
         isopen={isDirectBuyConfirmModalOpen}

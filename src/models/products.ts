@@ -18,7 +18,7 @@ export interface ProductDetail {
     id: string;
     slug: string;
     detailed_product_name: string | null;
-    desc: string;
+    desc: string | undefined;
     varients: VarientDetail[];
     price: {
         min: number;

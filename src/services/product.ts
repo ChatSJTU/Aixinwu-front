@@ -95,9 +95,14 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
           throw "获取商品详情失败";
         }
         var data = resp.data?.product;
-        const textBlocks = JSON.parse(data.description).blocks.map((block: any) => (block.data.text));
-        const textJoined = textBlocks.join('<br />')
-
+        if (!data.description) {
+            var textJoined = undefined;
+        }
+        else {
+            var textBlocks = JSON.parse(data.description).blocks.map((block: any) => (block.data.text));
+            var textJoined = textBlocks.join('<br />')
+        }
+        
         var res = {
             id: data.id,
             slug: data.slug,
