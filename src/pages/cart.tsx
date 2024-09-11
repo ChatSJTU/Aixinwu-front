@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { fetchUserAddresses } from "@/services/user";
 import { AddressInfo } from "@/models/address";
 import { CheckoutCompleteModal } from "@/components/checkout-complete-modal";
+import { NotificationContext } from "@/contexts/notification";
 const { Title, Text, Link, Paragraph } = Typography;
 const { Panel } = Collapse;
 const { useBreakpoint } = Grid;
@@ -24,6 +25,7 @@ export const OrderPageView = () => {
     const cartCtx = useContext(CartContext);
     const client = authCtx.client;
     const message = useContext(MessageContext);
+    const notification = useContext(NotificationContext);
     const screens = useBreakpoint();
     const [checkout, setCheckout] = useState<CheckoutDetail | undefined>(undefined);
     const [top, setTop] = React.useState<number>(70);
@@ -177,7 +179,27 @@ export const OrderPageView = () => {
         if (!authCtx.isLoggedIn)
             router.push("/403")
         fetchUserAddresses(client!)
-            .then(data => setAddresses(data))
+            .then(data => {
+                setAddresses(data);
+                if (data.length == 0) {
+                    const key = `open${Date.now()}`;
+                    const btn = (
+                        <Button type="primary" size="middle" onClick={() => {
+                            notification.destroy(key);
+                            router.push("/user/consignee")
+                        }}>
+                            前往收货地址管理
+                        </Button>
+                    );
+                    notification.warning({
+                        message: '未找到收货地址',
+                        description:
+                          '您必须至少添加一个收货地址才能下单商品。',
+                        btn,
+                        key,
+                    })
+                }
+            })
             .catch(err => message.error(err));
     }, [cartCtx.checkoutId, router]);
     

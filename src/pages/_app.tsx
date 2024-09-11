@@ -8,6 +8,7 @@ import { ThemeContextProvider } from '@/contexts/theme';
 import Head from 'next/head';
 import { MessageContextProvider } from '@/contexts/message';
 import { CartContextProvider } from '@/contexts/cart';
+import { NotificationContextProvider } from '@/contexts/notification';
 
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -30,11 +31,13 @@ function MyApp({ Component, pageProps }: AppProps) {
     <AuthContextProvider>
       <ThemeContextProvider>
         <MessageContextProvider>
-          <CartContextProvider>
-            <MainLayout>
-              <Component {...pageProps} />
-            </MainLayout>
-          </CartContextProvider>
+          <NotificationContextProvider>
+            <CartContextProvider>
+              <MainLayout>
+                <Component {...pageProps} />
+              </MainLayout>
+            </CartContextProvider>
+          </NotificationContextProvider>
         </MessageContextProvider>
       </ThemeContextProvider>
     </AuthContextProvider>
