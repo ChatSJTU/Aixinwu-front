@@ -398,3 +398,21 @@ code {
         border-top: themed('primary-border-color') solid 1px;
     }
 }
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @include themify {
+        background-color: themed('primary-bg-color');
+    }
+    width: 408px !important;
+    height: 408px !important;
+    overflow: hidden;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}

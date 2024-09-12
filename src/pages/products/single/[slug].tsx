@@ -148,21 +148,19 @@ const ProductDetailsPage: React.FC = () => {
       <div className='container'>
         <Row>
           <Col span={isMobile ? 24 : 9}>
-            <Carousel autoplay draggable={isMobile} style={{ textAlign: 'center' }}>
-              {/* Todo: images 可能为 null */}
+            <Carousel autoplay autoplaySpeed={5000} speed={1500} draggable={isMobile} style={{ textAlign: 'center' }}>
               {product.images?.map((url, index) => (
-                <Image
-                  key={index}
-                  src={url}
-                  alt={`图片预览 ${index + 1}`}
-                  width={isMobile ? 408 : 468}
-                  height={isMobile ? 408 : 468}
-                  preview={isMobile ? false : previewProps}
-                  draggable={false}
-                />
+                <div className="image-container">
+                  <Image
+                    key={index}
+                    src={url}
+                    alt={`图片预览 ${index + 1}`}
+                    preview={previewProps}
+                  />
+                </div>
               ))}
             </Carousel>
-          </Col> 
+          </Col>
           {isMobile &&
             <Divider />
           }
@@ -316,7 +314,7 @@ const ProductDetailsPage: React.FC = () => {
         </Row>
         <Divider />
         {
-            product.desc ? 
+          product.desc ?
             <div className="container article-content">
               <MarkdownRenderer content={product.desc} />
             </div>
@@ -333,7 +331,7 @@ const ProductDetailsPage: React.FC = () => {
       <DirectBuyModal
         checkoutId={checkoutId!}
         isopen={isDirectBuyModalOpen}
-        onClose={() => {setDirectBuyModalOpen(false)}}/>
+        onClose={() => { setDirectBuyModalOpen(false) }} />
     </>
   );
 };
