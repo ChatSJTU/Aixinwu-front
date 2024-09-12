@@ -64,9 +64,8 @@ const ProductDetailsPage: React.FC = () => {
   const [checkoutId, setCheckoutId] = useState<string | undefined>(undefined);
 
   const overQuantity = (
-    queryQuantity > product?.varients[selectedVarient]?.quantityLimit!
+    (product?.varients[selectedVarient]?.quantityLimit != undefined && queryQuantity > product?.varients[selectedVarient]?.quantityLimit!)
     || queryQuantity > product?.varients[selectedVarient]?.stock!
-    || queryQuantity > 50
   );
 
   const previewProps = {
@@ -232,11 +231,7 @@ const ProductDetailsPage: React.FC = () => {
                   <InputNumber
                     style={{ width: '40px' }}  // 确保InputNumber宽度合适
                     min={Math.min(1, product?.varients[selectedVarient]?.stock)}
-                    max={Math.min(
-                      product?.varients[selectedVarient]?.quantityLimit,
-                      product?.varients[selectedVarient]?.stock,
-                      50
-                    )} value={product?.varients[selectedVarient]?.stock > 0
+                    max={product?.varients[selectedVarient]?.quantityLimit} value={product?.varients[selectedVarient]?.stock > 0
                       ? queryQuantity
                       : 0
                     }
@@ -260,7 +255,11 @@ const ProductDetailsPage: React.FC = () => {
                 </Space.Compact>
                 {product?.varients[selectedVarient]?.stock > 0
                   ? <Text type='secondary'>{
-                    `库存${product?.varients[selectedVarient]?.stock}件（限购${product?.varients[selectedVarient]?.quantityLimit}件）`
+                    `库存${product?.varients[selectedVarient]?.stock}件${
+                      product?.varients[selectedVarient]?.quantityLimit ? 
+                        "（限购" + product?.varients[selectedVarient]?.quantityLimit + "件）"
+                        : "" //无限购
+                    }`
                   }</Text>
                   : <Text type='secondary'>已售罄</Text>
                 }

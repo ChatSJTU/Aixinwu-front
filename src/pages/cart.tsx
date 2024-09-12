@@ -116,7 +116,7 @@ export const OrderPageView = () => {
             return;
         }
         var value = line.quantity + 1;
-        if (value > 50)
+        if (line.varient.quantityLimit != undefined && value > line.varient.quantityLimit)
         {
             message.error("操作失败：商品数量已达到最大值");
             return;

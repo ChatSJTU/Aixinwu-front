@@ -11,6 +11,8 @@ fragment CheckoutForCartFragment on Checkout {
       }
     }
     variant {
+      quantityLimitPerCustomer
+      quantityAvailable
       name
       id
       product {

@@ -37,6 +37,8 @@ export interface CheckoutLineVarientDetail {
     product_thumbnail: string;
     product_category: string;
     stock: number;
+    quantityLimit: number | undefined;
+    quantityAvailable: number | undefined;
 }
 
 export interface CheckoutTableListProps {

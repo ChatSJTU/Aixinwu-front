@@ -34,7 +34,7 @@ export interface VarientDetail {
     update_time: string;
     price: number;
     [propName: string]: any;
-    quantityLimit: number;
+    quantityLimit: number | undefined;
     sold: number;
 }
 

@@ -118,7 +118,7 @@ export const CheckoutTableList: React.FC<CheckoutTableListProps> = (
                   <InputNumber
                     style={{width: '50%'}}
                     size="small"
-                    min={1} max={50} value={line.quantity}
+                    min={1} max={line.varient.quantityLimit} value={line.quantity}
                     controls={false}
                     onChange={value => {
                       if (value !== null) {
@@ -132,7 +132,7 @@ export const CheckoutTableList: React.FC<CheckoutTableListProps> = (
                     // type="ghost"
                     // style={{paddingLeft: '10%', paddingRight: '10%'}}
                     onClick={() => onItemNumberPlus(line.id)}
-                    disabled={line.quantity >= 50}
+                    disabled={line.varient.quantityLimit == undefined ? undefined : (line.quantity >= line.varient.quantityLimit)}
                   >
                     +
                   </Button>
@@ -144,7 +144,7 @@ export const CheckoutTableList: React.FC<CheckoutTableListProps> = (
                   alignItems: "center",
                   justifyContent: "center"
                 }}>
-                  库存：{line.varient.stock}
+                  库存：{line.varient.quantityAvailable == undefined ? "不限量" : line.varient.quantityAvailable}
                 </Text>
               </Space>
             )}
@@ -250,7 +250,7 @@ export const CheckoutTableList: React.FC<CheckoutTableListProps> = (
                          <InputNumber
                            style={{width: '46%', padding: 0}}
                            // size="small"
-                           min={1} max={50} value={line.quantity}
+                           min={1} max={line.varient.quantityLimit} value={line.quantity}
                            controls={false}
                            onChange={value => {
                              if (value !== null) {

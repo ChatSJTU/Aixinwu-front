@@ -118,7 +118,7 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
                 stock: x.quantityAvailable || 0,
                 update_time: x.updatedAt,
                 price: x.pricing?.priceUndiscounted?.gross.amount,
-                quantityLimit: x.quantityLimitPerCustomer || 50,
+                quantityLimit: x.quantityLimitPerCustomer,
                 sold: x.sales || 0
             } as VarientDetail)),
             price: {
