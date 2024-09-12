@@ -1,12 +1,10 @@
 import {
   Image, Spin, Divider, Row, Col, Button,
   Typography, Carousel, Breadcrumb, Space, InputNumber,
-  Tooltip, Grid, Radio, Modal, ConfigProvider, Alert,
-  Flex
+  Grid, Radio, Modal, ConfigProvider, Alert,
 } from 'antd'
 import {
   ShoppingCartOutlined,
-  InfoCircleFilled,
   RotateLeftOutlined,
   RotateRightOutlined,
   SwapOutlined,
@@ -14,13 +12,13 @@ import {
   ZoomOutOutlined,
   PayCircleOutlined
 } from '@ant-design/icons';
+import dynamic from "next/dynamic";
 import { useRouter } from 'next/router';
 import Head from "next/head";
 import { useEffect, useState, useContext } from 'react';
 import { TinyColor } from '@ctrl/tinycolor';
 import { AxCoin } from '@/components/axcoin';
 import { ProductDetail } from '@/models/products'
-import MarkdownRenderer from '@/components/markdown-renderer';
 import { getProductDetail } from '@/services/product';
 import AuthContext from '@/contexts/auth';
 import CartContext from '@/contexts/cart';
@@ -32,6 +30,10 @@ import { DirectBuyConfirmModal } from '@/components/direct-buy-confirm-modal';
 const { confirm } = Modal;
 const { Title, Text, Link } = Typography;
 const { useBreakpoint } = Grid;
+const QuillRenderer = dynamic(
+  () => import("@/components/quill-renderer").then(mod => mod.default),
+  { ssr: false }
+);
 
 interface ImageActions {
   onFlipY: () => void;
@@ -316,7 +318,7 @@ const ProductDetailsPage: React.FC = () => {
         {
           product.desc ?
             <div className="container article-content">
-              <MarkdownRenderer content={product.desc} />
+              <QuillRenderer HTMLContent={product.desc} />
             </div>
             : <Alert message="该商品暂无描述。" type="info" showIcon />
         }

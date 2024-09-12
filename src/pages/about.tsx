@@ -1,6 +1,11 @@
+import dynamic from "next/dynamic";
 import { PageHeader } from "@/components/page-header";
-import MarkdownRenderer from "@/components/markdown-renderer";
 import Head from "next/head";
+
+const QuillRenderer = dynamic(
+  () => import("@/components/quill-renderer").then(mod => mod.default),
+  { ssr: false }
+);
 
 const AboutPage = () => {
   return (
@@ -10,7 +15,7 @@ const AboutPage = () => {
         </Head>
         <PageHeader title="关于我们" onBack/>
         <div className="container article-content">
-            <MarkdownRenderer content={null}/>
+            <QuillRenderer HTMLContent={'About'}/>
             {/* TODO:获取文章接口实现 */}
         </div>
     </>
