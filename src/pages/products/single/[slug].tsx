@@ -152,7 +152,7 @@ const ProductDetailsPage: React.FC = () => {
           <Col span={isMobile ? 24 : 9}>
             <Carousel autoplay autoplaySpeed={5000} speed={1500} draggable={isMobile} style={{ textAlign: 'center' }}>
               {product.images?.map((url, index) => (
-                <div className="image-container">
+                <div key={index} className="image-container">
                   <Image
                     key={index}
                     src={url}
