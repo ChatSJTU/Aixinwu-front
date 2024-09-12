@@ -9,6 +9,7 @@ import {
   Table, Flex,
   Popconfirm,
 } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons'
 const { Column } = Table;
 const { Paragraph } = Typography;
 import {AxCoin} from "@/components/axcoin";
@@ -172,7 +173,7 @@ export const CheckoutTableList: React.FC<CheckoutTableListProps> = (
                 okText="确定"
                 cancelText="取消"
               >
-                <Button style={{padding: 0}} type="link">删除</Button>
+                <Button style={{padding: 0}} type="link" icon={<DeleteOutlined/>}/>
               </Popconfirm>
             )}
           />
@@ -235,7 +236,7 @@ export const CheckoutTableList: React.FC<CheckoutTableListProps> = (
                          <AxCoin size={22} value={line.varient.price} coloredValue/>
 
                        </div>
-                       <Space.Compact style={{width: '110%'}}>
+                       <Space.Compact style={{width: '80%'}}>
                          <Button
                            style={{width: '27%', padding: 0}}
                            // size="small"
@@ -268,10 +269,7 @@ export const CheckoutTableList: React.FC<CheckoutTableListProps> = (
                            +
                          </Button>
                        </Space.Compact>
-
-                       <Button style={{padding: 0}} type="link"
-                           onClick={(() => onClickDelete(line.id))}>删除
-                       </Button>
+                       <Button style={{padding: 0}} type="link" icon={<DeleteOutlined/>} onClick={(() => onClickDelete(line.id))}/>
                     </Space>   
                      </Flex>
                    </Flex>

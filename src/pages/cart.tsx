@@ -397,7 +397,7 @@ export const OrderPageView = () => {
                         />               
                     </Col>
 
-                    <div style={{ position: 'fixed', bottom: 0, width: '100%', background: '#fff', padding: '20px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }}>
+                    <div style={{ position: 'fixed', bottom: 0, width: '100%', background: '#fff', padding: '20px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', zIndex: '2' }}>
                         <Space align='center' style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
                             <Text style={{ display: 'flex', alignItems: "center" }}>
                                 总计： <AxCoin value={checkout.totalPrice.gross.amount} coloredValue/>
