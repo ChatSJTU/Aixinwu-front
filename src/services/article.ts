@@ -3,7 +3,9 @@ import {
     ArticleByTypeDocument, 
     ArticleByIdDocument,
     ArticleSearchByNameQuery,
-    ArticleSearchByNameDocument
+    ArticleSearchByNameDocument,
+    ArticleBySlugDocument,
+    ArticleBySlugQuery
 } from "@/graphql/hooks";
 import { ArticleDetails, ArticleSummary } from "@/models/article";
 import { ApolloClient } from "@apollo/client";
@@ -107,6 +109,50 @@ export async function fetchArticlesById(client: ApolloClient<object>, articleID:
             next: null,
             previous: null,
             cursor: cursor,
+        };
+        return res;
+
+    } catch (error) {
+        var errmessage = `获取文章详情失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+};
+
+// 根据文章SLUG获取指定文章详情
+export async function fetchArticleBySlug(client: ApolloClient<object>, slug: string) {
+    try {
+        const resp = await client.query<ArticleBySlugQuery>({
+            query: ArticleBySlugDocument,
+            variables: {
+                slug: slug,
+            }
+        });
+        if (!resp.data ||
+            !resp.data.page) {
+            throw "数据为空";
+        }
+        if (resp.errors) {
+            throw resp.errors[0].message;
+        }
+
+        const node = resp.data.page;
+        const textBlocks = JSON.parse(node.content).blocks.map((block: any) => (block.data.text));
+        const textJoined = textBlocks.join('<br />')
+
+        const res: ArticleDetails = {
+            id: node.id,
+            title: node.title,
+            description: node.seoDescription,
+            author: "aixinwu",
+            content: textJoined,
+            reads_count: 0,
+            publish_time: node.publishedAt,
+            navigation: {name: node.pageType.name, id: node.pageType.id},
+            // TODO: add next / prev ID
+            next: null,
+            previous: null,
+            cursor: null,
         };
         return res;
 

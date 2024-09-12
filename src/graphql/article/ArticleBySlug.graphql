@@ -1,0 +1,14 @@
+query ArticleBySlug($slug: String!) {
+  page(slug: $slug) {
+    id
+    title
+    slug
+    seoDescription
+    publishedAt
+    content
+    pageType {
+      id
+      name
+    }
+  }
+}
