@@ -25,7 +25,7 @@ export async function oidcRedirectJaccount(client: ApolloClient<object>, redirec
         var data = JSON.parse(resp.data?.externalAuthenticationUrl?.authenticationData) as AuthenticationData;
         if (!data.authorizationUrl)
         {
-          throw "获取数据失败，请稍后重试";
+          throw "登录暂不可用，请稍后重试";
         }
         return data.authorizationUrl;
     } catch (error) {
