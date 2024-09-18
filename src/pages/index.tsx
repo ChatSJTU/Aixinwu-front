@@ -8,27 +8,20 @@ import { Row, Col, Grid } from "antd";
 export default function HomePage() {
   const screens = Grid.useBreakpoint();
 
-    return (
-        <>
-        <Head>
-            <title>上海交通大学绿色爱心屋</title>
-        </Head>
-        {screens.md ? <HomeBanner/> : <HomeBannerMobile/>}
-        {screens.md &&
-          <Row>
-            <Col span={6}>
-                <HomeLeftContent/>
-            </Col>
-            <Col span={18}>
-                <HomeRightContent/>
-            </Col>
-        </Row>
-        }
-        {!screens.md &&
-          <>
-            <HomeRightContent/>
-          </>
-        }
-        </>
-    );
+  return (
+    <>
+      <Head>
+        <title>上海交通大学绿色爱心屋</title>
+      </Head>
+      {screens.md ? <HomeBanner /> : <HomeBannerMobile />}
+      <Row>
+        <Col span={screens.md ? 6 : 0}>
+          <HomeLeftContent />
+        </Col>
+        <Col span={screens.md ? 18 : 24}>
+          <HomeRightContent />
+        </Col>
+      </Row>
+    </>
+  );
 }
