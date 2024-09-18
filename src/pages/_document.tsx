@@ -7,6 +7,7 @@ const MyDocument = () => (
   <Html lang="zh-CN" data-theme="light">
     <Head>
         <meta name="description" content="SJTU Aixinwu" />
+        <link rel="shortcut icon" href="favicon.png" />
     </Head>
     <body>
       <Main />
