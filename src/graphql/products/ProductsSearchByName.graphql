@@ -46,6 +46,9 @@ query ProductsSearchByName($first: Int!, $search: String!, $field: ProductOrderF
         variants {
           sales
         }
+        productType {
+          metafield(key: "channel")
+        }
       }
     }
     totalCount
