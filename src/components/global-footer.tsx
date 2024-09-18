@@ -62,7 +62,7 @@ const GlobalFooter = () => {
                             <MailOutlined /> <Link className="footer-link" href="mailto:aixinwu@sjtu.edu.cn">aixinwu@sjtu.edu.cn</Link>
                         </div>
                         {!screens.md && <Developer/>}
-                        <div>Copyright ©{new Date().getFullYear()} 上海交通大学绿色爱心屋 | 沪交ICP备XXXXXXXX</div>
+                        <div>Copyright ©{new Date().getFullYear()} 上海交通大学绿色爱心屋 | 沪交ICP备20111144</div>
                     </Space>
                 </Space>
                 {screens.md && <Developer/>}
