@@ -4,7 +4,7 @@ import Document, { Head, Html, Main, NextScript } from 'next/document';
 import type { DocumentContext } from 'next/document';
 
 const MyDocument = () => (
-  <Html lang="en" data-theme="light">
+  <Html lang="zh-CN" data-theme="light">
     <Head>
         <meta name="description" content="SJTU Aixinwu" />
     </Head>
