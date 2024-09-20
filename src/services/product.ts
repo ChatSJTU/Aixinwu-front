@@ -216,6 +216,7 @@ export async function fetchProductsByCollection(client: ApolloClient<object>, ch
                 },
                 sold: edge.node.variants.reduce((acc: number, variant: { sales: number }) => acc + variant.sales, 0),
                 stock: edge.node.isAvailable ? 1 : 0,
+                is_shared: edge.node.productType.metafield == process.env.NEXT_PUBLIC_CHANNEL2
             }))
         );
 

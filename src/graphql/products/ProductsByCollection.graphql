@@ -56,6 +56,9 @@ query ProductsByCollection($channel: String!, $first: Int!, $slugs: [String!]) {
               variants {
                 sales
               }
+              productType {
+                metafield(key: "channel")
+              }
             }
           }
           totalCount

@@ -114,7 +114,15 @@ const createGraphqlClient = (token: string | null, useToken: boolean, refreshTok
 
   return new ApolloClient({
     link: from([errorLink, httpLink]),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
+    defaultOptions: {
+      query: {
+          fetchPolicy: 'network-only',
+      },
+      watchQuery: {
+          fetchPolicy: 'network-only',
+      },
+  },
   })
 }
 
