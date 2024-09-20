@@ -8,7 +8,6 @@ import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
 import { AxCoin } from './axcoin';
 import { fetchUserBasicInfo } from '@/services/user';
-import { oidcRedirectJaccount } from '@/services/oauth';
 import CartContext from '@/contexts/cart';
 
 const { Title, Text } = Typography;
@@ -73,15 +72,6 @@ const NavBar = () => {
         .catch(err => message.error(err));
     }
   }, [authCtx.isLoggedIn]);
-
-  const doExternalLogin = () => {
-    oidcRedirectJaccount(client!, window.location.origin + router.basePath + "/oauth/redirectback")
-      .then((data) => {
-        window.location.replace(data)
-      },(err)=>{
-        message.error(err);
-      });
-  };
 
   const menuItems = [
       { label: "置换", value: "/products/"+process.env.NEXT_PUBLIC_CHANNEL },
@@ -187,11 +177,11 @@ const NavBar = () => {
               }
               {
                 !authCtx.isLoggedIn && screens.md &&
-                <Button type="primary" onClick={doExternalLogin}>jAccount 登录</Button>
+                <Button type="primary" onClick={authCtx.doExternalLogin}>jAccount 登录</Button>
               }
               {
                 !authCtx.isLoggedIn && !screens.md &&
-                <Button type="primary" onClick={doExternalLogin} icon={<LoginOutlined />}>登录</Button>
+                <Button type="primary" onClick={authCtx.doExternalLogin} icon={<LoginOutlined />}>登录</Button>
               }
               
           </Space>

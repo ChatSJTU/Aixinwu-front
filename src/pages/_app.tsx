@@ -28,19 +28,19 @@ function MyApp({ Component, pageProps }: AppProps) {
     );
 
   return (
-    <AuthContextProvider>
-      <ThemeContextProvider>
-        <MessageContextProvider>
-          <NotificationContextProvider>
-            <CartContextProvider>
-              <MainLayout>
-                <Component {...pageProps} />
-              </MainLayout>
-            </CartContextProvider>
-          </NotificationContextProvider>
-        </MessageContextProvider>
-      </ThemeContextProvider>
-    </AuthContextProvider>
+    <MessageContextProvider>
+      <AuthContextProvider>
+        <ThemeContextProvider>
+            <NotificationContextProvider>
+              <CartContextProvider>
+                <MainLayout>
+                  <Component {...pageProps} />
+                </MainLayout>
+              </CartContextProvider>
+            </NotificationContextProvider>
+        </ThemeContextProvider>
+      </AuthContextProvider>
+    </MessageContextProvider>
   );
 }
 

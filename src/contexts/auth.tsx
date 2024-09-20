@@ -1,5 +1,5 @@
 import { ExternalObtainAccessTokens, User } from "@/graphql/hooks"
-import React, { useCallback, useEffect, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState, useContext } from "react"
 import { ApolloClient, HttpLink, InMemoryCache, from } from "@apollo/client"
 import { onError } from "@apollo/client/link/error";
 import useLocalStorage from "@/hooks/useLocalStorage"
@@ -8,7 +8,8 @@ import { useRouter } from 'next/router'
 import { Token } from "@/models/token"
 import { UserBasicInfo } from "@/models/user"
 import { oidcRefreshToken } from "@/services/oauth";
-import { useInterval } from "ahooks";
+import { MessageContext } from '@/contexts/message';
+import { oidcRedirectJaccount } from '@/services/oauth';
 
 interface AuthContextType {
   token: string,
@@ -20,6 +21,7 @@ interface AuthContextType {
   onLoggedInOr403: () => boolean,
   client: ApolloClient<object> | undefined,
   userInfo: UserBasicInfo | undefined
+  doExternalLogin: () => void
 }
 
 const AuthContext = React.createContext<AuthContextType>({
@@ -31,7 +33,8 @@ const AuthContext = React.createContext<AuthContextType>({
   onLogout: () => {},
   onLoggedInOr403: () => false,
   client: undefined,
-  userInfo: undefined
+  userInfo: undefined,
+  doExternalLogin: () => {}
 })
 
 const calculateRemainDuration = (expTime : number) => {
@@ -122,6 +125,7 @@ export const AuthContextProvider = (props : LayoutProps) => {
   const [userInfo, setUserInfo] = useState<UserBasicInfo>({} as UserBasicInfo);
   const [timerId, setTimerId] = useState<NodeJS.Timeout | undefined>(undefined);
   const router = useRouter();
+  const message = useContext(MessageContext);
   
   const isLoggedIn = (!!token) && (calculateRemainDuration(exp) > 0)
 
@@ -193,6 +197,15 @@ export const AuthContextProvider = (props : LayoutProps) => {
     setUserInfo(user);
   };
 
+  const doExternalLogin = () => {
+    oidcRedirectJaccount(client!, window.location.origin + router.basePath + "/oauth/redirectback")
+      .then((data) => {
+        window.location.replace(data)
+      },(err)=>{
+        message.error(err);
+      });
+  };
+
   const contextValue = {
     token: token || "",
     refreshToken: refreshToken || "",
@@ -202,7 +215,8 @@ export const AuthContextProvider = (props : LayoutProps) => {
     onLogout: logoutHandler,
     onLoggedInOr403: loggedInOr403,
     client: client,
-    userInfo: userInfo
+    userInfo: userInfo,
+    doExternalLogin: doExternalLogin
   }
 
   return (
