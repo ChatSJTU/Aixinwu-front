@@ -26,7 +26,7 @@ const DayButton: React.FC<DayButtonProps> = ({ day, value, filled = false }) => 
     );
 };
 
-const tagStyle : { [key: string]: { text: string; color: string }; } = {
+export const tagStyle : { [key: string]: { text: string; color: string }; } = {
     'faculty': { text: '教职工', color: 'blue' },
     'fs':      { text: '附属单位职工', color: 'magenta'},
     'postphd': { text: '博士后', color: 'cyan' },

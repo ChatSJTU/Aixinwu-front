@@ -10,14 +10,16 @@ import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
 import { fetchUserBasicInfo } from '@/services/user';
 
-const UserCenterTabs = [
+export const UserCenterTabs = [
     {
         label: '我的订单',
+        short: '订单',
         key: '/user/order',
         icon: <ContainerOutlined />
     },
     {
         label: '我的捐赠',
+        short: '捐赠',
         key: '/user/donation',
         icon: <GiftOutlined />
     },
@@ -28,11 +30,13 @@ const UserCenterTabs = [
     // },
     {
         label: '爱心币明细',
+        short: '明细',
         key: '/user/coin-log',
         icon: <InteractionOutlined />
     },
     {
         label: '收货信息管理',
+        short: '收货信息',
         key: '/user/consignee',
         icon: <IdcardOutlined />
     },

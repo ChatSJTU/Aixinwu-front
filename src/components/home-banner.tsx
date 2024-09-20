@@ -1,17 +1,27 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Carousel, Col, Row, Statistic, Image } from "antd";
-import { AxCoin } from "./axcoin";
+import { Carousel, Col, Row, Statistic, Image, Tag, Typography, Space, Avatar, Button } from "antd";
+import { UserOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/router';
+import { AxCoin } from "@/components/axcoin";
 import { fetchCarouselUrls, fetchStatistics } from "@/services/homepage";
+import { fetchUserBasicInfo } from "@/services/user";
 import { SiteStatistics } from "@/models/site-statistics";
+import { UserBasicInfo } from "@/models/user";
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
+import { tagStyle } from "@/components/user-basic-info-card";
+import { UserCenterTabs } from "./user-center-layout";
+
+const { Title } = Typography;
 
 const HomeBanner = () => {
     const [carouselUrls, setCarouselUrls] = useState<string[]>([]);
     const [statistics, setStatistics] = useState<SiteStatistics | null>(null);
+    const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo>({} as UserBasicInfo);
     const authCtx = useContext(AuthContext);
     const message = useContext(MessageContext);
     const client = authCtx.client;
+    const router = useRouter();
 
     useEffect(() => {
         fetchCarouselUrls(client!)
@@ -19,9 +29,16 @@ const HomeBanner = () => {
             .catch(err => message.error(err));
         fetchStatistics(client!)
             .then(res => setStatistics(res))
-            .catch(err => message.error(err));
-        }
-    , []);
+            .catch(err => message.error(err));   
+    }, []);
+
+    useEffect(() => {
+        if (authCtx.isLoggedIn) (
+            fetchUserBasicInfo(client!)
+            .then(data => setUserBasicInfo(data))
+            .catch(err => message.error(err))
+        )
+    }, [authCtx.isLoggedIn])
 
     const contentStyle: React.CSSProperties = {
         height: "326px",
@@ -54,10 +71,68 @@ const HomeBanner = () => {
         zIndex: 2,
     };
 
+    const overlayStyle: React.CSSProperties = {
+        position: 'absolute',
+        top: 12,
+        left: 12,
+        right: 12,
+        bottom: 12,
+        background: 'rgba(240, 240, 240, 0.55)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1,
+        backdropFilter: 'blur(7px)', 
+        borderRadius: '7px',
+        overflow: 'hidden',
+      };
+
+    const tag = tagStyle[userBasicInfo?.type] || { text: '未知', color: 'default' };
+
     return (
         <Row>
             <Col span={6}>
                 <div className="container homebanner">
+                    <Space direction="vertical" style={{alignItems: "center", width: "100%"}}>
+                        <Avatar shape="square" size={60} icon={<UserOutlined />} />
+                        <Space style={{marginTop: "12px"}}>
+                            <Title level={5} style={{margin: "0px"}}>{userBasicInfo.name}</Title>
+                            <Tag color={tag.color}>{tag.text}</Tag>
+                        </Space>
+                        <span>{userBasicInfo.email}</span>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span>账户余额：</span>
+                            <AxCoin size={14} 
+                                value={userBasicInfo.balance}
+                                coloredValue
+                                valueStyle={{
+                                    margin: '0px 0px 0px -4px',
+                                    fontSize: '14px',
+                                }}/>
+                        </div>
+                        <Row style={{marginTop: "12px"}}>
+                            {UserCenterTabs.slice(0, 3).map(tab => (
+                                <Col span={8}>
+                                    <Button 
+                                        type="text" style={{height: "auto", width: "100%"}} size="small"
+                                        onClick={() => {router.push(tab.key)}}
+                                        >
+                                        <div style={{marginInline: "4px"}}>
+                                            <div style={{fontSize: "16px"}}>{tab.icon}</div>
+                                            {tab.short}
+                                        </div>
+                                    </Button>
+                                </Col>
+                            ))}
+                        </Row>
+                    </Space>
+                    {!authCtx.isLoggedIn && (
+                        <div style={overlayStyle}>
+                        <Button type="link" onClick={authCtx.doExternalLogin}>
+                            请先登录
+                        </Button>
+                        </div>
+                    )}
                 </div>
             </Col>
             <Col span={12}>
