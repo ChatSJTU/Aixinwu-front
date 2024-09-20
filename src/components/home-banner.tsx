@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Carousel, Col, Row, Statistic, Image, Tag, Typography, Space, Avatar, Button } from "antd";
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, ContainerOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import { AxCoin } from "@/components/axcoin";
 import { fetchCarouselUrls, fetchStatistics } from "@/services/homepage";
@@ -10,7 +10,7 @@ import { UserBasicInfo } from "@/models/user";
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
 import { tagStyle } from "@/components/user-basic-info-card";
-import { UserCenterTabs } from "./user-center-layout";
+import { ShopErrorCode } from "@/graphql/hooks";
 
 const { Title } = Typography;
 
@@ -89,6 +89,24 @@ const HomeBanner = () => {
 
     const tag = tagStyle[userBasicInfo?.type] || { text: '未知', color: 'default' };
 
+    const userQuickLink = [
+        {
+            label: '订单',
+            key: '/user/order',
+            icon: <ContainerOutlined />
+        },
+        {
+            label: '爱心篮',
+            key: '/cart',
+            icon: <ShoppingCartOutlined />
+        },
+        {
+            label: '我的',
+            key: '/user',
+            icon: <UserOutlined/>
+        }
+    ]
+
     return (
         <Row>
             <Col span={6}>
@@ -111,15 +129,15 @@ const HomeBanner = () => {
                                 }}/>
                         </div>
                         <Row style={{marginTop: "12px"}}>
-                            {UserCenterTabs.slice(0, 3).map(tab => (
+                            {userQuickLink.slice(0, 3).map(item => (
                                 <Col span={8}>
                                     <Button 
                                         type="text" style={{height: "auto", width: "100%"}} size="small"
-                                        onClick={() => {router.push(tab.key)}}
+                                        onClick={() => {router.push(item.key)}}
                                         >
                                         <div style={{marginInline: "4px"}}>
-                                            <div style={{fontSize: "16px"}}>{tab.icon}</div>
-                                            {tab.short}
+                                            <div style={{fontSize: "16px"}}>{item.icon}</div>
+                                            {item.label}
                                         </div>
                                     </Button>
                                 </Col>
