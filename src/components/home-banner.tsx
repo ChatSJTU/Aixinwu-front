@@ -6,20 +6,21 @@ import { AxCoin } from "@/components/axcoin";
 import { fetchCarouselUrls, fetchStatistics } from "@/services/homepage";
 import { fetchUserBasicInfo } from "@/services/user";
 import { SiteStatistics } from "@/models/site-statistics";
-import { UserBasicInfo } from "@/models/user";
+import { UserBasicInfo, UserBasicInfoMockData } from "@/models/user";
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
+import ThemeContext from '@/contexts/theme';
 import { tagStyle } from "@/components/user-basic-info-card";
-import { ShopErrorCode } from "@/graphql/hooks";
 
 const { Title } = Typography;
 
 const HomeBanner = () => {
     const [carouselUrls, setCarouselUrls] = useState<string[]>([]);
     const [statistics, setStatistics] = useState<SiteStatistics | null>(null);
-    const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo>({} as UserBasicInfo);
+    const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo>(UserBasicInfoMockData);
     const authCtx = useContext(AuthContext);
     const message = useContext(MessageContext);
+    const theme = useContext(ThemeContext);
     const client = authCtx.client;
     const router = useRouter();
 
@@ -33,11 +34,16 @@ const HomeBanner = () => {
     }, []);
 
     useEffect(() => {
-        if (authCtx.isLoggedIn) (
+        if (authCtx.isLoggedIn) {
             fetchUserBasicInfo(client!)
             .then(data => setUserBasicInfo(data))
-            .catch(err => message.error(err))
-        )
+            .catch(err => {
+                message.error(err);
+                setUserBasicInfo({} as UserBasicInfo);
+            })
+        } else {
+            setUserBasicInfo(UserBasicInfoMockData);
+        }
     }, [authCtx.isLoggedIn])
 
     const contentStyle: React.CSSProperties = {
@@ -73,11 +79,11 @@ const HomeBanner = () => {
 
     const overlayStyle: React.CSSProperties = {
         position: 'absolute',
-        top: 12,
-        left: 12,
-        right: 12,
-        bottom: 12,
-        background: 'rgba(240, 240, 240, 0.55)',
+        top: 13,
+        left: 13,
+        right: 13,
+        bottom: 13,
+        background: theme.userTheme == 'light' ? 'rgba(255, 255, 255, 0.55)' : 'rgba(40, 40, 40, 0.55)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

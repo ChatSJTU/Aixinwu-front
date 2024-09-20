@@ -27,3 +27,11 @@ export interface DonationInfo {
     title: string;
     price: {amount: number};
 }
+
+export const UserBasicInfoMockData = {
+    name: '交小苗',
+    email: 'little-sjtuer@sjtu.edu.cn',
+    type: 'student',
+    balance: 100,
+    continuous_login_days: 10,
+} as UserBasicInfo;
