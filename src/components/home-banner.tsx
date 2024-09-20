@@ -141,7 +141,7 @@ const HomeBanner = () => {
                                         type="text" style={{height: "auto", width: "100%"}} size="small"
                                         onClick={() => {router.push(item.key)}}
                                         >
-                                        <div style={{marginInline: "4px"}}>
+                                        <div style={{marginInline: "12px"}}>
                                             <div style={{fontSize: "16px"}}>{item.icon}</div>
                                             {item.label}
                                         </div>
