@@ -136,7 +136,7 @@ const HomeBanner = () => {
                         </div>
                         <Row style={{marginTop: "12px"}}>
                             {userQuickLink.slice(0, 3).map(item => (
-                                <Col span={8}>
+                                <Col key={item.key} span={8}>
                                     <Button 
                                         type="text" style={{height: "auto", width: "100%"}} size="small"
                                         onClick={() => {router.push(item.key)}}
