@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Carousel, Col, Row, Statistic, Image, Tag, Typography, Space, Avatar, Button } from "antd";
+import { Carousel, Col, Row, Statistic, Image, Tag, Typography, Space, Avatar, Button, Skeleton } from "antd";
 import { UserOutlined, ContainerOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import { AxCoin } from "@/components/axcoin";
 import { fetchCarouselUrls, fetchStatistics } from "@/services/homepage";
 import { fetchUserBasicInfo } from "@/services/user";
 import { SiteStatistics } from "@/models/site-statistics";
-import { UserBasicInfo, UserBasicInfoMockData } from "@/models/user";
+import { UserBasicInfo } from "@/models/user";
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
 import ThemeContext from '@/contexts/theme';
@@ -17,7 +17,7 @@ const { Title } = Typography;
 const HomeBanner = () => {
     const [carouselUrls, setCarouselUrls] = useState<string[]>([]);
     const [statistics, setStatistics] = useState<SiteStatistics | null>(null);
-    const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo>(UserBasicInfoMockData);
+    const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo | undefined>(undefined);
     const authCtx = useContext(AuthContext);
     const message = useContext(MessageContext);
     const theme = useContext(ThemeContext);
@@ -39,10 +39,10 @@ const HomeBanner = () => {
             .then(data => setUserBasicInfo(data))
             .catch(err => {
                 message.error(err);
-                setUserBasicInfo({} as UserBasicInfo);
+                setUserBasicInfo(undefined);
             })
         } else {
-            setUserBasicInfo(UserBasicInfoMockData);
+            setUserBasicInfo(undefined);
         }
     }, [authCtx.isLoggedIn])
 
@@ -93,7 +93,7 @@ const HomeBanner = () => {
         overflow: 'hidden',
       };
 
-    const tag = tagStyle[userBasicInfo?.type] || { text: '未知', color: 'default' };
+    const tag = userBasicInfo != null ? (tagStyle[userBasicInfo?.type] || { text: '未知', color: 'default' }) : { text: '未知', color: 'default' };
 
     const userQuickLink = [
         {
@@ -120,14 +120,14 @@ const HomeBanner = () => {
                     <Space direction="vertical" style={{alignItems: "center", width: "100%"}}>
                         <Avatar shape="square" size={60} icon={<UserOutlined />} />
                         <Space style={{marginTop: "12px"}}>
-                            <Title level={5} style={{margin: "0px"}}>{userBasicInfo.name}</Title>
+                            <Title level={5} style={{margin: "0px"}}>{userBasicInfo?.name ?? <Skeleton.Input size="small"/>}</Title>
                             <Tag color={tag.color}>{tag.text}</Tag>
                         </Space>
-                        <span>{userBasicInfo.email}</span>
+                        <span>{userBasicInfo?.email ?? <Skeleton.Input size="small"/>}</span>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <span>账户余额：</span>
                             <AxCoin size={14} 
-                                value={userBasicInfo.balance}
+                                value={userBasicInfo?.balance ?? 0}
                                 coloredValue
                                 valueStyle={{
                                     margin: '0px 0px 0px -4px',
