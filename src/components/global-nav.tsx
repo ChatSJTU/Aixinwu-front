@@ -3,12 +3,13 @@ import { SunOutlined, MoonOutlined, UserOutlined, SearchOutlined, LogoutOutlined
 import ThemeContext from '@/contexts/theme';
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
 import { AxCoin } from './axcoin';
 import { fetchUserBasicInfo } from '@/services/user';
 import CartContext from '@/contexts/cart';
+import { useMemoizedFn } from 'ahooks';
 
 const { Title, Text } = Typography;
 const { Search } = Input;
@@ -24,7 +25,7 @@ const NavBar = () => {
   const [ searchText, setSearchText ] = useState<string>('');
   const screens = Grid.useBreakpoint();
 
-  const items : MenuProps['items'] = [
+  const items : MenuProps['items'] = useMemo(()=> [
     {
       key: '1',
       label: (
@@ -62,7 +63,7 @@ const NavBar = () => {
       ),
       icon: <LogoutOutlined />,
     },
-  ];
+  ], [authCtx.userInfo, authCtx.onLogout]);
 
   useEffect(()=>{
     if (authCtx.isLoggedIn)

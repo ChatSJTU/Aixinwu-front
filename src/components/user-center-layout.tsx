@@ -57,7 +57,12 @@ const UserLayout: React.FC<LayoutProps> = ({ children }) => {
 
     useEffect(()=>{
       if (!authCtx.onLoggedInOr403()) return;
-      fetchUserBasicInfo(client!).then(data => setUserBasicInfo(data)).catch(err => message.error(err));
+      fetchUserBasicInfo(client!)
+      .then(data => {
+        setUserBasicInfo(data);
+        authCtx.updateUserInfo(data);
+      })
+      .catch(err => message.error(err));
     }, []);
 
     return (

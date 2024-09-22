@@ -225,8 +225,10 @@ export const OrderPageView = () => {
           {addresses.map((address, index) => (
             <Menu.Item key={index} onClick={() => handleAddressClick(address)}>
               <p style={{ maxHeight: "300px", overflow: "auto" }}>
-                <span>{address.firstName}</span>
-                <span>{address.phone}</span>
+                <Space>
+                    <span>{address.firstName}</span>
+                    <span>{address.phone}</span>
+                </Space>
                 <br />
                 <span style={{ fontSize: "12px", color: "#888", overflow: "hidden", textOverflow: "ellipsis" }}>{address.streetAddress1}</span>
               </p>
@@ -256,13 +258,13 @@ export const OrderPageView = () => {
                         type="text"
                         style={{ width: '100%', fontWeight: "lighter", height: "auto", overflow:'hidden',  textOverflow: "ellipsis"}}
                     >
-                        <Flex justify='space-between'>
-                            <Space direction="vertical" size="small" style={{ textAlign: "left", maxWidth:'85%', textOverflow:'ellipsis' }}>
+                        <Flex justify='space-between' style={{width: "100%"}}>
+                            <Space direction="vertical" size="small" style={{ textAlign: "left", width: "100%", textOverflow:'ellipsis' }}>
                                 {
                                     selectedAddress ?
                                     (
                                         <>
-                                        <Space>
+                                        <Space style={{ flexWrap: 'wrap' }}>
                                             <span>{selectedAddress.firstName}</span>
                                             <span>{selectedAddress.phone}</span>
                                         </Space>
@@ -299,7 +301,7 @@ export const OrderPageView = () => {
                         <Input.TextArea rows={4} style={{maxHeight: '100px', overflow: 'auto'}}/>
                     </Panel>
                 </Collapse>
-                <Space align='center' style={{width: '100%', display: 'flex', justifyContent: 'flex-end'}}>
+                <Space align='center' style={{width: '100%', display: 'flex', justifyContent: 'flex-end', flexWrap: 'wrap'}}>
                     <Text style={{display: 'flex', alignItems: "center"}}>
                     {/* 总计： <AxCoin size={22}/> <span style={{color: '#eb2f96'}}>{totalCost}</span> */}
                     总计： <AxCoin value={checkout.totalPrice.gross.amount} coloredValue/>
