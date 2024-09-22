@@ -8,8 +8,8 @@
 }
 
 .ant-statistic-content-value {
-    overflow: hidden; 
-    white-space: nowrap; 
+    overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
 }
 
@@ -40,6 +40,7 @@
 .basic-card .ant-typography {
     margin-bottom: 24px;
 }
+
 .ant-statistic-content-suffix {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -57,4 +58,13 @@
 
 .search-modal .ant-modal-content {
     padding: 0px 12px 12px 12px;
+}
+
+.ant-dropdown {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+}
+
+.slide-up-enter, .slide-up-appear {
+    animation-duration: 0s !important;
 }
