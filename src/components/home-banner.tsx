@@ -36,7 +36,10 @@ const HomeBanner = () => {
     useEffect(() => {
         if (authCtx.isLoggedIn) {
             fetchUserBasicInfo(client!)
-            .then(data => setUserBasicInfo(data))
+            .then(data => {
+                setUserBasicInfo(data)
+                authCtx.updateUserInfo(data)
+            })
             .catch(err => {
                 message.error(err);
                 setUserBasicInfo({} as UserBasicInfo);
