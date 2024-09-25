@@ -8,19 +8,37 @@ import { MessageContext } from '@/contexts/message';
 import { fetchUserOrders } from "@/services/user";
 import { OrderTable } from "@/components/order-table";
 import { OrderInfo } from "@/models/order";
+import { PaginationProps } from "antd";
 
 
 const UserOrderPage = () => {
-    const [userOrders, setUserOrders] = useState<OrderInfo[]>([]);
+    const pageSize = 10;
+    const [orders, setOrders] = useState<OrderInfo[]>([]);
+    const [shownPage, setShownPage] = useState<number>(1);
+    const [totalResultsCount, setTotalResultsCount] = useState<number>(0);
     const authCtx = useContext(AuthContext);
     const message = useContext(MessageContext);
     const client = authCtx.client;
 
-    useEffect(()=>{
-        fetchUserOrders(client!,20)
-            .then(res => setUserOrders(res))
-            .catch(err => message.error(err))
-    },[])
+    const handleFetchLog = (page: number) => {
+        if (authCtx.isLoggedIn) {
+            fetchUserOrders(client!, pageSize * page, pageSize)
+                .then(res => {
+                    setOrders(res.data);
+                    setTotalResultsCount(res.totalCount!)
+                })
+                .catch(err => message.error(err))
+        }
+    }
+
+    const handlePaginationChange: PaginationProps['onChange'] = (page: number) => {
+        setShownPage(page);
+        handleFetchLog(page);
+    };
+
+    useEffect(() => {
+        handleFetchLog(shownPage);
+    }, [authCtx])
 
     return (
         <>
@@ -30,7 +48,12 @@ const UserOrderPage = () => {
             <UserLayout>
                 <PageHeader title={"我的订单"} />
                 <div style={{marginTop: '14px'}}>
-                    <OrderTable orders={userOrders}/>
+                    <OrderTable 
+                        orders={orders} 
+                        current={shownPage}
+                        total={totalResultsCount}
+                        onChange={handlePaginationChange}
+                        pageSize={pageSize}/>
                 </div>
             </UserLayout>
         </>

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Table, Button, Image, Typography, Tag, Flex } from 'antd';
-import type { TableColumnsType } from 'antd';
+import type { PaginationProps, TableColumnsType } from 'antd';
 import { ExportOutlined, CalendarOutlined, PayCircleOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import { OrderInfo } from '@/models/order';
 import { useRouter } from 'next/router';
@@ -12,10 +12,14 @@ import AuthContext from '@/contexts/auth';
 const { Text } = Typography;
 
 interface OrderTableProps {
+    current: number,
+    pageSize: number,
+    total: number,
+    onChange: PaginationProps['onChange'],
     orders: OrderInfo[];
 }
 
-export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
+export const OrderTable: React.FC<OrderTableProps> = (props) => {
     const router = useRouter();
     const authCtx = useContext(AuthContext);
     const client = authCtx.client;
@@ -32,8 +36,6 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
     const handleCancelClick = (orderId: string) => {
         router.push(`/order/detail?id=${orderId}&autocancel=true`)
     }
-
-    console.log(orders)
     
     const columns: TableColumnsType<any> = [
         {
@@ -148,9 +150,15 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
     ];
     return (
       <Table 
-        dataSource={orders} 
+        dataSource={props.orders} 
         columns={columns} 
-        pagination={{ hideOnSinglePage: true, pageSize: 10 }}
+        pagination={{
+            hideOnSinglePage: true,
+            current: props.current,
+            pageSize: props.pageSize,
+            total: props.total,
+            onChange: props.onChange,
+        }}
         scroll={{ x: 'max-content'}}
       />
     );

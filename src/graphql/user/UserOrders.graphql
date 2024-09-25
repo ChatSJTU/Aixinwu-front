@@ -1,11 +1,12 @@
-query UserOrders($maxFetch: Int = 50) {
-  me{
-  orders(first: $maxFetch) {
-    edges {
-      node {
-        ...OrderBriefFragment
+query UserOrders($first: Int!, $last: Int!) {
+  me {
+    orders(first: $first, last: $last, sortBy: {direction: DESC, field: NUMBER}) {
+      edges {
+        node {
+          ...OrderBriefFragment
+        }
       }
+      totalCount
     }
   }
-}
 }

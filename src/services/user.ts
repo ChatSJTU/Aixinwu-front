@@ -198,12 +198,13 @@ export async function setDefaultUserAddress(client: ApolloClient<object>, id: st
     }
 }
 
-export async function fetchUserOrders(client: ApolloClient<object>, maxFetch: number = 50) {
+export async function fetchUserOrders(client: ApolloClient<object>, first: number, last: number) {
     try {
         const resp = await client.query<UserOrdersQuery>({
             query: UserOrdersDocument,
             variables: {
-                maxFetch: maxFetch,
+                first: first,
+                last: last
             }
         });
         if (!resp.data || !resp.data.me || !resp.data.me.orders){
@@ -211,8 +212,10 @@ export async function fetchUserOrders(client: ApolloClient<object>, maxFetch: nu
         }
         const edges = resp.data.me.orders.edges;
         const res = edges.map(edge => edge.node)
-        return res as OrderInfo[]
-
+        return {
+            totalCount: resp.data.me.orders.totalCount,
+            data: res as OrderInfo[]
+        };
     } catch (error) {
         var errmessage = `获取用户订单列表失败：${error}`
         console.error(errmessage);
