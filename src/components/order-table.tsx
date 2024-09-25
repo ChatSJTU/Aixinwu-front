@@ -116,6 +116,9 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
                 if (record.paymentStatus == "FULLY_REFUNDED") {
                     return <Tag style={{ marginInlineEnd: '0px' }} color='purple'>已退款</Tag>
                 }
+                if (record.paymentStatus == "PARTIALLY_REFUNDED") {
+                    return <Tag style={{ marginInlineEnd: '0px' }} color='purple'>部分退款</Tag>
+                }
                 return <Tag style={{ marginInlineEnd: '0px' }} color="grey">未知状态</Tag>
             }
         },
@@ -126,7 +129,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
             key: 'operation',
             render: (_, record: OrderInfo) => {
 
-                if (record.paymentStatus === "NOT_CHARGED" && record.status != "CANCELED") {
+                if (record.paymentStatus === "NOT_CHARGED" && record.status == "UNCONFIRMED") {
                     return (
                         <Flex vertical justify='center' align='center' >
                             <Button type='primary' size='small' icon={<PayCircleOutlined />} style={{ marginBottom: '10px' }} onClick={() => {handlePayClick(record.id);}}>支付</Button>

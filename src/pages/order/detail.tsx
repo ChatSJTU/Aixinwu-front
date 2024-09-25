@@ -267,7 +267,7 @@ export default function OrderDetailPage() {
                     </List.Item>
                 )}
                 />
-            { (!orderDetail?.isPaid && orderDetail?.status != "CANCELED") &&
+            { (!orderDetail?.isPaid && orderDetail?.status == "UNCONFIRMED") &&
                 <Flex justify="flex-end" style={{marginTop: "8px"}}>
                     <Space size="small" direction="horizontal">
                         <Button onClick={handleCancelClick}>取消订单</Button>
