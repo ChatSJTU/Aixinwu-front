@@ -93,7 +93,7 @@ const NavBar = () => {
 
   return (
       <>
-          <Space size="large" className="navbar">
+          <Space size="middle" className="navbar">
               <Link href="/" className="title">SJTU 爱心屋</Link>
               {
                 !(!screens.md && router.asPath=="/") &&
