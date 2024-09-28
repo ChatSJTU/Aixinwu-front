@@ -20,19 +20,23 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
                 <Card
                     hoverable
                     className="preview-card"
-                    cover={<Image className='preview-card-cover' alt={product_name} src={image_url && image_url[0]} preview={false} />}
+                    cover={
+                        <div className="image-container" style={{ maxHeight: '140px', maxWidth: '161px'}}>
+                            <Image className='preview-card-cover' alt={product_name} src={image_url[0]} preview={false}/>
+                        </div>
+                    }
                 >
                     <Space direction="vertical" size="small" style={{ display: 'flex' }}>
                         <span className='preview-card-title'>{product_name}</span>
                         <Flex justify="space-between" align="center">
-                            <div style={{whiteSpace: 'nowrap'}}>
+                            <div style={{ whiteSpace: 'nowrap' }}>
                                 <ShoppingCartOutlined />
-                                <Text style={{marginLeft:'2px'}}>{sold}</Text>
+                                <Text style={{ marginLeft: '2px' }}>{sold}</Text>
                             </div>
-                            <div style={{whiteSpace: 'nowrap'}}>
-                                <AxCoin coloredValue size={15} 
+                            <div style={{ whiteSpace: 'nowrap' }}>
+                                <AxCoin coloredValue size={15}
                                     value={minPrice} shownFromSign={minPrice !== maxPrice}
-                                    valueStyle={{fontSize: '16px', paddingLeft: '-2px'}}
+                                    valueStyle={{ fontSize: '16px', paddingLeft: '-2px' }}
                                 />
                                 {/* <Text strong style={{marginLeft:'2px', color: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"}}>
                                     {minPrice >= 1000 ? minPrice.toFixed(1) : minPrice.toFixed(2)}
