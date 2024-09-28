@@ -1,7 +1,7 @@
 import {
   Image, Spin, Divider, Row, Col, Button,
   Typography, Carousel, Breadcrumb, Space, InputNumber,
-  Grid, Radio, Modal, ConfigProvider, Alert, Statistic 
+  Grid, Radio, ConfigProvider, Alert, Statistic
 } from 'antd'
 import {
   ShoppingCartOutlined,
@@ -270,65 +270,73 @@ const ProductDetailsPage: React.FC = () => {
                   }</Text>
                   : <Text type='secondary'>已售罄</Text>
                 }
-              </Space>}
-              <Space size="middle" style={{ width: "100%" }}>
-                {
-                  authCtx.isLoggedIn &&
-                  <>
-                    {
-                      product.isAvailableForPurchase &&
-                      <>
-                        <ConfigProvider
-                          theme={{
-                            components: {
-                              Button: {
-                                colorPrimary: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882",
-                                colorPrimaryHover: getHoverColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
-                                colorPrimaryActive: getActiveColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
-                                lineWidth: 0,
-                              },
-                            },
-                          }}
-                        >
-                          <Button
-                            size="large"
-                            type='primary'
-                            icon={<PayCircleOutlined />}
-                            // style={{ backgroundColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
-                            style={{ width: '150px' }}
-                            onClick={handleBuyClick}
-                            disabled={selectedVarient < 0 || overQuantity}
-                          >
-                            {shared ? "立即租赁" : "立即购买"}
-                          </Button>
-                        </ConfigProvider>
-                        {!shared && <Button
-                          size="large"
-                          type='default'
-                          icon={<ShoppingCartOutlined />}
-                          disabled={selectedVarient < 0 || overQuantity}
-                          style={{ borderColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882", width: '150px' }}
-                          onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, queryQuantity) }}
-                        >
-                          添加到爱心篮
-                        </Button>}
-                      </>
-                    }
-                    {
-                      (!product.isAvailableForPurchase && timeLeftMillis! > 0) &&
-                      <>
-                        <Countdown title="距离开售还有" value={timeLeftMillis} onFinish={() => setProduct({...product, isAvailableForPurchase: true})} format="D 天 H 时 m 分 s 秒" />
-                      </>
-                    }
-
-                  </>
-                }
-                {
-                  !authCtx.isLoggedIn &&
-                  <Alert message="您尚未登录，请登录以进行购买或添加至爱心篮"
-                    type="warning" showIcon />
-                }
               </Space>
+              }
+              {
+                authCtx.isLoggedIn &&
+                <>
+                  {
+                    product.isAvailableForPurchase &&
+                    <>
+                      <ConfigProvider
+                        theme={{
+                          components: {
+                            Button: {
+                              colorPrimary: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882",
+                              colorPrimaryHover: getHoverColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
+                              colorPrimaryActive: getActiveColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
+                              lineWidth: 0,
+                            },
+                          },
+                        }}
+                      >
+                        <Button
+                          size="large"
+                          type='primary'
+                          icon={<PayCircleOutlined />}
+                          // style={{ backgroundColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
+                          style={{ width: '150px' }}
+                          onClick={handleBuyClick}
+                          disabled={selectedVarient < 0 || overQuantity}
+                        >
+                          {shared ? "立即租赁" : "立即购买"}
+                        </Button>
+                      </ConfigProvider>
+                      {!shared && <Button
+                        size="large"
+                        type='default'
+                        icon={<ShoppingCartOutlined />}
+                        disabled={selectedVarient < 0 || overQuantity}
+                        style={{ borderColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882", width: '150px' }}
+                        onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, queryQuantity) }}
+                      >
+                        添加到爱心篮
+                      </Button>}
+                    </>
+                  }
+                  {
+                    (!product.isAvailableForPurchase && timeLeftMillis! > 0) &&
+                    <Alert
+                      type='info'
+                      message={
+                        <Countdown
+                          title="距离开售还有"
+                          value={timeLeftMillis}
+                          onFinish={() => setProduct({ ...product, isAvailableForPurchase: true })}
+                          format="D 天 H 时 m 分 s 秒"
+                        />
+                      }
+                      style={{ width: '100%', borderRadius: '6px' }}
+                    />
+                  }
+
+                </>
+              }
+              {
+                !authCtx.isLoggedIn &&
+                <Alert message="您尚未登录，请登录以进行购买或添加至爱心篮"
+                  type="warning" showIcon />
+              }
             </Space>
           </Col>
         </Row>
