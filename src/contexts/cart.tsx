@@ -69,14 +69,19 @@ export const CartContextProvider = (props : LayoutProps) => {
         }
         else
         {
-            checkoutGetQuantity(client!, checkoutId)
-                .then(data => {
-                    setTotalQuantity(data);
-                })
-                .catch(err => {
-                    // message.error(err);
-                    incrCartError();
-                });
+            if (authCtx.isLoggedIn) {
+                checkoutGetQuantity(client!, checkoutId)
+                    .then(data => {
+                        setTotalQuantity(data);
+                    })
+                    .catch(err => {
+                        // message.error(err);
+                        incrCartError();
+                    });
+            }
+            else {
+                setCheckoutId(undefined);
+            }
         }
     }
 
