@@ -13,6 +13,7 @@ import { useMemoizedFn } from 'ahooks';
 
 const { Title, Text } = Typography;
 const { Search } = Input;
+type MenuItem = Required<MenuProps>['items'][number];
 
 const NavBar = () => {
   const router = useRouter();
@@ -25,7 +26,7 @@ const NavBar = () => {
   const [ searchText, setSearchText ] = useState<string>('');
   const screens = Grid.useBreakpoint();
 
-  const items : MenuProps['items'] = useMemo(()=> [
+  const dropDownChild : MenuProps['items'] = [
     {
       key: '1',
       label: (
@@ -63,7 +64,14 @@ const NavBar = () => {
       ),
       icon: <LogoutOutlined />,
     },
-  ], [authCtx.userInfo, authCtx.onLogout]);
+  ];
+
+  const dropDownItem: MenuItem = 
+  {
+    label: <Button type="text" icon={<UserOutlined />} onClick={()=>{router.push("/user")}}/>,
+    key: 'user-menu',
+    children: dropDownChild,
+  }
 
   useEffect(()=>{
     if (authCtx.isLoggedIn)
@@ -168,13 +176,18 @@ const NavBar = () => {
                   />
                 </Badge>
               }
-              
               {
                 authCtx.isLoggedIn &&
-                <Dropdown menu={{ items }} placement="bottom">
-                  <Button type="text" icon={<UserOutlined />} onClick={()=>{router.push("/user")}}></Button>
-                </Dropdown>
-                // <Button type="text" icon={<UserOutlined />} onClick={()=>{router.push("/user")}}></Button>
+                <>
+                  <Menu 
+                    mode="horizontal" 
+                    items={[dropDownItem]}
+                    selectable={false}
+                    overflowedIndicator={<UserOutlined/>}
+                    triggerSubMenuAction="hover"
+                    style={{ marginLeft: '-14px' }}
+                  />
+                </>
               }
               {
                 !authCtx.isLoggedIn && screens.md &&
