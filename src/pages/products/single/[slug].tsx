@@ -1,7 +1,7 @@
 import {
   Image, Spin, Divider, Row, Col, Button,
   Typography, Carousel, Breadcrumb, Space, InputNumber,
-  Grid, Radio, Modal, ConfigProvider, Alert,
+  Grid, Radio, Modal, ConfigProvider, Alert, Statistic 
 } from 'antd'
 import {
   ShoppingCartOutlined,
@@ -27,7 +27,7 @@ import { MessageContext } from '@/contexts/message';
 import ThemeContext from "@/contexts/theme";
 import { DirectBuyConfirmModal } from '@/components/direct-buy-confirm-modal';
 
-const { confirm } = Modal;
+const { Countdown } = Statistic;
 const { Title, Text, Link } = Typography;
 const { useBreakpoint } = Grid;
 const QuillRenderer = dynamic(
@@ -56,6 +56,8 @@ const ProductDetailsPage: React.FC = () => {
   const isMobile = !screens.md;
   const { slug, shared } = router.query;
   const [product, setProduct] = useState<ProductDetail | undefined>(undefined);
+  const [timeLeftMillis, setTimeleftMillis] = useState<number>(-1);
+
   const [selectedVarient, setSelectedVarient] = useState<number>(-Infinity);
   const [queryQuantity, setQueryQuantity] = useState<number>(1);
 
@@ -93,6 +95,10 @@ const ProductDetailsPage: React.FC = () => {
       try {
         var resp = await getProductDetail(client!, channel!, slug as string);
         setProduct(resp);
+        if (resp.availableForPurchaseAt) {
+          setTimeleftMillis(new Date(resp.availableForPurchaseAt).getTime())
+        }
+        console.log(timeLeftMillis)
         if (resp.varients.length === 1)
           setSelectedVarient(0);
       } catch (err) {
@@ -149,7 +155,7 @@ const ProductDetailsPage: React.FC = () => {
       <div className='container'>
         <Row>
           <Col span={isMobile ? 24 : 9}>
-            <div style={{ maxHeight: '458px', maxWidth: '458px', overflow: 'hidden'}}>
+            <div style={{ maxHeight: '458px', maxWidth: '458px', overflow: 'hidden' }}>
               <Carousel autoplay autoplaySpeed={5000} speed={1500} draggable={isMobile} style={{ textAlign: 'center' }}>
                 {product.images?.map((url, index) => (
                   <div key={index} className="image-container">
@@ -269,40 +275,52 @@ const ProductDetailsPage: React.FC = () => {
                 {
                   authCtx.isLoggedIn &&
                   <>
-                    <ConfigProvider
-                      theme={{
-                        components: {
-                          Button: {
-                            colorPrimary: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882",
-                            colorPrimaryHover: getHoverColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
-                            colorPrimaryActive: getActiveColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
-                            lineWidth: 0,
-                          },
-                        },
-                      }}
-                    >
-                      <Button
-                        size="large"
-                        type='primary'
-                        icon={<PayCircleOutlined />}
-                        // style={{ backgroundColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
-                        style={{ width: '150px' }}
-                        onClick={handleBuyClick}
-                        disabled={selectedVarient < 0 || overQuantity}
-                      >
-                        {shared ? "立即租赁" : "立即购买"}
-                      </Button>
-                    </ConfigProvider>
-                    {!shared && <Button
-                      size="large"
-                      type='default'
-                      icon={<ShoppingCartOutlined />}
-                      disabled={selectedVarient < 0 || overQuantity}
-                      style={{ borderColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882", width: '150px' }}
-                      onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, queryQuantity) }}
-                    >
-                      添加到爱心篮
-                    </Button>}
+                    {
+                      product.isAvailableForPurchase &&
+                      <>
+                        <ConfigProvider
+                          theme={{
+                            components: {
+                              Button: {
+                                colorPrimary: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882",
+                                colorPrimaryHover: getHoverColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
+                                colorPrimaryActive: getActiveColor(themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882"),
+                                lineWidth: 0,
+                              },
+                            },
+                          }}
+                        >
+                          <Button
+                            size="large"
+                            type='primary'
+                            icon={<PayCircleOutlined />}
+                            // style={{ backgroundColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882" }}
+                            style={{ width: '150px' }}
+                            onClick={handleBuyClick}
+                            disabled={selectedVarient < 0 || overQuantity}
+                          >
+                            {shared ? "立即租赁" : "立即购买"}
+                          </Button>
+                        </ConfigProvider>
+                        {!shared && <Button
+                          size="large"
+                          type='default'
+                          icon={<ShoppingCartOutlined />}
+                          disabled={selectedVarient < 0 || overQuantity}
+                          style={{ borderColor: themeCtx.userTheme == 'light' ? "#EB2F96" : "#CD2882", width: '150px' }}
+                          onClick={() => { cartCtx.addLines(product?.varients[selectedVarient]!.id, queryQuantity) }}
+                        >
+                          添加到爱心篮
+                        </Button>}
+                      </>
+                    }
+                    {
+                      (!product.isAvailableForPurchase && timeLeftMillis! > 0) &&
+                      <>
+                        <Countdown title="距离开售还有" value={timeLeftMillis} onFinish={() => setProduct({...product, isAvailableForPurchase: true})} format="D 天 H 时 m 分 s 秒" />
+                      </>
+                    }
+
                   </>
                 }
                 {

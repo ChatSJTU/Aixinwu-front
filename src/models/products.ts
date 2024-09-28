@@ -20,6 +20,8 @@ export interface ProductDetail {
     detailed_product_name: string | null;
     desc: string | undefined;
     varients: VarientDetail[];
+    isAvailableForPurchase: boolean;
+    availableForPurchaseAt: string | null;
     price: {
         min: number;
         max: number;

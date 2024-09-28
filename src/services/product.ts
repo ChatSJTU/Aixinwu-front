@@ -125,6 +125,8 @@ export async function getProductDetail(client: ApolloClient<object>, channel: st
                 min: data.pricing?.priceRangeUndiscounted?.start?.gross?.amount || 0,
                 max: data.pricing?.priceRangeUndiscounted?.stop?.gross?.amount || 0
             },
+            isAvailableForPurchase: data.isAvailableForPurchase,
+            availableForPurchaseAt: data.availableForPurchaseAt ?? null
         } as ProductDetail;
         return res;
     } catch (error) {
