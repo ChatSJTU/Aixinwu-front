@@ -273,8 +273,8 @@ const ProductDetailsPage: React.FC = () => {
               </Space>
               }
               {
-                authCtx.isLoggedIn &&
-                <>
+                authCtx.isLoggedIn && product.isAvailableForPurchase &&
+                <Space direction="horizontal" size="middle">
                   {
                     product.isAvailableForPurchase &&
                     <>
@@ -314,23 +314,22 @@ const ProductDetailsPage: React.FC = () => {
                       </Button>}
                     </>
                   }
-                  {
-                    (!product.isAvailableForPurchase && timeLeftMillis! > 0) &&
-                    <Alert
-                      type='info'
-                      message={
-                        <Countdown
-                          title="距离开售还有"
-                          value={timeLeftMillis}
-                          onFinish={() => setProduct({ ...product, isAvailableForPurchase: true })}
-                          format="D 天 H 时 m 分 s 秒"
-                        />
-                      }
-                      style={{ width: '100%', borderRadius: '6px' }}
+                </Space>
+              }
+              {
+                (!product.isAvailableForPurchase && timeLeftMillis! > 0) &&
+                <Alert
+                  type='info'
+                  message={
+                    <Countdown
+                      title="距离开售还有"
+                      value={timeLeftMillis}
+                      onFinish={() => setProduct({ ...product, isAvailableForPurchase: true })}
+                      format="D 天 H 时 m 分 s 秒"
                     />
                   }
-
-                </>
+                  style={{ width: '100%', borderRadius: '6px' }}
+                />
               }
               {
                 !authCtx.isLoggedIn &&
