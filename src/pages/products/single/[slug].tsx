@@ -326,6 +326,7 @@ const ProductDetailsPage: React.FC = () => {
                       value={timeLeftMillis}
                       onFinish={() => setProduct({ ...product, isAvailableForPurchase: true })}
                       format="D 天 H 时 m 分 s 秒"
+                      className='product-detail-countdown'
                     />
                   }
                   style={{ width: '100%', borderRadius: '6px' }}
