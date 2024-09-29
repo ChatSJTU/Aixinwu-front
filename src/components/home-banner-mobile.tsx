@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Carousel, Image, Flex, Button, Space } from "antd";
+import { Carousel, Image, Flex, Button, Space, Alert } from "antd";
 import { useRouter } from "next/router";
 import { fetchCarouselUrls } from "@/services/homepage";
+import { fetchUserBasicInfo } from "@/services/user";
+import { UserBasicInfo } from "@/models/user";
 import AuthContext from '@/contexts/auth';
 import { MessageContext } from '@/contexts/message';
-import Icon, { UserOutlined, ShoppingOutlined, FileTextOutlined, HourglassOutlined } from "@ant-design/icons";
+import Icon from "@ant-design/icons";
 import icon_page from '../../assets/icons/page.svg'
 import icon_share from '../../assets/icons/share.svg'
 import icon_store from '../../assets/icons/store.svg'
@@ -12,6 +14,7 @@ import icon_user from '../../assets/icons/user.svg'
 
 const HomeBannerMobile = () => {
     const [carouselUrls, setCarouselUrls] = useState<string[]>([]);
+    const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo | undefined>(undefined);
     const authCtx = useContext(AuthContext);
     const message = useContext(MessageContext);
     const client = authCtx.client;
@@ -23,6 +26,22 @@ const HomeBannerMobile = () => {
             .catch(err => message.error(err));
         }
     , []);
+
+    useEffect(() => {
+      if (authCtx.isLoggedIn) {
+          fetchUserBasicInfo(client!)
+          .then(data => {
+              setUserBasicInfo(data)
+              authCtx.updateUserInfo(data)
+          })
+          .catch(err => {
+              message.error(err);
+              setUserBasicInfo(undefined);
+          })
+      } else {
+          setUserBasicInfo(undefined);
+      }
+  }, [authCtx.isLoggedIn])
 
     const contentStyle: React.CSSProperties = {
         height: "326px",
@@ -57,6 +76,19 @@ const HomeBannerMobile = () => {
 
     return (
       <div>
+        {userBasicInfo?.unpicked_order_count && userBasicInfo?.unpicked_order_count > 0 &&
+          <Alert 
+            message={`${userBasicInfo?.unpicked_order_count} 笔订单待取货`}
+            type="warning" 
+            showIcon
+            banner
+            action={
+              <Button size="small" type="link" onClick={() => {router.push('/user/order')}}>
+                查看
+              </Button>
+            }
+          />
+        }
         <div className="container homebanner" style={{padding: '12px 12px 12px 12px', marginBottom: '24px'}} >
           <Flex align="center" justify="space-between">
             <Button 

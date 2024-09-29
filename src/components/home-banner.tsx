@@ -185,7 +185,7 @@ const HomeBanner = () => {
                                     <span style={{ display: 'inline' }}>笔订单待取货</span>
                                     <Button 
                                         type='link' 
-                                        onClick={() => { router.push('/user/order') }}
+                                        onClick={() => {router.push('/user/order')}}
                                         style={{ padding: 0, display: 'inline' }}
                                     >
                                         查看
