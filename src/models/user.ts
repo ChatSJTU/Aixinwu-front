@@ -4,6 +4,7 @@ export interface UserBasicInfo {
     type: string;
     balance: number;
     continuous_login_days: number;
+    unpicked_order_count: number;
 }
 
 export interface CoinLogInfo {

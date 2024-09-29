@@ -101,7 +101,7 @@ const NavBar = () => {
 
   return (
       <>
-          <Space size="middle" className="navbar">
+          <Space size={screens.md ? "large" : "middle"} className="navbar">
               <Link href="/" className="title">SJTU 爱心屋</Link>
               {
                 !(!screens.md && router.asPath=="/") &&

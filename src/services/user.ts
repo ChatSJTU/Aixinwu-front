@@ -62,7 +62,8 @@ export async function fetchUserBasicInfo(client: ApolloClient<object>) {
             email: data.email,
             type: data.userType,
             balance: data.balance,
-            continuous_login_days: data.continuous
+            continuous_login_days: data.continuous,
+            unpicked_order_count: data.orders.totalCount
         } as UserBasicInfo;
     } catch (error) {
         var errmessage = `获取用户数据失败：${error}`

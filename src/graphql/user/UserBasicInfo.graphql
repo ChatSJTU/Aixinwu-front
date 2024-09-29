@@ -10,5 +10,8 @@ query UserBasicInfo {
     }
     userType
     continuous
+    orders(filter: {paymentStatus: FULLY_CHARGED, status: UNFULFILLED}) {
+      totalCount
+    }
   }
 }

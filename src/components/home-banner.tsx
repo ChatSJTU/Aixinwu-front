@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Carousel, Col, Row, Statistic, Image, Tag, Typography, Space, Avatar, Button, Skeleton } from "antd";
+import { Carousel, Col, Row, Statistic, Image, Tag, Typography, Space, Avatar, Button, Skeleton, Alert } from "antd";
 import { UserOutlined, ContainerOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import { AxCoin } from "@/components/axcoin";
@@ -152,6 +152,49 @@ const HomeBanner = () => {
                                 </Col>
                             ))}
                         </Row>
+                        <div
+                            style={{
+                                border: '2px dashed',
+                                borderColor: userBasicInfo?.unpicked_order_count && userBasicInfo?.unpicked_order_count > 0 
+                                    ? 'rgba(128, 0, 128, 0.4)' 
+                                    : (theme.userTheme === 'light' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)'),
+                                borderRadius: '8px',
+                                backgroundColor: userBasicInfo?.unpicked_order_count && userBasicInfo?.unpicked_order_count > 0
+                                    ? 'rgba(128, 0, 128, 0.06)'
+                                    : (theme.userTheme === 'light' ? 'rgba(0, 0, 0, 0.02)' : 'rgba(255, 255, 255, 0.04)'),
+                                marginTop: "8px",
+                                padding: '10px',
+                                textAlign: 'center',
+                                height: '40px',
+                                width: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {userBasicInfo?.unpicked_order_count && userBasicInfo?.unpicked_order_count > 0 ? (
+                                <Space style={{
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                    textOverflow: 'ellipsis', 
+                                    width: '100%',
+                                }}>
+                                    <p style={{ fontSize: '16px', fontWeight: 'bold', display: 'inline' }}>
+                                        {userBasicInfo?.unpicked_order_count}
+                                    </p>
+                                    <span style={{ display: 'inline' }}>笔订单待取货</span>
+                                    <Button 
+                                        type='link' 
+                                        onClick={() => { router.push('/user/order') }}
+                                        style={{ padding: 0, display: 'inline' }}
+                                    >
+                                        查看
+                                    </Button>
+                                </Space>
+                            ) : (
+                                <div>&nbsp;&nbsp;当前无待取货订单&nbsp;&nbsp;</div>
+                            )}
+                        </div>
                     </Space>
                     {!authCtx.isLoggedIn && (
                         <div style={overlayStyle}>
