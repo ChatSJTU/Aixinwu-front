@@ -185,7 +185,7 @@ const NavBar = () => {
                     selectable={false}
                     overflowedIndicator={<UserOutlined/>}
                     triggerSubMenuAction="hover"
-                    style={{ marginLeft: '-14px' }}
+                    style={{ marginLeft: '-8px', marginRight: '-8px' }}
                   />
                 </>
               }

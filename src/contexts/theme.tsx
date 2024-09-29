@@ -36,6 +36,12 @@ export const ThemeContextProvider = (props : LayoutProps) => {
         theme={{ 
             algorithm: userTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
             token: { colorPrimary: "#1677ff", colorInfo: "#1677ff", screenXXLMin: 1920, screenXXL: 2560, },
+            components: {
+              Menu: {
+                itemHeight: 32,
+                itemPaddingInline: 8
+              }
+            }
         }}
         locale={zhCN}
       >
