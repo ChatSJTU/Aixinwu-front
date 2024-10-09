@@ -76,7 +76,7 @@ const HomeBannerMobile = () => {
 
     return (
       <div>
-        {userBasicInfo?.unpicked_order_count && userBasicInfo?.unpicked_order_count > 0 &&
+        {userBasicInfo?.unpicked_order_count && userBasicInfo?.unpicked_order_count > 0 ?
           <Alert 
             message={`${userBasicInfo?.unpicked_order_count} 笔订单待取货`}
             type="warning" 
@@ -87,7 +87,7 @@ const HomeBannerMobile = () => {
                 查看
               </Button>
             }
-          />
+          /> : <React.Fragment/>
         }
         <div className="container homebanner" style={{padding: '12px 12px 12px 12px', marginBottom: '24px'}} >
           <Flex align="center" justify="space-between">
