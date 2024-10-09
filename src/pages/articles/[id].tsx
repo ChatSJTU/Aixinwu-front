@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useState, useContext, useEffect } from 'react';
 import { Breadcrumb, Button, Divider, Skeleton, Space, Typography } from "antd";
-import { CalendarOutlined, EyeOutlined, UserOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons"
+import { CalendarOutlined, UserOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons"
 // import MarkdownRenderer from "@/components/markdown-renderer";
 import { ArticleDetails } from "@/models/article";
 import AuthContext from '@/contexts/auth';
@@ -54,7 +54,6 @@ const ArticlePage = () => {
                             <div style={{ textAlign: "center" }} className="secondary-text">
                                 <UserOutlined /> {articleDetails.author}&nbsp;&nbsp;&nbsp;
                                 <CalendarOutlined /> {new Date(articleDetails.publish_time).toISOString().split('T')[0]}&nbsp;&nbsp;&nbsp;
-                                <EyeOutlined /> {articleDetails.reads_count}
                             </div>
                         </Space>
                         <Divider />
