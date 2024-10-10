@@ -18,6 +18,7 @@ export interface CheckoutDetail {
     shippingAddress: AddressInfo;
     isShippingRequired: boolean;
     availableShippingMethods : ShippingMethodDetail[] | null;
+    note: string | undefined;
 }
 
 export interface CheckoutLineDetail {

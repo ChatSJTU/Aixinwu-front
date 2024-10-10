@@ -377,6 +377,32 @@ export type AccountInput = {
 };
 
 /**
+ * Create a new invitation for the customer.
+ *
+ * Requires one of the following permissions: AUTHENTICATED_USER.
+ */
+export type AccountInvitationCreate = {
+  __typename?: 'AccountInvitationCreate';
+  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  accountErrors: Array<AccountError>;
+  errors: Array<AccountError>;
+  invitation?: Maybe<Invitation>;
+};
+
+/**
+ * Create a new address for the customer.
+ *
+ * Requires one of the following permissions: AUTHENTICATED_USER.
+ */
+export type AccountInvitationDelete = {
+  __typename?: 'AccountInvitationDelete';
+  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  accountErrors: Array<AccountError>;
+  errors: Array<AccountError>;
+  invitation?: Maybe<Invitation>;
+};
+
+/**
  * Register a new user.
  *
  * Triggers the following webhook events:
@@ -2972,6 +2998,7 @@ export enum BalanceEventsEnum {
   DonationGranted = 'DONATION_GRANTED',
   DonationRejected = 'DONATION_REJECTED',
   FirstLogin = 'FIRST_LOGIN',
+  InvitationAccepted = 'INVITATION_ACCEPTED',
   InviteNewUser = 'INVITE_NEW_USER',
   ManuallyUpdated = 'MANUALLY_UPDATED',
   Other = 'OTHER',
@@ -4791,6 +4818,23 @@ export type CheckoutCustomerAttach = {
  */
 export type CheckoutCustomerDetach = {
   __typename?: 'CheckoutCustomerDetach';
+  /** An updated checkout. */
+  checkout?: Maybe<Checkout>;
+  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  checkoutErrors: Array<CheckoutError>;
+  errors: Array<CheckoutError>;
+};
+
+/**
+ * Updates customer note in the existing checkout object.
+ *
+ * Added in Saleor 3.21.
+ *
+ * Triggers the following webhook events:
+ * - CHECKOUT_UPDATED (async): A checkout was updated.
+ */
+export type CheckoutCustomerNoteUpdate = {
+  __typename?: 'CheckoutCustomerNoteUpdate';
   /** An updated checkout. */
   checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -7125,7 +7169,7 @@ export type Donation = Node & {
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   /** The description of the donation. */
   description?: Maybe<Scalars['String']['output']>;
-  /** The user who made the donation. Requires one of permissions: MANAGE_USERS, MANAGE_DONATIONS, fOWNER */
+  /** The user who made the donation. Requires one of permissions: MANAGE_USERS, MANAGE_DONATIONS, OWNER, READ_USERS */
   donator?: Maybe<User>;
   /** The ID of the donation. */
   id: Scalars['ID']['output'];
@@ -7141,6 +7185,38 @@ export type Donation = Node & {
   title?: Maybe<Scalars['String']['output']>;
   /** The date and time when the donation was last updated. */
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+/**
+ * Complete donations
+ *
+ * Requires one of the following permissions: MANAGE_DONATIONS.
+ */
+export type DonationBulkComplete = {
+  __typename?: 'DonationBulkComplete';
+  /** Returns how many objects were updated. */
+  count: Scalars['Int']['output'];
+  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  donationErrors: Array<DonationBulkError>;
+  /** Input list of donations */
+  donations: Array<Donation>;
+  errors: Array<DonationBulkError>;
+};
+
+export type DonationBulkCompleteInput = {
+  accepted: Scalars['Boolean']['input'];
+  /** ID of the donation. */
+  id: Scalars['ID']['input'];
+};
+
+export type DonationBulkError = {
+  __typename?: 'DonationBulkError';
+  /** The error code. */
+  code: DonationErrorCode;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+  /** Path to field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  path?: Maybe<Scalars['String']['output']>;
 };
 
 /**
@@ -9275,6 +9351,54 @@ export type IntRangeInput = {
   gte?: InputMaybe<Scalars['Int']['input']>;
   /** Value less than or equal to. */
   lte?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Represents invitation data. */
+export type Invitation = Node & {
+  __typename?: 'Invitation';
+  /** Invitation code */
+  code: Scalars['String']['output'];
+  /** Creation of the current invitation */
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Expiration of the current invitation */
+  expiredAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The Id of the invitation */
+  id: Scalars['ID']['output'];
+};
+
+export type InvitationCountableConnection = {
+  __typename?: 'InvitationCountableConnection';
+  edges: Array<InvitationCountableEdge>;
+  /** Pagination data for this connection. */
+  pageInfo: PageInfo;
+  /** A total count of items in the collection. */
+  totalCount?: Maybe<Scalars['Int']['output']>;
+};
+
+export type InvitationCountableEdge = {
+  __typename?: 'InvitationCountableEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: Invitation;
+};
+
+export type InvitationFilterInput = {
+  createdAt?: InputMaybe<DateTimeRangeInput>;
+  expiredAt?: InputMaybe<DateTimeRangeInput>;
+  metadata?: InputMaybe<Array<MetadataFilter>>;
+};
+
+export enum InvitationSortField {
+  /** Sort invitations by created at. */
+  CreatedAt = 'CREATED_AT'
+}
+
+export type InvitationsSortingInput = {
+  /** Specifies the direction in which to sort invitations. */
+  direction: OrderDirection;
+  /** Sort invitations by the selected field. */
+  field: InvitationSortField;
 };
 
 /** Represents an Invoice. */
@@ -11902,6 +12026,15 @@ export type Mutation = {
    */
   checkoutCustomerDetach?: Maybe<CheckoutCustomerDetach>;
   /**
+   * Updates customer note in the existing checkout object.
+   *
+   * Added in Saleor 3.21.
+   *
+   * Triggers the following webhook events:
+   * - CHECKOUT_UPDATED (async): A checkout was updated.
+   */
+  checkoutCustomerNoteUpdate?: Maybe<CheckoutCustomerNoteUpdate>;
+  /**
    * Updates the delivery method (shipping method or pick up point) of the checkout.
    *
    * Added in Saleor 3.1.
@@ -12145,6 +12278,12 @@ export type Mutation = {
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
   digitalContentUrlCreate?: Maybe<DigitalContentUrlCreate>;
+  /**
+   * Complete donations
+   *
+   * Requires one of the following permissions: MANAGE_DONATIONS.
+   */
+  donationBulkComplete?: Maybe<DonationBulkComplete>;
   /**
    * Complete a new donation.
    *
@@ -12395,6 +12534,18 @@ export type Mutation = {
    * - GIFT_CARD_UPDATED (async): A gift card was updated.
    */
   giftCardUpdate?: Maybe<GiftCardUpdate>;
+  /**
+   * Create a new invitation for the customer.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_USER.
+   */
+  invitationCreate?: Maybe<AccountInvitationCreate>;
+  /**
+   * Create a new address for the customer.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_USER.
+   */
+  invitationDelete?: Maybe<AccountInvitationDelete>;
   /**
    * Creates a ready to send invoice.
    *
@@ -14291,6 +14442,12 @@ export type MutationCheckoutCustomerDetachArgs = {
 };
 
 
+export type MutationCheckoutCustomerNoteUpdateArgs = {
+  customerNote: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationCheckoutDeliveryMethodUpdateArgs = {
   deliveryMethodId?: InputMaybe<Scalars['ID']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -14516,6 +14673,11 @@ export type MutationDigitalContentUrlCreateArgs = {
 };
 
 
+export type MutationDonationBulkCompleteArgs = {
+  donations: Array<DonationBulkCompleteInput>;
+};
+
+
 export type MutationDonationCompleteArgs = {
   id: Scalars['ID']['input'];
   input: DonationCompleteInput;
@@ -14692,6 +14854,11 @@ export type MutationGiftCardSettingsUpdateArgs = {
 export type MutationGiftCardUpdateArgs = {
   id: Scalars['ID']['input'];
   input: GiftCardUpdateInput;
+};
+
+
+export type MutationInvitationDeleteArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -18276,6 +18443,7 @@ export enum OrderStatus {
 
 export enum OrderStatusFilter {
   Canceled = 'CANCELED',
+  Expired = 'EXPIRED',
   Fulfilled = 'FULFILLED',
   PartiallyFulfilled = 'PARTIALLY_FULFILLED',
   ReadyToCapture = 'READY_TO_CAPTURE',
@@ -20063,7 +20231,8 @@ export enum PermissionEnum {
   ManageStaff = 'MANAGE_STAFF',
   ManageTaxes = 'MANAGE_TAXES',
   ManageTranslations = 'MANAGE_TRANSLATIONS',
-  ManageUsers = 'MANAGE_USERS'
+  ManageUsers = 'MANAGE_USERS',
+  ReadUsers = 'READ_USERS'
 }
 
 /**
@@ -24899,7 +25068,7 @@ export type Query = {
   /**
    * Look up a user by ID or email address.
    *
-   * Requires one of the following permissions: MANAGE_STAFF, MANAGE_USERS, MANAGE_ORDERS.
+   * Requires one of the following permissions: MANAGE_STAFF, MANAGE_USERS, READ_USERS, MANAGE_ORDERS.
    */
   user?: Maybe<User>;
   /**
@@ -30358,7 +30527,7 @@ export type User = Node & ObjectWithMetadata & {
   /**
    * List of events associated with the user.
    *
-   * Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF.
+   * Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF, READ_USERS.
    */
   events?: Maybe<Array<CustomerEvent>>;
   /**
@@ -30373,6 +30542,10 @@ export type User = Node & ObjectWithMetadata & {
   giftCards?: Maybe<GiftCardCountableConnection>;
   /** The ID of the user. */
   id: Scalars['ID']['output'];
+  /** List of user's invitations. Requires one of the following permissions: AuthorizationFilters.AUTHENTICATED_USER. */
+  invitations?: Maybe<InvitationCountableConnection>;
+  /** Whom the user is invited by */
+  invitedBy: Scalars['String']['output'];
   /** Determine if the user is active. */
   isActive: Scalars['Boolean']['output'];
   /**
@@ -30408,7 +30581,7 @@ export type User = Node & ObjectWithMetadata & {
   /**
    * A note about the customer.
    *
-   * Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF.
+   * Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF, READ_USERS.
    */
   note?: Maybe<Scalars['String']['output']>;
   /** List of user's orders. Requires one of the following permissions: MANAGE_STAFF, OWNER. */
@@ -30493,6 +30666,17 @@ export type UserGiftCardsArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** Represents user data. */
+export type UserInvitationsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<InvitationFilterInput>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<InvitationsSortingInput>;
 };
 
 
@@ -33291,7 +33475,7 @@ export enum WeightUnitsEnum {
 }
 
 /** _Entity union as defined by Federation spec. */
-export type _Entity = Address | App | Category | Collection | Group | Order | PageType | Product | ProductMedia | ProductType | ProductVariant | User;
+export type _Entity = Address | App | Category | Collection | Group | Invitation | Order | PageType | Product | ProductMedia | ProductType | ProductVariant | User;
 
 /** _Service manifest as defined by Federation spec. */
 export type _Service = {
@@ -33404,9 +33588,9 @@ export type CheckoutFindQueryVariables = Exact<{
 }>;
 
 
-export type CheckoutFindQuery = { __typename?: 'Query', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', quantityLimitPerCustomer?: number | null, quantityAvailable?: number | null, name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null, stocks?: Array<{ __typename?: 'Stock', id: string, quantity: number }> | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> } | null };
+export type CheckoutFindQuery = { __typename?: 'Query', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, note: string, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', quantityLimitPerCustomer?: number | null, quantityAvailable?: number | null, name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null, stocks?: Array<{ __typename?: 'Stock', id: string, quantity: number }> | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> } | null };
 
-export type CheckoutForCartFragmentFragment = { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', quantityLimitPerCustomer?: number | null, quantityAvailable?: number | null, name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null, stocks?: Array<{ __typename?: 'Stock', id: string, quantity: number }> | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> };
+export type CheckoutForCartFragmentFragment = { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, note: string, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', quantityLimitPerCustomer?: number | null, quantityAvailable?: number | null, name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null, stocks?: Array<{ __typename?: 'Stock', id: string, quantity: number }> | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> };
 
 export type CheckoutGetQuantityQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -33421,7 +33605,7 @@ export type CheckoutLineDeleteMutationVariables = Exact<{
 }>;
 
 
-export type CheckoutLineDeleteMutation = { __typename?: 'Mutation', checkoutLineDelete?: { __typename?: 'CheckoutLineDelete', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', quantityLimitPerCustomer?: number | null, quantityAvailable?: number | null, name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null, stocks?: Array<{ __typename?: 'Stock', id: string, quantity: number }> | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> } | null, errors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null, lines?: Array<string> | null }> } | null };
+export type CheckoutLineDeleteMutation = { __typename?: 'Mutation', checkoutLineDelete?: { __typename?: 'CheckoutLineDelete', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, note: string, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', quantityLimitPerCustomer?: number | null, quantityAvailable?: number | null, name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null, stocks?: Array<{ __typename?: 'Stock', id: string, quantity: number }> | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> } | null, errors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null, lines?: Array<string> | null }> } | null };
 
 export type CheckoutLinesUpdateMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -33430,7 +33614,7 @@ export type CheckoutLinesUpdateMutationVariables = Exact<{
 }>;
 
 
-export type CheckoutLinesUpdateMutation = { __typename?: 'Mutation', checkoutLinesUpdate?: { __typename?: 'CheckoutLinesUpdate', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', quantityLimitPerCustomer?: number | null, quantityAvailable?: number | null, name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null, stocks?: Array<{ __typename?: 'Stock', id: string, quantity: number }> | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> } | null, checkoutErrors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null, lines?: Array<string> | null }> } | null };
+export type CheckoutLinesUpdateMutation = { __typename?: 'Mutation', checkoutLinesUpdate?: { __typename?: 'CheckoutLinesUpdate', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, note: string, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', quantityLimitPerCustomer?: number | null, quantityAvailable?: number | null, name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null, stocks?: Array<{ __typename?: 'Stock', id: string, quantity: number }> | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> } | null, checkoutErrors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null, lines?: Array<string> | null }> } | null };
 
 export type CheckoutShippingAddressUpdateMutationVariables = Exact<{
   shippingAddress: AddressInput;
@@ -33438,7 +33622,7 @@ export type CheckoutShippingAddressUpdateMutationVariables = Exact<{
 }>;
 
 
-export type CheckoutShippingAddressUpdateMutation = { __typename?: 'Mutation', checkoutShippingAddressUpdate?: { __typename?: 'CheckoutShippingAddressUpdate', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', quantityLimitPerCustomer?: number | null, quantityAvailable?: number | null, name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null, stocks?: Array<{ __typename?: 'Stock', id: string, quantity: number }> | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> } | null, errors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null }> } | null };
+export type CheckoutShippingAddressUpdateMutation = { __typename?: 'Mutation', checkoutShippingAddressUpdate?: { __typename?: 'CheckoutShippingAddressUpdate', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, note: string, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', quantityLimitPerCustomer?: number | null, quantityAvailable?: number | null, name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null, stocks?: Array<{ __typename?: 'Stock', id: string, quantity: number }> | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> } | null, errors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null }> } | null };
 
 export type CheckoutShippingMethodUpdateMutationVariables = Exact<{
   checkoutId: Scalars['ID']['input'];
@@ -33446,7 +33630,15 @@ export type CheckoutShippingMethodUpdateMutationVariables = Exact<{
 }>;
 
 
-export type CheckoutShippingMethodUpdateMutation = { __typename?: 'Mutation', checkoutShippingMethodUpdate?: { __typename?: 'CheckoutShippingMethodUpdate', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', quantityLimitPerCustomer?: number | null, quantityAvailable?: number | null, name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null, stocks?: Array<{ __typename?: 'Stock', id: string, quantity: number }> | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> } | null, errors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null }> } | null };
+export type CheckoutShippingMethodUpdateMutation = { __typename?: 'Mutation', checkoutShippingMethodUpdate?: { __typename?: 'CheckoutShippingMethodUpdate', checkout?: { __typename?: 'Checkout', id: string, email?: string | null, quantity: number, isShippingRequired: boolean, note: string, lines: Array<{ __typename?: 'CheckoutLine', id: string, quantity: number, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, variant: { __typename?: 'ProductVariant', quantityLimitPerCustomer?: number | null, quantityAvailable?: number | null, name: string, id: string, product: { __typename?: 'Product', id: string, name: string, slug: string, thumbnail?: { __typename?: 'Image', url: string, alt?: string | null } | null, category?: { __typename?: 'Category', name: string } | null }, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } } | null } | null, stocks?: Array<{ __typename?: 'Stock', id: string, quantity: number }> | null } }>, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, shippingAddress?: { __typename?: 'Address', id: string, isDefaultBillingAddress?: boolean | null, isDefaultShippingAddress?: boolean | null, countryArea: string, city: string, cityArea: string, streetAddress1: string, streetAddress2: string, postalCode: string, companyName: string, firstName: string, lastName: string, phone?: string | null, country: { __typename?: 'CountryDisplay', code: string, country: string } } | null, availableShippingMethods: Array<{ __typename?: 'ShippingMethod', active: boolean, id: string, name: string, type?: ShippingMethodTypeEnum | null, description?: any | null }> } | null, errors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, message?: string | null }> } | null };
+
+export type CheckoutUpdateNoteMutationVariables = Exact<{
+  customerNote: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type CheckoutUpdateNoteMutation = { __typename?: 'Mutation', checkoutCustomerNoteUpdate?: { __typename?: 'CheckoutCustomerNoteUpdate', errors: Array<{ __typename?: 'CheckoutError', code: CheckoutErrorCode, field?: string | null, lines?: Array<string> | null, message?: string | null }> } | null };
 
 export type CarouselUrlsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -33685,6 +33877,7 @@ export const CheckoutForCartFragmentFragmentDoc = gql`
     type
     description
   }
+  note
 }
     ${UserAddressFragmentFragmentDoc}`;
 export const OrderBriefFragmentFragmentDoc = gql`
@@ -34042,8 +34235,8 @@ export function useArticleByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ArticleByIdQuery, ArticleByIdQueryVariables>(ArticleByIdDocument, options);
         }
-export function useArticleByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ArticleByIdQuery, ArticleByIdQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useArticleByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ArticleByIdQuery, ArticleByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ArticleByIdQuery, ArticleByIdQueryVariables>(ArticleByIdDocument, options);
         }
 export type ArticleByIdQueryHookResult = ReturnType<typeof useArticleByIdQuery>;
@@ -34091,8 +34284,8 @@ export function useArticleBySlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ArticleBySlugQuery, ArticleBySlugQueryVariables>(ArticleBySlugDocument, options);
         }
-export function useArticleBySlugSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ArticleBySlugQuery, ArticleBySlugQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useArticleBySlugSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ArticleBySlugQuery, ArticleBySlugQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ArticleBySlugQuery, ArticleBySlugQueryVariables>(ArticleBySlugDocument, options);
         }
 export type ArticleBySlugQueryHookResult = ReturnType<typeof useArticleBySlugQuery>;
@@ -34150,8 +34343,8 @@ export function useArticleByTypeLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ArticleByTypeQuery, ArticleByTypeQueryVariables>(ArticleByTypeDocument, options);
         }
-export function useArticleByTypeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ArticleByTypeQuery, ArticleByTypeQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useArticleByTypeSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ArticleByTypeQuery, ArticleByTypeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ArticleByTypeQuery, ArticleByTypeQueryVariables>(ArticleByTypeDocument, options);
         }
 export type ArticleByTypeQueryHookResult = ReturnType<typeof useArticleByTypeQuery>;
@@ -34194,8 +34387,8 @@ export function useArticleCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHook
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ArticleCategoriesQuery, ArticleCategoriesQueryVariables>(ArticleCategoriesDocument, options);
         }
-export function useArticleCategoriesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ArticleCategoriesQuery, ArticleCategoriesQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useArticleCategoriesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ArticleCategoriesQuery, ArticleCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ArticleCategoriesQuery, ArticleCategoriesQueryVariables>(ArticleCategoriesDocument, options);
         }
 export type ArticleCategoriesQueryHookResult = ReturnType<typeof useArticleCategoriesQuery>;
@@ -34251,8 +34444,8 @@ export function useArticleSearchByNameLazyQuery(baseOptions?: Apollo.LazyQueryHo
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ArticleSearchByNameQuery, ArticleSearchByNameQueryVariables>(ArticleSearchByNameDocument, options);
         }
-export function useArticleSearchByNameSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ArticleSearchByNameQuery, ArticleSearchByNameQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useArticleSearchByNameSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ArticleSearchByNameQuery, ArticleSearchByNameQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ArticleSearchByNameQuery, ArticleSearchByNameQueryVariables>(ArticleSearchByNameDocument, options);
         }
 export type ArticleSearchByNameQueryHookResult = ReturnType<typeof useArticleSearchByNameQuery>;
@@ -34555,8 +34748,8 @@ export function useCheckoutFindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<CheckoutFindQuery, CheckoutFindQueryVariables>(CheckoutFindDocument, options);
         }
-export function useCheckoutFindSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CheckoutFindQuery, CheckoutFindQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useCheckoutFindSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CheckoutFindQuery, CheckoutFindQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<CheckoutFindQuery, CheckoutFindQueryVariables>(CheckoutFindDocument, options);
         }
 export type CheckoutFindQueryHookResult = ReturnType<typeof useCheckoutFindQuery>;
@@ -34596,8 +34789,8 @@ export function useCheckoutGetQuantityLazyQuery(baseOptions?: Apollo.LazyQueryHo
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<CheckoutGetQuantityQuery, CheckoutGetQuantityQueryVariables>(CheckoutGetQuantityDocument, options);
         }
-export function useCheckoutGetQuantitySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CheckoutGetQuantityQuery, CheckoutGetQuantityQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useCheckoutGetQuantitySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CheckoutGetQuantityQuery, CheckoutGetQuantityQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<CheckoutGetQuantityQuery, CheckoutGetQuantityQueryVariables>(CheckoutGetQuantityDocument, options);
         }
 export type CheckoutGetQuantityQueryHookResult = ReturnType<typeof useCheckoutGetQuantityQuery>;
@@ -34774,6 +34967,45 @@ export function useCheckoutShippingMethodUpdateMutation(baseOptions?: Apollo.Mut
 export type CheckoutShippingMethodUpdateMutationHookResult = ReturnType<typeof useCheckoutShippingMethodUpdateMutation>;
 export type CheckoutShippingMethodUpdateMutationResult = Apollo.MutationResult<CheckoutShippingMethodUpdateMutation>;
 export type CheckoutShippingMethodUpdateMutationOptions = Apollo.BaseMutationOptions<CheckoutShippingMethodUpdateMutation, CheckoutShippingMethodUpdateMutationVariables>;
+export const CheckoutUpdateNoteDocument = gql`
+    mutation CheckoutUpdateNote($customerNote: String!, $id: ID!) {
+  checkoutCustomerNoteUpdate(customerNote: $customerNote, id: $id) {
+    errors {
+      code
+      field
+      lines
+      message
+    }
+  }
+}
+    `;
+export type CheckoutUpdateNoteMutationFn = Apollo.MutationFunction<CheckoutUpdateNoteMutation, CheckoutUpdateNoteMutationVariables>;
+
+/**
+ * __useCheckoutUpdateNoteMutation__
+ *
+ * To run a mutation, you first call `useCheckoutUpdateNoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCheckoutUpdateNoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [checkoutUpdateNoteMutation, { data, loading, error }] = useCheckoutUpdateNoteMutation({
+ *   variables: {
+ *      customerNote: // value for 'customerNote'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCheckoutUpdateNoteMutation(baseOptions?: Apollo.MutationHookOptions<CheckoutUpdateNoteMutation, CheckoutUpdateNoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CheckoutUpdateNoteMutation, CheckoutUpdateNoteMutationVariables>(CheckoutUpdateNoteDocument, options);
+      }
+export type CheckoutUpdateNoteMutationHookResult = ReturnType<typeof useCheckoutUpdateNoteMutation>;
+export type CheckoutUpdateNoteMutationResult = Apollo.MutationResult<CheckoutUpdateNoteMutation>;
+export type CheckoutUpdateNoteMutationOptions = Apollo.BaseMutationOptions<CheckoutUpdateNoteMutation, CheckoutUpdateNoteMutationVariables>;
 export const CarouselUrlsDocument = gql`
     query CarouselUrls {
   carousel {
@@ -34805,8 +35037,8 @@ export function useCarouselUrlsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<CarouselUrlsQuery, CarouselUrlsQueryVariables>(CarouselUrlsDocument, options);
         }
-export function useCarouselUrlsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CarouselUrlsQuery, CarouselUrlsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useCarouselUrlsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CarouselUrlsQuery, CarouselUrlsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<CarouselUrlsQuery, CarouselUrlsQueryVariables>(CarouselUrlsDocument, options);
         }
 export type CarouselUrlsQueryHookResult = ReturnType<typeof useCarouselUrlsQuery>;
@@ -34847,8 +35079,8 @@ export function useStatisticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<StatisticsQuery, StatisticsQueryVariables>(StatisticsDocument, options);
         }
-export function useStatisticsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<StatisticsQuery, StatisticsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useStatisticsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<StatisticsQuery, StatisticsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<StatisticsQuery, StatisticsQueryVariables>(StatisticsDocument, options);
         }
 export type StatisticsQueryHookResult = ReturnType<typeof useStatisticsQuery>;
@@ -34932,8 +35164,8 @@ export function useOrderDetailedLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<OrderDetailedQuery, OrderDetailedQueryVariables>(OrderDetailedDocument, options);
         }
-export function useOrderDetailedSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<OrderDetailedQuery, OrderDetailedQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useOrderDetailedSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OrderDetailedQuery, OrderDetailedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<OrderDetailedQuery, OrderDetailedQueryVariables>(OrderDetailedDocument, options);
         }
 export type OrderDetailedQueryHookResult = ReturnType<typeof useOrderDetailedQuery>;
@@ -35028,8 +35260,8 @@ export function useCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<CategoriesQuery, CategoriesQueryVariables>(CategoriesDocument, options);
         }
-export function useCategoriesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CategoriesQuery, CategoriesQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useCategoriesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CategoriesQuery, CategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<CategoriesQuery, CategoriesQueryVariables>(CategoriesDocument, options);
         }
 export type CategoriesQueryHookResult = ReturnType<typeof useCategoriesQuery>;
@@ -35125,8 +35357,8 @@ export function useProductDetailLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ProductDetailQuery, ProductDetailQueryVariables>(ProductDetailDocument, options);
         }
-export function useProductDetailSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProductDetailQuery, ProductDetailQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useProductDetailSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ProductDetailQuery, ProductDetailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ProductDetailQuery, ProductDetailQueryVariables>(ProductDetailDocument, options);
         }
 export type ProductDetailQueryHookResult = ReturnType<typeof useProductDetailQuery>;
@@ -35221,8 +35453,8 @@ export function useProductsByCategoryIdLazyQuery(baseOptions?: Apollo.LazyQueryH
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ProductsByCategoryIdQuery, ProductsByCategoryIdQueryVariables>(ProductsByCategoryIdDocument, options);
         }
-export function useProductsByCategoryIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProductsByCategoryIdQuery, ProductsByCategoryIdQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useProductsByCategoryIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ProductsByCategoryIdQuery, ProductsByCategoryIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ProductsByCategoryIdQuery, ProductsByCategoryIdQueryVariables>(ProductsByCategoryIdDocument, options);
         }
 export type ProductsByCategoryIdQueryHookResult = ReturnType<typeof useProductsByCategoryIdQuery>;
@@ -35323,8 +35555,8 @@ export function useProductsByCollectionLazyQuery(baseOptions?: Apollo.LazyQueryH
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ProductsByCollectionQuery, ProductsByCollectionQueryVariables>(ProductsByCollectionDocument, options);
         }
-export function useProductsByCollectionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProductsByCollectionQuery, ProductsByCollectionQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useProductsByCollectionSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ProductsByCollectionQuery, ProductsByCollectionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ProductsByCollectionQuery, ProductsByCollectionQueryVariables>(ProductsByCollectionDocument, options);
         }
 export type ProductsByCollectionQueryHookResult = ReturnType<typeof useProductsByCollectionQuery>;
@@ -35418,8 +35650,8 @@ export function useProductsSearchByNameLazyQuery(baseOptions?: Apollo.LazyQueryH
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ProductsSearchByNameQuery, ProductsSearchByNameQueryVariables>(ProductsSearchByNameDocument, options);
         }
-export function useProductsSearchByNameSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProductsSearchByNameQuery, ProductsSearchByNameQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useProductsSearchByNameSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ProductsSearchByNameQuery, ProductsSearchByNameQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ProductsSearchByNameQuery, ProductsSearchByNameQueryVariables>(ProductsSearchByNameDocument, options);
         }
 export type ProductsSearchByNameQueryHookResult = ReturnType<typeof useProductsSearchByNameQuery>;
@@ -35611,8 +35843,8 @@ export function useUserAddressesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<UserAddressesQuery, UserAddressesQueryVariables>(UserAddressesDocument, options);
         }
-export function useUserAddressesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UserAddressesQuery, UserAddressesQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useUserAddressesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserAddressesQuery, UserAddressesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<UserAddressesQuery, UserAddressesQueryVariables>(UserAddressesDocument, options);
         }
 export type UserAddressesQueryHookResult = ReturnType<typeof useUserAddressesQuery>;
@@ -35671,8 +35903,8 @@ export function useUserBalanceEventsLazyQuery(baseOptions?: Apollo.LazyQueryHook
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<UserBalanceEventsQuery, UserBalanceEventsQueryVariables>(UserBalanceEventsDocument, options);
         }
-export function useUserBalanceEventsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UserBalanceEventsQuery, UserBalanceEventsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useUserBalanceEventsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserBalanceEventsQuery, UserBalanceEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<UserBalanceEventsQuery, UserBalanceEventsQueryVariables>(UserBalanceEventsDocument, options);
         }
 export type UserBalanceEventsQueryHookResult = ReturnType<typeof useUserBalanceEventsQuery>;
@@ -35722,8 +35954,8 @@ export function useUserBasicInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<UserBasicInfoQuery, UserBasicInfoQueryVariables>(UserBasicInfoDocument, options);
         }
-export function useUserBasicInfoSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UserBasicInfoQuery, UserBasicInfoQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useUserBasicInfoSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserBasicInfoQuery, UserBasicInfoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<UserBasicInfoQuery, UserBasicInfoQueryVariables>(UserBasicInfoDocument, options);
         }
 export type UserBasicInfoQueryHookResult = ReturnType<typeof useUserBasicInfoQuery>;
@@ -35762,8 +35994,8 @@ export function useUserCheckoutsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<UserCheckoutsQuery, UserCheckoutsQueryVariables>(UserCheckoutsDocument, options);
         }
-export function useUserCheckoutsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UserCheckoutsQuery, UserCheckoutsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useUserCheckoutsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserCheckoutsQuery, UserCheckoutsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<UserCheckoutsQuery, UserCheckoutsQueryVariables>(UserCheckoutsDocument, options);
         }
 export type UserCheckoutsQueryHookResult = ReturnType<typeof useUserCheckoutsQuery>;
@@ -35823,8 +36055,8 @@ export function useUserDonationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<UserDonationsQuery, UserDonationsQueryVariables>(UserDonationsDocument, options);
         }
-export function useUserDonationsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UserDonationsQuery, UserDonationsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useUserDonationsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserDonationsQuery, UserDonationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<UserDonationsQuery, UserDonationsQueryVariables>(UserDonationsDocument, options);
         }
 export type UserDonationsQueryHookResult = ReturnType<typeof useUserDonationsQuery>;
@@ -35871,8 +36103,8 @@ export function useUserOrdersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<UserOrdersQuery, UserOrdersQueryVariables>(UserOrdersDocument, options);
         }
-export function useUserOrdersSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UserOrdersQuery, UserOrdersQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+export function useUserOrdersSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserOrdersQuery, UserOrdersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<UserOrdersQuery, UserOrdersQueryVariables>(UserOrdersDocument, options);
         }
 export type UserOrdersQueryHookResult = ReturnType<typeof useUserOrdersQuery>;

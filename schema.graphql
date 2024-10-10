@@ -1824,7 +1824,7 @@ type Query {
   """
   Look up a user by ID or email address.
   
-  Requires one of the following permissions: MANAGE_STAFF, MANAGE_USERS, MANAGE_ORDERS.
+  Requires one of the following permissions: MANAGE_STAFF, MANAGE_USERS, READ_USERS, MANAGE_ORDERS.
   """
   user(
     """ID of the user."""
@@ -3394,6 +3394,7 @@ enum PermissionEnum @doc(category: "Users") {
   MANAGE_USERS
   MANAGE_STAFF
   IMPERSONATE_USER
+  READ_USERS
   MANAGE_APPS
   MANAGE_OBSERVABILITY
   MANAGE_CHECKOUTS
@@ -10492,6 +10493,9 @@ type User implements Node & ObjectWithMetadata @doc(category: "Users") {
   """The name of the user IODC account."""
   account: String!
 
+  """Whom the user is invited by"""
+  invitedBy: String!
+
   """The type of the user. Defined by the OIDC provider"""
   userType: String!
 
@@ -10589,7 +10593,7 @@ type User implements Node & ObjectWithMetadata @doc(category: "Users") {
   """
   A note about the customer.
   
-  Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF.
+  Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF, READ_USERS.
   """
   note: String
 
@@ -10668,9 +10672,36 @@ type User implements Node & ObjectWithMetadata @doc(category: "Users") {
   """
   List of events associated with the user.
   
-  Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF.
+  Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF, READ_USERS.
   """
   events: [CustomerEvent!]
+
+  """
+  List of user's invitations. Requires one of the following permissions: AuthorizationFilters.AUTHENTICATED_USER.
+  """
+  invitations(
+    """Sort invitations."""
+    sortBy: InvitationsSortingInput
+
+    """Filtering options for invitations."""
+    filter: InvitationFilterInput
+
+    """Return the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Return the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Retrieve the first n elements from the list. Note that the system only allows fetching a maximum of 10000 objects in a single query.
+    """
+    first: Int
+
+    """
+    Retrieve the last n elements from the list. Note that the system only allows fetching a maximum of 10000 objects in a single query.
+    """
+    last: Int
+  ): InvitationCountableConnection
 
   """
   List of stored payment sources. The field returns a list of payment sources stored for payment plugins.
@@ -13311,6 +13342,7 @@ enum OrderStatusFilter @doc(category: "Orders") {
   PARTIALLY_FULFILLED
   FULFILLED
   CANCELED
+  EXPIRED
 }
 
 """Represents user's permissions."""
@@ -13417,6 +13449,57 @@ enum CustomerEventsEnum @doc(category: "Users") {
   NAME_ASSIGNED
   EMAIL_ASSIGNED
   NOTE_ADDED
+}
+
+type InvitationCountableConnection @doc(category: "Users") {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+  edges: [InvitationCountableEdge!]!
+
+  """A total count of items in the collection."""
+  totalCount: Int
+}
+
+type InvitationCountableEdge @doc(category: "Users") {
+  """The item at the end of the edge."""
+  node: Invitation!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+"""Represents invitation data."""
+type Invitation implements Node @doc(category: "Users") {
+  """The Id of the invitation"""
+  id: ID!
+
+  """Invitation code"""
+  code: String!
+
+  """Creation of the current invitation"""
+  createdAt: DateTime
+
+  """Expiration of the current invitation"""
+  expiredAt: DateTime
+}
+
+input InvitationsSortingInput @doc(category: "Users") {
+  """Specifies the direction in which to sort invitations."""
+  direction: OrderDirection!
+
+  """Sort invitations by the selected field."""
+  field: InvitationSortField!
+}
+
+enum InvitationSortField @doc(category: "Users") {
+  """Sort invitations by created at."""
+  CREATED_AT
+}
+
+input InvitationFilterInput @doc(category: "Users") {
+  metadata: [MetadataFilter!]
+  createdAt: DateTimeRangeInput
+  expiredAt: DateTimeRangeInput
 }
 
 """
@@ -14288,6 +14371,7 @@ enum BalanceEventsEnum @doc(category: "Events") {
   BONUS
   POOR_SIGN
   OTHER
+  INVITATION_ACCEPTED
 }
 
 input BalanceEventSortingInput @doc(category: "Events") {
@@ -14388,7 +14472,7 @@ type Donation implements Node @doc(category: "Donations") {
   title: String
 
   """
-  The user who made the donation. Requires one of permissions: MANAGE_USERS, MANAGE_DONATIONS, fOWNER
+  The user who made the donation. Requires one of permissions: MANAGE_USERS, MANAGE_DONATIONS, OWNER, READ_USERS
   """
   donator: User
 
@@ -18449,6 +18533,16 @@ type Mutation {
   ): DonationComplete @doc(category: "Donations") @webhookEventsInfo(asyncEvents: [], syncEvents: [])
 
   """
+  Complete donations 
+  
+  Requires one of the following permissions: MANAGE_DONATIONS.
+  """
+  donationBulkComplete(
+    """Input list of donations to be updated"""
+    donations: [DonationBulkCompleteInput!]!
+  ): DonationBulkComplete @doc(category: "Donations")
+
+  """
   Creates a new promotion.
   
   Added in Saleor 3.17.
@@ -19154,6 +19248,22 @@ type Mutation {
     """
     token: UUID
   ): CheckoutCustomerDetach @doc(category: "Checkout") @webhookEventsInfo(asyncEvents: [CHECKOUT_UPDATED], syncEvents: [])
+
+  """
+  Updates customer note in the existing checkout object.
+  
+  Added in Saleor 3.21.
+  
+  Triggers the following webhook events:
+  - CHECKOUT_UPDATED (async): A checkout was updated.
+  """
+  checkoutCustomerNoteUpdate(
+    """New customer note content."""
+    customerNote: String!
+
+    """The checkout's ID."""
+    id: ID!
+  ): CheckoutCustomerNoteUpdate @doc(category: "Checkout") @webhookEventsInfo(asyncEvents: [CHECKOUT_UPDATED], syncEvents: [])
 
   """
   Updates email address in the existing checkout object.
@@ -20698,6 +20808,23 @@ type Mutation {
     """ID of the group to delete."""
     id: ID!
   ): PermissionGroupDelete @doc(category: "Users") @webhookEventsInfo(asyncEvents: [PERMISSION_GROUP_DELETED], syncEvents: [])
+
+  """
+  Create a new invitation for the customer. 
+  
+  Requires one of the following permissions: AUTHENTICATED_USER.
+  """
+  invitationCreate: AccountInvitationCreate @doc(category: "Users")
+
+  """
+  Create a new address for the customer. 
+  
+  Requires one of the following permissions: AUTHENTICATED_USER.
+  """
+  invitationDelete(
+    """ID of the invitation code to delete."""
+    id: ID!
+  ): AccountInvitationDelete @doc(category: "Users")
 }
 
 """
@@ -28127,6 +28254,40 @@ input DonationCompleteInput @doc(category: "Donations") {
 }
 
 """
+Complete donations 
+
+Requires one of the following permissions: MANAGE_DONATIONS.
+"""
+type DonationBulkComplete @doc(category: "Donations") {
+  """Input list of donations"""
+  donations: [Donation!]!
+
+  """Returns how many objects were updated."""
+  count: Int!
+  donationErrors: [DonationBulkError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [DonationBulkError!]!
+}
+
+type DonationBulkError {
+  """
+  Path to field that caused the error. A value of `null` indicates that the error isn't associated with a particular field.
+  """
+  path: String
+
+  """The error message."""
+  message: String
+
+  """The error code."""
+  code: DonationErrorCode!
+}
+
+input DonationBulkCompleteInput {
+  """ID of the donation."""
+  id: ID!
+  accepted: Boolean!
+}
+
+"""
 Creates a new promotion.
 
 Added in Saleor 3.17.
@@ -29535,6 +29696,21 @@ Triggers the following webhook events:
 - CHECKOUT_UPDATED (async): A checkout was updated.
 """
 type CheckoutCustomerDetach @doc(category: "Checkout") @webhookEventsInfo(asyncEvents: [CHECKOUT_UPDATED], syncEvents: []) {
+  """An updated checkout."""
+  checkout: Checkout
+  checkoutErrors: [CheckoutError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [CheckoutError!]!
+}
+
+"""
+Updates customer note in the existing checkout object.
+
+Added in Saleor 3.21.
+
+Triggers the following webhook events:
+- CHECKOUT_UPDATED (async): A checkout was updated.
+"""
+type CheckoutCustomerNoteUpdate @doc(category: "Checkout") @webhookEventsInfo(asyncEvents: [CHECKOUT_UPDATED], syncEvents: []) {
   """An updated checkout."""
   checkout: Checkout
   checkoutErrors: [CheckoutError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
@@ -32473,6 +32649,28 @@ type PermissionGroupDelete @doc(category: "Users") @webhookEventsInfo(asyncEvent
   permissionGroupErrors: [PermissionGroupError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
   errors: [PermissionGroupError!]!
   group: Group
+}
+
+"""
+Create a new invitation for the customer. 
+
+Requires one of the following permissions: AUTHENTICATED_USER.
+"""
+type AccountInvitationCreate @doc(category: "Users") {
+  invitation: Invitation
+  accountErrors: [AccountError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [AccountError!]!
+}
+
+"""
+Create a new address for the customer. 
+
+Requires one of the following permissions: AUTHENTICATED_USER.
+"""
+type AccountInvitationDelete @doc(category: "Users") {
+  accountErrors: [AccountError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+  errors: [AccountError!]!
+  invitation: Invitation
 }
 
 type Subscription @doc(category: "Miscellaneous") {
@@ -36636,7 +36834,7 @@ type PaymentMethodProcessTokenizationSession implements Event @doc(category: "Pa
 scalar _Any
 
 """_Entity union as defined by Federation spec."""
-union _Entity = App | Address | User | Group | ProductVariant | Product | ProductType | ProductMedia | Category | Collection | Order | PageType
+union _Entity = App | Address | Invitation | User | Group | ProductVariant | Product | ProductType | ProductMedia | Category | Collection | Order | PageType
 
 """_Service manifest as defined by Federation spec."""
 type _Service {

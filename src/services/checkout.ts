@@ -24,6 +24,8 @@ import {
     CheckoutCompleteDocument,
     CheckoutEmailUpdateMutation,
     CheckoutEmailUpdateDocument,
+    CheckoutUpdateNoteMutation,
+    CheckoutUpdateNoteDocument,
 } from "@/graphql/hooks";
 import { CheckoutCreateResult, CheckoutDetail, CheckoutLineDetail, CheckoutLineVarientDetail, ShippingMethodDetail } from "@/models/checkout";
 import { Token } from "@/models/token";
@@ -63,6 +65,7 @@ function mapCheckoutForCart(data: Checkout) : CheckoutDetail {
                 quantityAvailable: x.variant.quantityAvailable
             }) as CheckoutLineVarientDetail,
         }) as CheckoutLineDetail),
+        note: data.note,
     } as CheckoutDetail;
 }
 
@@ -369,6 +372,33 @@ export async function checkoutComplete(client: ApolloClient<object>, checkoutId:
           throw resp.data.checkoutComplete.errors[0].message;
         }
         return resp.data.checkoutComplete.order?.id;
+    } catch (error) {
+        var errmessage = `请求失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+};
+
+
+//修改备注
+export async function checkoutUpdateNote(client: ApolloClient<object>, checkoutId: string, note: string) {
+    try {
+        const resp = await client.mutate<CheckoutUpdateNoteMutation>({
+            mutation: CheckoutUpdateNoteDocument,
+            variables: {
+                id: checkoutId,
+                customerNote: note,
+            }
+        }); 
+        if (!resp.data || 
+            !resp.data.checkoutCustomerNoteUpdate) {
+          throw "修改订单备注失败";
+        }
+        if (resp.data.checkoutCustomerNoteUpdate.errors.length != 0)
+        {
+          throw resp.data.checkoutCustomerNoteUpdate.errors[0].message;
+        }
+        return true;
     } catch (error) {
         var errmessage = `请求失败：${error}`
         console.error(errmessage);

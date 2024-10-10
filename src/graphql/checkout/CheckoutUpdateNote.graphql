@@ -1,0 +1,10 @@
+mutation CheckoutUpdateNote($customerNote: String!, $id: ID!) {
+  checkoutCustomerNoteUpdate(customerNote: $customerNote, id: $id) {
+    errors {
+      code
+      field
+      lines
+      message
+    }
+  }
+}

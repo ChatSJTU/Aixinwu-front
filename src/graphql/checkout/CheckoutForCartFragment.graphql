@@ -59,4 +59,5 @@ fragment CheckoutForCartFragment on Checkout {
     type
     description
   }
+  note
 }
