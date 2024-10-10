@@ -156,19 +156,26 @@ const ProductDetailsPage: React.FC = () => {
         <Row>
           <Col span={isMobile ? 24 : 9}>
             <div style={{ maxHeight: '458px', maxWidth: '458px', overflow: 'hidden' }}>
-              <Carousel autoplay autoplaySpeed={5000} speed={1500} draggable={isMobile} style={{ textAlign: 'center' }}>
+              <Carousel
+                autoplay
+                autoplaySpeed={5000}
+                speed={1500}
+                draggable={isMobile}
+                style={{ textAlign: 'center' }}
+              >
                 {product.images?.map((url, index) => (
-                  <div key={index} className="image-container">
+                  <div className="image-container" key={index}>
                     <Image
-                      key={index}
                       src={url}
                       alt={`图片预览 ${index + 1}`}
                       preview={previewProps}
+                      className="carousel-image"
                     />
                   </div>
                 ))}
               </Carousel>
             </div>
+
           </Col>
           {isMobile &&
             <Divider />
