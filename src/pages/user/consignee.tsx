@@ -8,6 +8,8 @@ import AuthContext from "@/contexts/auth";
 import { MessageContext } from '@/contexts/message';
 import { AddressInfo } from "@/models/address";
 import { PageHeader } from "@/components/page-header";
+import { AddressInput } from "@/graphql/hooks";
+import { NotificationContext } from "@/contexts/notification";
 
 const UserConsigneePage = () => {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -18,6 +20,7 @@ const UserConsigneePage = () => {
     const [addrList, setAddrList] = useState<AddressInfo[] | undefined>(undefined)
     const authCtx = useContext(AuthContext);
     const message = useContext(MessageContext);
+    const noti = useContext(NotificationContext);
     const client = authCtx.client;
 
     useEffect(() => {
@@ -31,10 +34,17 @@ const UserConsigneePage = () => {
             .catch(err => message.error(err))
     }
 
-    const handleAddressAdd = (NewAddr: any) => {
+    const handleAddressAdd = (NewAddr: AddressInput) => {
         addUserAddress(client!, NewAddr)
             .then(() => {
                 setIsModalVisible(false);
+                if (NewAddr.streetAddress1 == "徐汇校区" || NewAddr.streetAddress1 == "黄浦校区") {
+                    noti.info({
+                        message: "温馨提示",
+                        description: "收货地址为徐汇黄浦校区的同学请加QQ群：321557314，否则无法收到收货信息。",
+                        duration: 30,
+                    });
+                }
                 fetchAddress();
             })
             .catch(err => message.error(err))
@@ -46,7 +56,7 @@ const UserConsigneePage = () => {
             .catch(err => message.error(err))
     }
 
-    const handleAddressUpdate = (ID: string, NewAddr: any) => {
+    const handleAddressUpdate = (ID: string, NewAddr: AddressInput) => {
         updateUserAddress(client!, ID, NewAddr)
             .then(() => {
                 setIsModalVisible(false);
@@ -96,9 +106,9 @@ const UserConsigneePage = () => {
         modifiedValues.cityArea = "";
 
         if (editingAddr) {
-            handleAddressUpdate(editingAddr.id, modifiedValues);
+            handleAddressUpdate(editingAddr.id, modifiedValues as AddressInput);
         } else {
-            handleAddressAdd(modifiedValues);
+            handleAddressAdd(modifiedValues as AddressInput);
         }
     };
 

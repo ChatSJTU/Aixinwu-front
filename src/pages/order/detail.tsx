@@ -20,6 +20,8 @@ import { OrderLinesTable } from "@/components/order-lines-table";
 import { AxCoin } from "@/components/axcoin";
 import useErrorMessage from "@/hooks/useErrorMessage";
 import dayjs from 'dayjs'
+import useLocalStorage from "@/hooks/useLocalStorage";
+import { NotificationContext } from "@/contexts/notification";
 
 const { confirm } = Modal;
 const { Title, Text, Paragraph } = Typography;
@@ -29,13 +31,15 @@ export default function OrderDetailPage() {
     const router = useRouter();
     const authCtx = useContext(AuthContext);
     const message = useContext(MessageContext);
+    const noti = useContext(NotificationContext);
     const client = authCtx.client;
     const { id, autopay, autocancel } = router.query;
     const { et } = useErrorMessage();
     const [orderDetail, setOrderDetail] = useState<OrderDetailedInfo | null>(null);
-    const [softRefresh, setSoftRefresh] = useState<Boolean>(false);
-    const [checkAutoPay, setCheckAutoPay] = useState<Boolean>(false);
-    const [checkAutoCancel, setCheckAutoCancel] = useState<Boolean>(false);
+    const [softRefresh, setSoftRefresh] = useState<boolean>(false);
+    const [checkAutoPay, setCheckAutoPay] = useState<boolean>(false);
+    const [checkAutoCancel, setCheckAutoCancel] = useState<boolean>(false);
+    const [addrNoti, setAddrNoti] = useLocalStorage<boolean>("specialAddressNotification", true);
 
     useEffect(() => {
         if (id == undefined || id == "") {
@@ -68,6 +72,20 @@ export default function OrderDetailPage() {
             router.replace(router.basePath + "?id=" + id)
         }
     }, [checkAutoPay, checkAutoCancel]);
+
+    useEffect(() => {
+        if (["徐汇校区", "黄浦校区"].includes(orderDetail?.shippingAddress.streetAddress1 ?? "")) {
+            if (addrNoti == true) {
+                console.log(addrNoti)
+                setAddrNoti(false);
+                noti.info({
+                    message: "温馨提示",
+                    description: "收货地址为徐汇黄浦校区的同学请加QQ群：321557314，否则无法收到收货信息。",
+                    duration: 30,
+                });
+            }
+        }
+    }, [orderDetail]);
 
     const handlePayClick = () => {
         confirm({

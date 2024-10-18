@@ -18,7 +18,8 @@ import {
     UserBalanceEventsQuery,
     UserBalanceEventsDocument,
     UserDonationsQuery,
-    UserDonationsDocument
+    UserDonationsDocument,
+    AddressInput
 } from "@/graphql/hooks";
 
 import { AddressInfo } from "@/models/address";
@@ -95,7 +96,7 @@ export async function fetchUserAddresses(client: ApolloClient<object>) {
 };
 
 //新增用户收货地址
-export async function addUserAddress(client: ApolloClient<object>, newAddress: any) {
+export async function addUserAddress(client: ApolloClient<object>, newAddress: AddressInput) {
     try {
         const resp = await client.mutate<UserAddressAddMutation>({
             mutation: UserAddressAddDocument,
@@ -151,7 +152,7 @@ export async function deleteUserAddress(client: ApolloClient<object>, id: string
 }
 
 // 更新用户收货地址
-export async function updateUserAddress(client: ApolloClient<object>, id: string, newAddr: any) {
+export async function updateUserAddress(client: ApolloClient<object>, id: string, newAddr: AddressInput) {
     try {
         const resp = await client.mutate<UserAddressUpdateMutation>({
             mutation: UserAddressUpdateDocument,
