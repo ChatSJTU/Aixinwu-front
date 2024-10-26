@@ -1,0 +1,16 @@
+query UserInvitationCode {
+  me {
+    id
+    invitations(first: 10) {
+      edges {
+        node {
+          id
+          code
+          createdAt
+          expiredAt
+        }
+      }
+      totalCount
+    }
+  }
+}

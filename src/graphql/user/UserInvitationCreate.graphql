@@ -1,0 +1,16 @@
+mutation UserInvitationCreate {
+  invitationCreate {
+    invitation {
+      id
+      code
+      createdAt
+      expiredAt
+    }
+    errors {
+      addressType
+      code
+      field
+      message
+    }
+  }
+}
