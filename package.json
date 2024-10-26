@@ -16,6 +16,7 @@
     "@svgr/webpack": "^8.1.0",
     "ahooks": "^3.7.11",
     "antd": "^5.14.0",
+    "copy-to-clipboard": "^3.3.3",
     "graphql": "^16.8.1",
     "next": "13.5.7",
     "react": "^18",
