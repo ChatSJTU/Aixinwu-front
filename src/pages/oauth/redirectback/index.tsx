@@ -28,7 +28,7 @@ const OauthRedirctBack = () => {
         });
     };
 
-    useEffect(()=>{
+    useEffect(() => {
       if(router.query.code && router.query.state){
         doFetchToken(router.query.code as string, router.query.state as string)
       }

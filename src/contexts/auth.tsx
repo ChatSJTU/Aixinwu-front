@@ -206,7 +206,11 @@ export const AuthContextProvider = (props : LayoutProps) => {
   };
 
   const doExternalLogin = () => {
-    oidcRedirectJaccount(client!, window.location.origin + router.basePath + "/oauth/redirectback")
+    let redirectUrl = window.location.origin + router.basePath + "/oauth/redirectback";
+    const { share_code } = router.query;
+    if (share_code && typeof share_code === 'string' && share_code.trim() !== '')
+      redirectUrl += "?share_code=" + share_code;
+    oidcRedirectJaccount(client!, redirectUrl)
       .then((data) => {
         window.location.replace(data)
       },(err)=>{

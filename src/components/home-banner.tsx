@@ -198,7 +198,7 @@ const HomeBanner = () => {
                     </Space>
                     {!authCtx.isLoggedIn && (
                         <div style={overlayStyle}>
-                        <Button type="link" onClick={authCtx.doExternalLogin}>
+                        <Button type="link" onClick={() => {authCtx.doExternalLogin}}>
                             请先登录
                         </Button>
                         </div>
