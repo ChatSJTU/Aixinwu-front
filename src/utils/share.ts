@@ -8,7 +8,7 @@ export const shareContent = async (
   onlyCopyUrl: boolean = true
 ) => {
 
-  if (navigator.share) {   
+  if (typeof navigator.share !== "undefined") {   
     // browser support navigator.share
     try {
       await navigator.share({
