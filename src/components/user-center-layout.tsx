@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Tabs, Grid } from 'antd';
-import { ContainerOutlined, GiftOutlined, InteractionOutlined, SolutionOutlined, IdcardOutlined, SettingOutlined } from '@ant-design/icons';
+import { ContainerOutlined, GiftOutlined, InteractionOutlined, SolutionOutlined, IdcardOutlined, SettingOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import { LayoutProps } from '@/models/layout';
 import { UserBasicInfo } from '@/models/user';
@@ -41,6 +41,11 @@ const UserCenterTabs = [
     //     key: '/user/settings',
     //     icon: <SettingOutlined />
     // }
+    {
+        label: '邀请新用户',
+        key: '/user/invitation',
+        icon: <UsergroupAddOutlined />
+    }
 ]
 
 const UserLayout: React.FC<LayoutProps> = ({ children }) => {

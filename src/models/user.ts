@@ -28,3 +28,10 @@ export interface DonationInfo {
     title: string;
     price: {amount: number};
 }
+
+export interface InvitationInfo {
+    id: string;
+    code: string;
+    createdAt: string;
+    expiredAt: string;
+}

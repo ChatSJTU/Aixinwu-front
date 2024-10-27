@@ -19,11 +19,20 @@ import {
     UserBalanceEventsDocument,
     UserDonationsQuery,
     UserDonationsDocument,
+    UserInvitationCodeDocument,
+    UserInvitationCodeQuery,
+    UserInvitationCreateDocument,
+    UserInvitationCreateMutation,
     AddressInput
 } from "@/graphql/hooks";
 
 import { AddressInfo } from "@/models/address";
-import { CoinLogInfo, DonationInfo, UserBasicInfo } from "@/models/user";
+import { 
+    CoinLogInfo, 
+    DonationInfo, 
+    UserBasicInfo,
+    InvitationInfo
+} from "@/models/user";
 import { ApolloClient } from "@apollo/client";
 import { OrderInfo } from "../models/order";
 
@@ -310,6 +319,51 @@ export async function fetchUserDonations(client: ApolloClient<object>, first: nu
 
     } catch (error) {
         var errmessage = `获取用户捐赠记录失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+}
+
+export async function fetchUserInvitationCodes(client: ApolloClient<object>) {
+    try {
+        const resp = await client.query<UserInvitationCodeQuery>({
+            query: UserInvitationCodeDocument,
+        });
+        if (!resp.data || !resp.data.me){
+            throw "数据为空"
+        }
+        const edges = resp.data.me.invitations?.edges;
+        let invitations = edges?.map((edge) => {
+            return ({
+                id: edge.node.id,
+                code: edge.node.code,
+                createdAt: edge.node.createdAt,
+                expiredAt: edge.node.expiredAt,
+            })
+        }) as InvitationInfo[]
+        return invitations
+    } catch (error) {
+        var errmessage = `获取用户邀请码失败：${error}`
+        console.error(errmessage);
+        throw errmessage;
+    }
+}
+
+export async function createUserInvitationCode(client: ApolloClient<object>) {
+    try {
+        const resp = await client.mutate<UserInvitationCreateMutation>({
+            mutation: UserInvitationCreateDocument,
+        });
+        if (!resp.data || !resp.data.invitationCreate){
+            throw "数据为空"
+        }
+        if (resp.data.invitationCreate.errors.length != 0)
+        {
+          throw resp.data.invitationCreate.errors[0].message;
+        }
+        return resp.data.invitationCreate.invitation as InvitationInfo
+    } catch (error) {
+        var errmessage = `创建用户邀请码失败：${error}`
         console.error(errmessage);
         throw errmessage;
     }
