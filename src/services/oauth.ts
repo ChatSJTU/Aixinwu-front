@@ -36,7 +36,7 @@ export async function oidcRedirectJaccount(client: ApolloClient<object>, redirec
 };
 
 //处理回调，获取令牌
-export async function oidcFetchToken(client: ApolloClient<object>, code: string, state: string) {
+export async function oidcFetchToken(client: ApolloClient<object>, code: string, state: string, share_code: string | undefined) {
     try {
         const resp = await client.mutate<OidcTokenFetchMutation>({
             mutation: OidcTokenFetchDocument,
@@ -44,6 +44,7 @@ export async function oidcFetchToken(client: ApolloClient<object>, code: string,
               input: JSON.stringify({
                 code: code,
                 state: state,
+                invitation_code: share_code,
               }), 
               pluginId: "aixinwu.authentication.openidconnect"
             }

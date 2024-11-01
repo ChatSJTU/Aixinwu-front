@@ -16,8 +16,8 @@ const OauthRedirctBack = () => {
     const [errMessage, setErrMessage] = useState<string>("");
     const message = useContext(MessageContext);
 
-    const doFetchToken = (code: string, state: string) => {
-      oidcFetchToken(client!, code, state)
+    const doFetchToken = (code: string, state: string, share_code: string | undefined) => {
+      oidcFetchToken(client!, code, state, share_code)
         .then((data) => {
           authCtx.onLogin(data);
           router.push('/', undefined, { shallow: true })
@@ -30,7 +30,7 @@ const OauthRedirctBack = () => {
 
     useEffect(() => {
       if(router.query.code && router.query.state){
-        doFetchToken(router.query.code as string, router.query.state as string)
+        doFetchToken(router.query.code as string, router.query.state as string, router.query.share_code as (string | undefined))
       }
     },[router.query])
 
