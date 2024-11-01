@@ -15,6 +15,7 @@ const UserConsigneePage = () => {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [modalTitle, setModalTitle] = useState<string>("新增收货地址");
     const [editingAddr, setEditingAddr] = useState<AddressInfo | null>(null);
+    const [modalOpen, setModalOpen] = useState(false);
     const [form] = Form.useForm();
 
     const [addrList, setAddrList] = useState<AddressInfo[] | undefined>(undefined)
@@ -39,11 +40,12 @@ const UserConsigneePage = () => {
             .then(() => {
                 setIsModalVisible(false);
                 if (NewAddr.streetAddress1 == "徐汇校区" || NewAddr.streetAddress1 == "黄浦校区") {
-                    noti.info({
-                        message: "温馨提示",
-                        description: "收货地址为徐汇黄浦校区的同学请加QQ群：321557314，否则无法收到收货信息。",
-                        duration: 30,
-                    });
+                    // noti.info({
+                    //     message: "温馨提示",
+                    //     description: "收货地址为徐汇黄浦校区的同学请加QQ群：321557314，否则无法收到收货信息。",
+                    //     duration: 30,
+                    // });
+                    setModalOpen(true);
                 }
                 fetchAddress();
             })
@@ -201,6 +203,15 @@ const UserConsigneePage = () => {
                     </Modal>
                 </center>
             </UserLayout>
+            <Modal
+                title="温馨提示"
+                centered
+                open={modalOpen}
+                onOk={() => setModalOpen(false)}
+                onCancel={() => setModalOpen(false)}
+            >
+                <p>收货地址为徐汇黄浦校区的同学请加QQ群：321557314，否则无法收到收货信息。</p>
+            </Modal>
         </>
     );
 };
