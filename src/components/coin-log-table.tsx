@@ -28,6 +28,11 @@ export const CoinLogTable: React.FC<CoinLogTableProps> = ({ current, pageSize, t
         "consecutive_login": ["连续登录", "magenta"],
         "consumed": ["已支付", "green"],
         "refunded": ["已退款", "blue"],
+        "invite_new_user": ["邀请新用户", "gold"],
+        "special_event": ["特殊活动", "purple"],
+        "bonus": ["特殊奖励", "purple"],
+        "poor_sign": ["贫困生奖励", "cyan"],
+        "other": ["其他", ""],
     }
     const dataSource = coinLogs.map(coinLog => ({
         key: coinLog.id,
