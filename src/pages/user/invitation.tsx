@@ -36,7 +36,7 @@ const UserInvitationPage = () => {
     }, []);
 
     const shareTitle = "上海交大爱心屋喊你来看看！"
-    const shareText = "上海交通大学学生事务中心“绿色爱心屋”是一个慈善捐赠与校内物品循环的公益性平台"
+    const shareText = "上海交通大学“绿色爱心屋”是一个慈善捐赠与校内物品循环的公益性平台"
     const shareURL = `${window.location.origin}?share_code=${invitationCode}`
 
     const share = () => {
@@ -50,7 +50,7 @@ const UserInvitationPage = () => {
     }
 
     const copySlogan = () => {
-        copy(`【${shareTitle}】\n${shareText}。点击下方链接使用 jAccount 登录，即可获得爱心币～\n${shareURL}`)
+        copy(`【${shareTitle}】\n${shareText}。${shareURL}`)
         message.success("已复制到剪贴板");
     }
 
