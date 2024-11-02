@@ -17,7 +17,13 @@ export const shareContent = async (
         url: url,
       });
       return;
-    } catch (error) { throw error; }
+    } catch (error: any) { 
+      const isUserCancel = error?.message?.includes("abort") || error?.name === "AbortError";
+
+      if (isUserCancel) {
+        return Promise.reject("分享已取消");
+      } else { return Promise.reject(error); }
+    }
   }
 
   const shareText = onlyCopyUrl ? url : `【${title}】\n${text}\n${url}`;
