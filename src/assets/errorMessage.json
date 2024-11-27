@@ -8,7 +8,11 @@
         "NO_DATA": "数据为空",
         "QUANTITY_GREATER_THAN_LIMIT": "当前用户已达限购上限",
         "INSUFFICIENT_STOCK": "库存不足",
-        "PRODUCT_UNAVAILABLE_FOR_PURCHASE": "商品未开放购买，请稍后再试！"
+        "PRODUCT_UNAVAILABLE_FOR_PURCHASE": "商品未开放购买，请稍后再试！",
+        "REQUIREMENT_NOT_MEET": "您不满足购买此商品所需的条件"
+    },
+    "checkoutUpdateLine": {
+        "REQUIREMENT_NOT_MEET": "您不满足购买此商品所需的条件"
     },
     "orderPay": {
         "title": "订单支付失败",
