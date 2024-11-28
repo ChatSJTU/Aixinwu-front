@@ -39,10 +39,10 @@ export const CartContextProvider = (props : LayoutProps) => {
     const doRefresh = () => {
         if (checkoutId === undefined || checkoutId === "" || checkoutErrorCounter >= 3)
         {
-            setCheckoutErrorCounter(0);
             if (authCtx.isLoggedIn) {
                 fetchUserCheckouts(client!, process.env.NEXT_PUBLIC_CHANNEL!)
                 .then(data => {
+                    setCheckoutErrorCounter(0);
                     if (!!data && data.length > 0) {
                         setCheckoutId(data[0]);
                         checkoutGetQuantity(client!, data[0])
@@ -57,6 +57,12 @@ export const CartContextProvider = (props : LayoutProps) => {
                                 setTotalQuantity(data.quantity)
                             });
                     }
+                })
+                .catch(err => {
+                    if (checkoutErrorCounter < 3)
+                        incrCartError();
+                    else
+                        console.log(err);
                 });
             }
             // else {
@@ -72,11 +78,14 @@ export const CartContextProvider = (props : LayoutProps) => {
             if (authCtx.isLoggedIn) {
                 checkoutGetQuantity(client!, checkoutId)
                     .then(data => {
+                        setCheckoutErrorCounter(0);
                         setTotalQuantity(data);
                     })
                     .catch(err => {
-                        // message.error(err);
-                        incrCartError();
+                        if (checkoutErrorCounter < 3)
+                            incrCartError();
+                        else
+                            console.log(err);
                     });
             }
             else {
@@ -90,7 +99,7 @@ export const CartContextProvider = (props : LayoutProps) => {
     }, [checkoutId, checkoutErrorCounter]);
 
     const incrCartError = () => {
-        setCheckoutErrorCounter(checkoutErrorCounter + 1);
+        setCheckoutErrorCounter(prevValue => prevValue + 1);
     }
   
     const addLines = useCallback((variantId : string, quantity : number) => {
