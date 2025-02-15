@@ -13,6 +13,7 @@
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.4",
     "@apollo/client": "^3.9.5",
+    "@ctrl/tinycolor": "^4.1.0",
     "@svgr/webpack": "^8.1.0",
     "ahooks": "^3.7.11",
     "antd": "^5.14.0",
