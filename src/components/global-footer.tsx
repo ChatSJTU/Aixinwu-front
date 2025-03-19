@@ -3,7 +3,7 @@ import { PhoneOutlined, MailOutlined, ShopOutlined, ClockCircleOutlined } from "
 import Link from "next/link";
 
 const Developer = () => (
-    <div>Supported by <Link target="_blank" href="https://github.com/ChatSJTU" style={{color: "inherit", textDecoration: "none"}} >上海交通大学绿色爱心屋学生开发团队</Link></div>
+    <div>Supported by <Link target="_blank" href="https://geek.sjtu.edu.cn/" style={{color: "inherit", textDecoration: "none"}} >上海交通大学学生信息技术协会</Link></div>
 );
 
 const GlobalFooter = () => {
@@ -55,10 +55,10 @@ const GlobalFooter = () => {
                         value="http://weixin.qq.com/r/B3UaAl7EywO0rRph9yAV"
                     />
                     <Space direction="vertical">
-                        <div><ShopOutlined /> 闵行校区学生服务中心一楼</div>
+                        <div><ShopOutlined /> 闵行校区学生中心一楼咨询台爱心屋窗口</div>
                         <div style={{wordBreak: "break-all", overflowWrap: "break-word"}}>
                             <ClockCircleOutlined /> 8:20-19:50&nbsp;&nbsp;&nbsp;
-                            <PhoneOutlined style={{transform: "scaleX(-1)"}}/> 021-54745672&nbsp;&nbsp;&nbsp;
+                            {/* <PhoneOutlined style={{transform: "scaleX(-1)"}}/> 021-54745672&nbsp;&nbsp;&nbsp; */}
                             <MailOutlined /> <Link className="footer-link" href="mailto:aixinwu@sjtu.edu.cn">aixinwu@sjtu.edu.cn</Link>
                         </div>
                         {!screens.md && <Developer/>}
