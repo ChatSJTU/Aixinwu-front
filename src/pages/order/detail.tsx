@@ -39,7 +39,9 @@ export default function OrderDetailPage() {
     const [softRefresh, setSoftRefresh] = useState<boolean>(false);
     const [checkAutoPay, setCheckAutoPay] = useState<boolean>(false);
     const [checkAutoCancel, setCheckAutoCancel] = useState<boolean>(false);
-    const [addrNoti, setAddrNoti] = useLocalStorage<boolean>("specialAddressNotification", true);
+    const [needAddrNoti, setNeedAddrNoti] = useLocalStorage<boolean>("specialAddressNotification", true);   // 未显示过地址提示为 true
+
+    const [addrNotiModalOpen, setAddrNotiModalOpen] = useState(false);
 
     useEffect(() => {
         if (id == undefined || id == "") {
@@ -73,19 +75,14 @@ export default function OrderDetailPage() {
         }
     }, [checkAutoPay, checkAutoCancel]);
 
-    useEffect(() => {
-        if (["徐汇校区", "黄浦校区"].includes(orderDetail?.shippingAddress.streetAddress1 ?? "")) {
-            if (addrNoti == true) {
-                console.log(addrNoti)
-                setAddrNoti(false);
-                noti.info({
-                    message: "温馨提示",
-                    description: "收货地址为徐汇黄浦校区的同学请加QQ群：321557314，否则无法收到收货信息。",
-                    duration: 30,
-                });
-            }
-        }
-    }, [orderDetail]);
+    // useEffect(() => {
+    //     if (["徐汇校区", "黄浦校区"].includes(orderDetail?.shippingAddress.streetAddress1 ?? "")) {
+    //         if (addrNoti == true) {
+    //             setAddrNoti(false);
+    //             setAddrNotiModalOpen(true);
+    //         }
+    //     }
+    // }, [orderDetail]);
 
     const handlePayClick = () => {
         confirm({
@@ -111,6 +108,15 @@ export default function OrderDetailPage() {
             onCancel() {
             },
         });
+        if (["徐汇校区", "黄浦校区"].includes(orderDetail?.shippingAddress.streetAddress1 ?? "")) {
+            if (needAddrNoti == true) {
+                setNeedAddrNoti(false);
+                confirm({
+                    title: "温馨提示",
+                    content: <p>收货地址为徐汇、黄浦校区的同学请加QQ群：321557314，否则无法收到收货信息。</p>
+                })
+            }
+        }
     }
 
     const handleCancelClick = () => {
@@ -351,6 +357,15 @@ export default function OrderDetailPage() {
                     <Skeleton title={false} paragraph={{ rows: 4 }} active />
                 </div>
             }
+            <Modal
+                title="温馨提示"
+                centered
+                open={addrNotiModalOpen}
+                onOk={() => setAddrNotiModalOpen(false)}
+                onCancel={() => setAddrNotiModalOpen(false)}
+            >
+                <p>收货地址为徐汇、黄浦校区的同学请加QQ群：321557314，否则无法收到收货信息。</p>
+            </Modal>
         </>
     );
 }

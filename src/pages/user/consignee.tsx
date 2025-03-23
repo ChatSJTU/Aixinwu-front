@@ -210,7 +210,7 @@ const UserConsigneePage = () => {
                 onOk={() => setModalOpen(false)}
                 onCancel={() => setModalOpen(false)}
             >
-                <p>收货地址为徐汇黄浦校区的同学请加QQ群：321557314，否则无法收到收货信息。</p>
+                <p>收货地址为徐汇、黄浦校区的同学请加QQ群：321557314，否则无法收到收货信息。</p>
             </Modal>
         </>
     );
