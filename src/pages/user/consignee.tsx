@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import Head from "next/head";
 import UserLayout from "@/components/user-center-layout"
-import { Form, Modal, Input, Card, List, Button, Space, Spin, Tag, Select } from "antd";
+import { Form, Modal, Input, Card, List, Button, Space, Spin, Tag, Select, Empty } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined, HomeOutlined } from '@ant-design/icons';
 import { addUserAddress, deleteUserAddress, updateUserAddress, fetchUserAddresses, setDefaultUserAddress } from "@/services/user";
 import AuthContext from "@/contexts/auth";
@@ -130,7 +130,7 @@ const UserConsigneePage = () => {
                     <PageHeader title={"收货信息管理"} />
                     <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal()}>新增收货地址</Button>
                 </div>
-                <div className="address-list-container" style={{ maxHeight: '400px', marginTop: '30px' }}>
+                {addrList.length !== 0 && <div className="address-list-container" style={{ maxHeight: '400px', marginTop: '30px' }}>
                     <Space direction="vertical" size="small">
                         <List
                             grid={{ gutter: 14, xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 2 }}
@@ -163,7 +163,11 @@ const UserConsigneePage = () => {
                             )}
                         />
                     </Space>
-                </div>
+                </div>}
+                {
+                    addrList.length === 0 &&
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                }
                 <center>
                     <Modal title={modalTitle} open={isModalVisible} onCancel={handleCancel} onOk={() => form.submit()}>
                         <Form form={form} layout="vertical" onFinish={handleSubmit}>
