@@ -110,13 +110,21 @@ export const OrderTable: React.FC<OrderTableProps> = (props) => {
                     return <Tag style={{ marginInlineEnd: '0px' }} color='error'>已取消</Tag>
                 }
                 if (record.paymentStatus == "FULLY_CHARGED") {
-                    return <Tag style={{ marginInlineEnd: '0px' }} color='green'>已支付</Tag>
+                    if (record.status == "UNFULFILLED")
+                        return <Tag style={{ marginInlineEnd: '0px' }} color='orange'>待收货</Tag>
+                    else if (record.status == "PARTIALLY_FULFILLED")
+                        return <Tag style={{ marginInlineEnd: '0px' }} color='orange'>部分完成</Tag>
+                    else if (record.status == "FULFILLED")
+                        return <Tag style={{ marginInlineEnd: '0px' }} color='green'>已完成</Tag>
                 }
                 if (record.paymentStatus == "NOT_CHARGED") {
                     return <Tag style={{ marginInlineEnd: '0px' }} color='blue'>未支付</Tag>
                 }
                 if (record.paymentStatus == "FULLY_REFUNDED") {
-                    return <Tag style={{ marginInlineEnd: '0px' }} color='purple'>已退款</Tag>
+                    if (record.status == "EXPIRED")
+                        return <Tag style={{ marginInlineEnd: '0px' }} color='purple'>已过期退款</Tag>
+                    else
+                        return <Tag style={{ marginInlineEnd: '0px' }} color='purple'>已退款</Tag>
                 }
                 if (record.paymentStatus == "PARTIALLY_REFUNDED") {
                     return <Tag style={{ marginInlineEnd: '0px' }} color='purple'>部分退款</Tag>
