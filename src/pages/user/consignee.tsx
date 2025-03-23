@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import Head from "next/head";
+import { useRouter } from 'next/router';
 import UserLayout from "@/components/user-center-layout"
 import { Form, Modal, Input, Card, List, Button, Space, Spin, Tag, Select, Empty } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined, HomeOutlined } from '@ant-design/icons';
@@ -12,6 +13,7 @@ import { AddressInput } from "@/graphql/hooks";
 import { NotificationContext } from "@/contexts/notification";
 
 const UserConsigneePage = () => {
+    const router = useRouter();
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [modalTitle, setModalTitle] = useState<string>("新增收货地址");
     const [editingAddr, setEditingAddr] = useState<AddressInfo | null>(null);
@@ -25,8 +27,13 @@ const UserConsigneePage = () => {
     const client = authCtx.client;
 
     useEffect(() => {
+        const { add } = router.query;
+        if (add === 'true') {
+            setIsModalVisible(true);
+        }
+
         fetchAddress();
-    }, [])
+    }, [router.query]);
 
 
     const fetchAddress = () => {

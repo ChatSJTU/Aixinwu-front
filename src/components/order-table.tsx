@@ -111,7 +111,7 @@ export const OrderTable: React.FC<OrderTableProps> = (props) => {
                 }
                 if (record.paymentStatus == "FULLY_CHARGED") {
                     if (record.status == "UNFULFILLED")
-                        return <Tag style={{ marginInlineEnd: '0px' }} color='orange'>待收货</Tag>
+                        return <Tag style={{ marginInlineEnd: '0px' }} color='orange'>待取货</Tag>
                     else if (record.status == "PARTIALLY_FULFILLED")
                         return <Tag style={{ marginInlineEnd: '0px' }} color='orange'>部分完成</Tag>
                     else if (record.status == "FULFILLED")

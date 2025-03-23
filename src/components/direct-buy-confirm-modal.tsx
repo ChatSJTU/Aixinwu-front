@@ -14,6 +14,8 @@ import { fetchUserAddresses } from "@/services/user";
 import { AddressInfo } from "@/models/address";
 import { EllipsisOutlined } from '@ant-design/icons';
 import { AxCoin } from "./axcoin";
+import { NotificationContext } from "@/contexts/notification";
+
 const { Title, Text, Link, Paragraph } = Typography;
 
 interface DirectBuyConfirmModalProps {
@@ -27,11 +29,11 @@ interface DirectBuyConfirmModalProps {
 
 export const DirectBuyConfirmModal: React.FC<DirectBuyConfirmModalProps> = (props) => {
     const authCtx = useContext(AuthContext);
-    const cartCtx = useContext(CartContext);
     const client = authCtx.client;
     const message = useContext(MessageContext);
     const router = useRouter();
     const { et } = useErrorMessage();
+    const notification = useContext(NotificationContext);
 
     const [selectedAddress, setSelectedAddress] = useState<AddressInfo | undefined>(undefined);
     const [addresses, setAddresses] = useState<AddressInfo[]>([]);
@@ -49,7 +51,30 @@ export const DirectBuyConfirmModal: React.FC<DirectBuyConfirmModalProps> = (prop
     useEffect(() => {
         if (!props.isopen) return;
         fetchUserAddresses(client!)
-            .then(data => setAddresses(data))
+            .then(data => {
+                setAddresses(data)
+                if (data == undefined || data.length === 0) {
+                    const key = `open${Date.now()}`;
+                    const btn = (
+                        <Button
+                        type="primary"
+                        size="middle"
+                        onClick={() => {
+                            notification.destroy(key);
+                            window.open("/user/consignee?add=true", "_blank");
+                        }}
+                        >
+                        前往收货地址管理
+                        </Button>
+                    );
+                    notification.warning({
+                        message: "未找到收货地址",
+                        description: "您必须至少添加一个收货地址才能下单商品。",
+                        btn,
+                        key,
+                    });
+                }
+            })
             .catch(err => message.error(err));
     }, [props.isopen]);
 
@@ -156,7 +181,7 @@ export const DirectBuyConfirmModal: React.FC<DirectBuyConfirmModalProps> = (prop
             maskClosable={false}
             onCancel={props.onCancel}
             onOk={handleOkClick}
-            okButtonProps={{ disabled: (checkout == undefined) }}
+            okButtonProps={{ disabled: (checkout == undefined || checkout.shippingAddress == undefined) }}
             width={320}
         >
             <div style={{marginTop: '12px'}}>

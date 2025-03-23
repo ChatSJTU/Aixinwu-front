@@ -85,7 +85,7 @@ export const CheckoutCustomerData: React.FC<CheckoutCustomerDataProps> = ({
               size="middle"
               onClick={() => {
                 notification.destroy(key);
-                router.push("/user/consignee");
+                window.open("/user/consignee?add=true", "_blank");
               }}
             >
               前往收货地址管理
