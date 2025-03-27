@@ -61,7 +61,7 @@ export const DirectBuyConfirmModal: React.FC<DirectBuyConfirmModalProps> = (prop
                         size="middle"
                         onClick={() => {
                             notification.destroy(key);
-                            window.open("/user/consignee?add=true", "_blank");
+                            router.push("/user/consignee?add=true");
                         }}
                         >
                         前往收货地址管理
