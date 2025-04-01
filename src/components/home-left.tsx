@@ -1,4 +1,4 @@
-import { Typography, List, Divider, Spin } from "antd";
+import { Typography, List, Tooltip, Spin } from "antd";
 import { CalendarOutlined } from "@ant-design/icons"
 import { useState, useEffect, useContext } from "react";
 
@@ -58,24 +58,26 @@ export const HomeLeftContent = () => {
                         itemLayout="horizontal"
                         dataSource={noticeSummaries}
                         renderItem={item => (
-                            <List.Item
-                                extra={
-                                    <div>
-                                        <CalendarOutlined className="secondary-text" />
-                                        <Text type="secondary" style={{ fontWeight: 'normal', marginLeft: '4px' }}>
-                                            {formatPublishTime(item.publish_time)}
-                                        </Text>
-                                    </div>
-                                }
-                            >
-                                <List.Item.Meta
-                                    title={
-                                        <div className="link-container-ellipsis">
-                                            <Link className="link-ellipsis" href={`/articles/${item.id}`} >{item.title}</Link>
+                            <Tooltip placement="right" title={item.title}>
+                                <List.Item
+                                    extra={
+                                        <div>
+                                            <CalendarOutlined className="secondary-text" />
+                                            <Text type="secondary" style={{ fontWeight: 'normal', marginLeft: '4px' }}>
+                                                {formatPublishTime(item.publish_time)}
+                                            </Text>
                                         </div>
                                     }
-                                />
-                            </List.Item>
+                                >
+                                    <List.Item.Meta
+                                        title={
+                                            <div className="link-container-ellipsis">
+                                                <Link className="link-ellipsis" href={`/articles/${item.id}`} >{item.title}</Link>
+                                            </div>
+                                        }
+                                    />
+                                </List.Item>
+                            </Tooltip>
                         )}
                     />
                 }
@@ -93,24 +95,26 @@ export const HomeLeftContent = () => {
                         itemLayout="horizontal"
                         dataSource={newsSummaries}
                         renderItem={item => (
-                            <List.Item
-                                extra={
-                                    <div>
-                                        <CalendarOutlined className="secondary-text" />
-                                        <Text type="secondary" style={{ fontWeight: 'normal', marginLeft: '4px' }}>
-                                            {formatPublishTime(item.publish_time)}
-                                        </Text>
-                                    </div>
-                                }
-                            >
-                                <List.Item.Meta
-                                    title={
-                                        <div className="link-container-ellipsis">
-                                            <Link className="link-ellipsis" href={`/articles/${item.id}`}>{item.title}</Link>
+                            <Tooltip placement="right" title={item.title}>
+                                <List.Item
+                                    extra={
+                                        <div>
+                                            <CalendarOutlined className="secondary-text" />
+                                            <Text type="secondary" style={{ fontWeight: 'normal', marginLeft: '4px' }}>
+                                                {formatPublishTime(item.publish_time)}
+                                            </Text>
                                         </div>
                                     }
-                                />
-                            </List.Item>
+                                >
+                                    <List.Item.Meta
+                                        title={
+                                            <div className="link-container-ellipsis">
+                                                <Link className="link-ellipsis" href={`/articles/${item.id}`}>{item.title}</Link>
+                                            </div>
+                                        }
+                                    />
+                                </List.Item>
+                            </Tooltip>
                         )}
                     />
                 }
