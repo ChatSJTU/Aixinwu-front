@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Image, Typography, Space, Flex } from 'antd'
+import { Card, Image, Typography, Space, Flex, Tooltip } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons';
 
 import { ProductSummaryProps } from "@/models/products";
@@ -27,7 +27,9 @@ export const ProductPreviewCard: React.FC<ProductSummaryProps> = ({ productSumma
                     }
                 >
                     <Space direction="vertical" size="small" style={{ display: 'flex' }}>
-                        <span className='preview-card-title'>{product_name}</span>
+                        <Tooltip title={product_name}>
+                            <span className='preview-card-title'>{product_name}</span>
+                        </Tooltip>
                         <Flex justify="space-between" align="center">
                             <div style={{ whiteSpace: 'nowrap' }}>
                                 <ShoppingCartOutlined />
